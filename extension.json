@@ -1,0 +1,159 @@
+{
+  "displayName": "Web Vitals",
+  "name": "web-vitals-js",
+  "platform": "web",
+  "version": "1.0.0",
+  "description": "Measure page quality signals from Web Vitals (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
+  "author": {
+    "name": "Yuhui",
+    "url": "https://yuhui.sg",
+    "email": "dev@yuhui.sg"
+  },
+  "exchangeUrl": "https://exchange.adobe.com/experiencecloud.details.106769.web-vitals.html",
+  "iconPath": "web-vitals-icon.svg",
+  "viewBasePath": "src/view/",
+  "configuration": {
+    "viewPath": "configuration/configuration.html",
+    "schema": {
+      "$schema": "http://json-schema.org/draft-04/schema#",
+      "type": "object",
+      "properties": {}
+    }
+  },
+  "events": [
+    {
+      "displayName": "Cumulative Layout Shift (CLS)",
+      "name": "cumulative-layout-shift",
+      "categoryName": "Core Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/events/cumulativeLayoutShift.js",
+      "viewPath": "events/cumulativeLayoutShift.html"
+    },
+    {
+      "displayName": "First Input Delay (FID)",
+      "name": "first-input-delay",
+      "categoryName": "Core Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/events/firstInputDelay.js",
+      "viewPath": "events/firstInputDelay.html"
+    },
+    {
+      "displayName": "Largest Contentful Paint (LCP)",
+      "name": "largest-contentful-paint",
+      "categoryName": "Core Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/events/largestContentfulPaint.js",
+      "viewPath": "events/largestContentfulPaint.html"
+    },
+    {
+      "displayName": "First Contentful Paint (FCP)",
+      "name": "first-contentful-paint",
+      "categoryName": "Other Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/events/firstContentfulPaint.js",
+      "viewPath": "events/firstContentfulPaint.html"
+    },
+    {
+      "displayName": "Time to First Byte (TTFB)",
+      "name": "time-to-first-byte",
+      "categoryName": "Other Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/events/timeToFirstByte.js",
+      "viewPath": "events/timeToFirstByte.html"
+    }
+  ],
+  "dataElements": [
+    {
+      "displayName": "Delta",
+      "name": "metric-delta",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/metricDelta.js",
+      "viewPath": "dataElements/metricDelta.html"
+    },
+    {
+      "displayName": "Entries",
+      "name": "metric-entries",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/metricEntries.js",
+      "viewPath": "dataElements/metricEntries.html"
+    },
+    {
+      "displayName": "Full Name",
+      "name": "metric-full-name",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/metricFullName.js",
+      "viewPath": "dataElements/metricFullName.html"
+    },
+    {
+      "displayName": "ID",
+      "name": "metric-id",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/metricId.js",
+      "viewPath": "dataElements/metricId.html"
+    },
+    {
+      "displayName": "Name",
+      "name": "metric-name",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/metricName.js",
+      "viewPath": "dataElements/metricName.html"
+    },
+    {
+      "displayName": "Value",
+      "name": "metric-value",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {}
+      },
+      "libPath": "src/lib/dataElements/metricValue.js",
+      "viewPath": "dataElements/metricValue.html"
+    }
+  ]
+}

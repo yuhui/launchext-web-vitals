@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>First Input Delay Event</title>
+    <link rel="stylesheet" href="//assets.adobedtm.com/activation/reactor/spectrum/2.9.0/spectrum-light.css">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <script src="//use.typekit.net/buj6cmr.js"></script>
+  </head>
+  <body class="spectrum spectrum--light spectrum-Body">
+    <h4 class="spectrum-Heading4">No configuration necessary</h4>
+
+    <section>
+      <div class="spectrum-Toast spectrum-Toast--warning max-width" role="alert">
+        <svg class="spectrum-UIIcon-AlertMedium spectrum-Icon spectrum-Toast-typeIcon" focusable="false" aria-label="Warning" role="img">
+          <path d="M8.564 1.289L.2 16.256A.5.5 0 0 0 .636 17h16.728a.5.5 0 0 0 .5-.5.494.494 0 0 0-.064-.244L9.436 1.289a.5.5 0 0 0-.872 0zM10 14.75a.25.25 0 0 1-.25.25h-1.5a.25.25 0 0 1-.25-.25v-1.5a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 .25.25zm0-3a.25.25 0 0 1-.25.25h-1.5a.25.25 0 0 1-.25-.25v-6a.25.25 0 0 1 .25-.25h1.5a.25.25 0 0 1 .25.25z" class="spectrum-UIIcon--medium"></path>
+        </svg>
+        <div class="spectrum-Toast-body">
+          <div class="spectrum-Toast-content">
+            Since <code>webvitals.js</code> is loaded after the Launch library itself has been
+            loaded, some Web Vitals metrics may not be measured as accurately as when they are
+            implemented directly into the web pages. In some cases, the Web Vitals metrics may
+            just not be measured at all.
+          </div>
+        </div>
+      </div>
+
+      <div class="content-separator">
+        &nbsp;
+      </div>
+
+      <h5 class="spectrum-Heading5">How this Event works</h5>
+      <p>
+        This Event is triggered when the user's browser responds to the user's first interaction
+        on the current page.
+        <a href="https://web.dev/fid/" target="_blank" rel="noopener noreferrer">
+          Learn more about First Input Delay (FID).
+        </a>
+      </p>
+      <p>
+        In most cases, you will need to report only the delta (the difference between the current
+        value and the last-reported value). You can then compute the total value by summing all
+        metric deltas sent with the same ID in your analytics system.
+        <a href="https://github.com/GoogleChrome/web-vitals#report-only-the-delta-of-changes" target="_blank" rel="noopener noreferrer">
+          Learn more.
+        </a>
+      </p>
+      <p>
+        This Event works with the following web browsers only:
+        <ul>
+          <li>Chromium-based browsers, e.g. Google Chrome, Microsoft Edge, Opera, Samsung
+            Internet</li>
+          <li>Firefox</li>
+          <li>Safari</li>
+        </ul>
+      </p>
+      <p>
+        You are advised to send your analytics data with a beacon.
+        <a href="https://github.com/GoogleChrome/web-vitals#send-the-results-to-an-analytics-endpoint" target="_blank" rel="noopener noreferrer">
+          Learn more.
+        </a><br />
+        With Adobe Analytics, you can do this by setting <code>s.useBeacon = true;</code> in your
+        "Set Variables" Action.
+      </p>
+    </section>
+
+    <footer class="spectrum-Body--small text footer">
+      <div id="donations">
+        <p>Donate: <a href="https://paypal.me/yuhuibc" target="_blank">PayPal</a></p>
+      </div>
+      <div id="support">
+        <p>Support Information</p>
+        <ul>
+          <li>
+            <a href="https://github.com/yuhui/launchext-web-vitals/issues" target="_blank">
+              Open a ticket
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/yuhui/launchext-web-vitals/blob/master/CHANGELOG.md" target="_blank">
+              Read change log
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <p>Copyright &copy; 2021 Yuhui. All rights reserved.</p>
+      <p>
+        <a href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
+        <a href="https://yuhui.sg/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a href="https://yuhui.sg/cookie-policy.html" target="_blank">Cookie Policy</a> |
+        <a href="https://yuhui.sg/acceptable-use-policy.html" target="_blank">Acceptable Use Policy</a>
+      </p>
+    </footer>
+
+    <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
+    <script>
+      window.extensionBridge.register({
+        init: function(info) {
+          if (info.settings) {}
+        },
+
+        getSettings: function() {
+          return {};
+        },
+
+        validate: function() {
+          return true;
+        }
+      });
+    </script>
+  </body>
+</html>

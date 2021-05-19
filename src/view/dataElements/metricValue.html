@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Metric Value Data Element</title>
+    <link rel="stylesheet" href="//assets.adobedtm.com/activation/reactor/spectrum/2.9.0/spectrum-light.css">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <script src="//use.typekit.net/buj6cmr.js"></script>
+  </head>
+  <body class="spectrum spectrum--light spectrum-Body">
+    <h4 class="spectrum-Heading4">No configuration necessary</h4>
+
+    <section>
+      <h5 class="spectrum-Heading5">How this Data Element works</h5>
+      <p>
+        This Data Element returns the current value of the measured metric.
+        <a href="https://github.com/GoogleChrome/web-vitals#types" target="_blank" rel="noopener noreferrer">
+          Learn more.
+        </a>
+      </p>
+
+      <p>
+        <b>This data element <span class="text-underline">must</span> be used with an Event from
+          this Web Vitals extension.</b>
+      </p>
+      <p>
+        How to use:
+      </p>
+      <ul>
+        <li><code>%data element name%</code></li>
+        <li><code>_satellite.getVar('data element name', event)</code></li>
+      </ul>
+    </section>
+
+    <footer class="spectrum-Body--small text footer">
+      <div id="donations">
+        <p>Donate: <a href="https://paypal.me/yuhuibc" target="_blank">PayPal</a></p>
+      </div>
+      <div id="support">
+        <p>Support Information</p>
+        <ul>
+          <li>
+            <a href="https://github.com/yuhui/launchext-web-vitals/issues" target="_blank">
+              Open a ticket
+            </a>
+          </li>
+          <li>
+            <a href="https://github.com/yuhui/launchext-web-vitals/blob/master/CHANGELOG.md" target="_blank">
+              Read change log
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <p>Copyright &copy; 2021 Yuhui. All rights reserved.</p>
+      <p>
+        <a href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
+        <a href="https://yuhui.sg/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a href="https://yuhui.sg/cookie-policy.html" target="_blank">Cookie Policy</a> |
+        <a href="https://yuhui.sg/acceptable-use-policy.html" target="_blank">Acceptable Use Policy</a>
+      </p>
+    </footer>
+
+    <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
+    <script src="../scripts/common.js"></script>
+    <script>
+      window.extensionBridge.register({
+        init: function(info) {
+          if (info.settings) {}
+        },
+
+        getSettings: function() {
+          return {};
+        },
+
+        validate: function() {
+          return true;
+        }
+      });
+    </script>
+  </body>
+</html>

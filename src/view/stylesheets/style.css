@@ -1,0 +1,91 @@
+/**
+ * Copyright 2021 Yuhui. All rights reserved.
+ *
+ * Licensed under the GNU General Public License, Version 3.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.gnu.org/licenses/gpl-3.0.html
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+@font-face {
+  font-family: adobe-clean;
+  src: url(https://use.typekit.net/af/cb695f/000000000000000000017701/27/l?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3)
+  format("woff2"),url(https://use.typekit.net/af/cb695f/000000000000000000017701/27/d?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3)
+  format("woff"),url(https://use.typekit.net/af/cb695f/000000000000000000017701/27/a?primer=7cdcb44be4a7db8877ffa5c0007b8dd865b3bbc383831fe2ea177f62257a9191&fvd=n4&v=3)
+  format("opentype");
+  font-weight: 400;
+  font-style: normal;
+}
+
+h4 {
+  text-align: center;
+  margin: 25px 0;
+}
+
+.content-separator {
+  padding-top: 0rem;
+  padding-bottom: 0rem;
+}
+
+.text-underline {
+  text-decoration: underline;
+}
+
+.hide {
+  display: none;
+}
+
+.show {
+  display: block;
+}
+
+.hide-content {
+  visibility: hidden;
+}
+
+.show-content {
+  visibility: visible;
+}
+
+.error-message {
+  color: #ff0000;
+  font-weight: bold;
+}
+
+.max-width {
+  display: flex !important;
+}
+  .max-width label {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    flex: 1 !important;
+  }
+    .max-width label input[type="text"] {
+      width: 100% !important;
+    }
+  .max-width a {
+    margin-left: 0.5rem;
+  }
+
+path.a {
+  fill: #6E6E6E;
+}
+
+footer.footer {
+  color: dimgray;
+  line-height: 0.6em;
+  padding-top: 5rem;
+}
+  footer.footer ul {
+    line-height: 1.4em;
+  }
+  footer.footer a {
+    color: royalblue;
+  }
