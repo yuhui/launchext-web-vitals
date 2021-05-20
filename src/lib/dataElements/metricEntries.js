@@ -17,21 +17,16 @@
 'use strict';
 
 /**
- * Return a base `event` object for use with data element unit testing.
+ * Entries data element.
+ * This data element returns an array of the performance entries used in the metric's value
+ * calculation.
+ *
+ * @param {Object} settings The data element settings object.
+ * @param {Object} event The event that triggered the evaluation of the data element.
+ * @returns {Array}
  */
-module.exports = function() {
-  var baseEvent = {
-    webvitals: {
-      id: 'v1-1621390039209-9647315286660',
-      name: 'FCP',
-      fullName: 'First Contentful Paint',
-      delta: 866.8799999868497,
-      value: 2125.6949999951757,
-      entries: [
-        jasmine.createSpyObj('PerformancePaintTiming', ['apply', 'bind', 'call', 'toString'])
-      ],
-    },
-  };
-
-  return baseEvent;
+module.exports = function(settings, event) {
+  if (event && event.webvitals) {
+    return event.webvitals.entries;
+  }
 };

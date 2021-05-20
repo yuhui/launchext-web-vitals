@@ -87,6 +87,7 @@ var getWebVitalsMetricData = function(webVitalsMetric, data) {
     fullName: webVitalsMetric,
     delta: data.delta,
     value: data.value,
+    entries: data.entries,
   };
 
   return metricData;

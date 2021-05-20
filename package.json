@@ -1,12 +1,12 @@
 {
   "name": "launchext-web-vitals",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Measure page quality signals from Web Vitals (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
   "author": "Yuhui",
   "license": "GPL-3.0-or-later",
   "main": "main.js",
   "devDependencies": {
-    "@adobe/reactor-sandbox": "^11.1.6",
+    "@adobe/reactor-sandbox": "^11.1.7",
     "eslint": "^7.26.0",
     "jasmine": "^3.7.0",
     "proxyquire": "^2.1.3"

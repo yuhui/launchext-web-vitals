@@ -1,3 +1,8 @@
+1.0.1 (released 20 May 2021)
+-----------------------------
+
+- Add missing Metric Entries data element.
+
 1.0.0 (released 19 May 2021)
 -----------------------------
 
