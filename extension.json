@@ -2,7 +2,7 @@
   "displayName": "Web Vitals",
   "name": "web-vitals-js",
   "platform": "web",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Measure page quality signals from Web Vitals (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
   "author": {
     "name": "Yuhui",
@@ -17,7 +17,41 @@
     "schema": {
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
-      "properties": {}
+      "properties": {
+        "reportAllChangesCLS": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "no"
+        },
+        "reportAllChangesFCP": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "no"
+        },
+        "reportAllChangesFID": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "no"
+        },
+        "reportAllChangesLCP": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "no"
+        },
+        "reportAllChangesTTFB": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "no"
+        }
+      },
+      "required": [
+        "reportAllChangesCLS",
+        "reportAllChangesFCP",
+        "reportAllChangesFID",
+        "reportAllChangesLCP",
+        "reportAllChangesTTFB"
+      ],
+      "additionalProperties": false
     }
   },
   "events": [
@@ -28,7 +62,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/events/cumulativeLayoutShift.js",
       "viewPath": "events/cumulativeLayoutShift.html"
@@ -40,7 +75,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/events/firstInputDelay.js",
       "viewPath": "events/firstInputDelay.html"
@@ -52,7 +88,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/events/largestContentfulPaint.js",
       "viewPath": "events/largestContentfulPaint.html"
@@ -64,7 +101,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/events/firstContentfulPaint.js",
       "viewPath": "events/firstContentfulPaint.html"
@@ -76,7 +114,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/events/timeToFirstByte.js",
       "viewPath": "events/timeToFirstByte.html"
@@ -90,7 +129,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/dataElements/metricDelta.js",
       "viewPath": "dataElements/metricDelta.html"
@@ -102,7 +142,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/dataElements/metricEntries.js",
       "viewPath": "dataElements/metricEntries.html"
@@ -114,7 +155,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/dataElements/metricFullName.js",
       "viewPath": "dataElements/metricFullName.html"
@@ -126,7 +168,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/dataElements/metricId.js",
       "viewPath": "dataElements/metricId.html"
@@ -138,7 +181,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/dataElements/metricName.js",
       "viewPath": "dataElements/metricName.html"
@@ -150,7 +194,8 @@
       "schema": {
         "$schema": "http://json-schema.org/draft-04/schema#",
         "type": "object",
-        "properties": {}
+        "properties": {},
+        "additionalProperties": false
       },
       "libPath": "src/lib/dataElements/metricValue.js",
       "viewPath": "dataElements/metricValue.html"
