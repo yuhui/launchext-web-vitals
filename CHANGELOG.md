@@ -1,3 +1,12 @@
+1.1.1 (released 21 September 2021)
+-----------------------------
+
+- Updated views' styles to use [Adobe Coral 4.5.0](https://opensource.adobe.com/coral-spectrum/documentation/).
+- Updated properties in extension.json.
+
+1.1.0 (rejected by Adobe)
+-------------------------
+
 1.0.1 (released 20 May 2021)
 -----------------------------
 
