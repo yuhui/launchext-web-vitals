@@ -16,23 +16,20 @@
 
 'use strict';
 
-/**
- * Return a `webVitals` spy object for use with event unit testing.
- */
-module.exports = () => {
-  const webVitalsSpyObj = jasmine.createSpyObj(
-    [
-      'registerEventStateTrigger',
-    ],
-    {
-      cls: 'Cumulative Layout Shift',
-      fid: 'First Input Delay',
-      fcp: 'First Contentful Paint',
-      inp: 'Interaction to Next Paint',
-      lcp: 'Largest Contentful Paint',
-      ttfb: 'Time to First Byte',
-    }
-  );
+const webVitals = require('../helpers/webVitals');
 
-  return webVitalsSpyObj;
+/**
+ * Web Vitals Interaction to Next Paint metric event.
+ * This event occurs with every click, tap and keyboard interaction made with the page.
+ *
+ * @param {Object} settings The event settings object.
+ * @param {ruleTrigger} trigger The trigger callback.
+ */
+module.exports = function(settings, trigger) {
+  const { registerEventStateTrigger, inp } = webVitals;
+  registerEventStateTrigger(
+    inp,
+    settings,
+    trigger
+  );
 };

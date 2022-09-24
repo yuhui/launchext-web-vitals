@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2022 Yuhui. All rights reserved.
+ * Copyright 2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,14 @@
 'use strict';
 
 /**
- * Name data element.
- * This data element returns the name of the metric (in acronym form).
- * This name is one of the following:
- * - 'CLS'
- * - 'FCP'
- * - 'FID'
- * - 'INP'
- * - 'LCP'
- * - 'TTFB'
+ * Navigation Type data element.
+ * This data element returns the navigation type of the metric.
+ * This rating is one of the following:
+ * - 'navigate'
+ * - 'reload'
+ * - 'back-forward'
+ * - 'back-forward-cache'
+ * - 'prerender'
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
@@ -36,5 +35,5 @@ module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
     return;
   }
-  return webvitals.name;
+  return webvitals.navigationType;
 };

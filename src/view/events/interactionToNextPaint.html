@@ -2,7 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8">
-    <title>Largest Contentful Paint Event</title>
+    <title>Interaction to Next Paint Event</title>
     <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
     <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
@@ -13,17 +13,16 @@
     <section class="coral-Well">
       <h4 class="coral-Heading--S coral-Heading--light">How this Event works</h4>
       <p>
-        This Event is triggered at the point in the current page's load timeline when its main
-        content has likely loaded.
-        <a class="coral-Link" href="https://web.dev/lcp/" target="_blank" rel="noopener noreferrer">
-          Learn more about Largest Contentful Paint (LCP).
+        This Event is triggered when the user's browser responds to the user's first interaction
+        on the current page.
+        <a class="coral-Link" href="https://web.dev/inp/" target="_blank" rel="noopener noreferrer">
+          Learn more about Interaction to Next Paint (INP).
         </a>
       </p>
       <p>
-        In most cases, you will need to report only the delta (the difference between the current
-        value and the last-reported value). You can then compute the total value by summing all
-        metric deltas sent with the same ID in your analytics system.
-        <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#report-only-the-delta-of-changes" target="_blank" rel="noopener noreferrer">
+        Interaction to Next Paint (INP) should be continually monitored for changes throughout the
+        entire lifespan of a page.
+        <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#oninp" target="_blank" rel="noopener noreferrer">
           Learn more.
         </a>
       </p>
@@ -92,7 +91,7 @@
               String
             </td>
             <td is="coral-table-cell">
-              Name of the measured metric in acronym form: <code class="coral-Code--S">LCP</code>.
+              Name of the measured metric in acronym form: <code class="coral-Code--S">INP</code>.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -103,8 +102,8 @@
               String
             </td>
             <td is="coral-table-cell">
-              Full name of the measured metric: <code class="coral-Code--S">Largest
-              Contentful Paint</code>.
+              Full name of the measured metric: <code class="coral-Code--S">Interaction
+              to Next Paint</code>.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -150,7 +149,7 @@
               Metric Entries
             </td>
             <td is="coral-table-cell">
-              Array of <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint" target="_blank" rel="noopener noreferrer">LargestContentfulPaints</a>
+              Array of <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEventTiming" target="_blank" rel="noopener noreferrer">PerformanceEventTimings</a>
             </td>
             <td is="coral-table-cell">
               Array of the performance entries used in the measured metric's value calculation.
@@ -188,14 +187,11 @@
               Refer to the "Metric Attribution" Data Element type in this extension for
               more information about the allowed attributions:
               <ul class="coral-List">
-                <li class="coral-List-item">Element</li>
-                <li class="coral-List-item">URL</li>
-                <li class="coral-List-item">Time to First Byte</li>
-                <li class="coral-List-item">Resource Load Delay</li>
-                <li class="coral-List-item">Resource Load Time</li>
-                <li class="coral-List-item">Element Render Delay</li>
-                <li class="coral-List-item">Navigation Type</li>
-                <li class="coral-List-item">LCP Resource Entry</li>
+                <li class="coral-List-item">Event Target</li>
+                <li class="coral-List-item">Event Time</li>
+                <li class="coral-List-item">Event Type</li>
+                <li class="coral-List-item">Event Entry</li>
+                <li class="coral-List-item">Load State</li>
               </ul>
             </td>
           </tr>
@@ -230,7 +226,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2021-2022 Yuhui. All rights reserved.
+        Copyright &copy; 2022 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
@@ -241,7 +237,6 @@
     </footer>
 
     <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
-    <script src="../scripts/common.js"></script>
     <script>
       window.extensionBridge.register({
         init: (info) => {

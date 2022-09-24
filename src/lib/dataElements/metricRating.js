@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2022 Yuhui. All rights reserved.
+ * Copyright 2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,21 @@
 'use strict';
 
 /**
- * Return a `webVitals` spy object for use with event unit testing.
+ * Rating data element.
+ * This data element returns the rating of the metric.
+ * This rating is one of the following:
+ * - 'good'
+ * - 'needs-improvement'
+ * - 'poor'
+ *
+ * @param {Object} settings The data element settings object.
+ * @param {Object} event The event that triggered the evaluation of the data element.
+ * @param {Object} [event.webvitals=null] The event's data.
+ * @returns {String}
  */
-module.exports = () => {
-  const webVitalsSpyObj = jasmine.createSpyObj(
-    [
-      'registerEventStateTrigger',
-    ],
-    {
-      cls: 'Cumulative Layout Shift',
-      fid: 'First Input Delay',
-      fcp: 'First Contentful Paint',
-      inp: 'Interaction to Next Paint',
-      lcp: 'Largest Contentful Paint',
-      ttfb: 'Time to First Byte',
-    }
-  );
-
-  return webVitalsSpyObj;
+module.exports = function(settings, { webvitals = null }) {
+  if (!webvitals) {
+    return;
+  }
+  return webvitals.rating;
 };

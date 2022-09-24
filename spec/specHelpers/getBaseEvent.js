@@ -25,11 +25,16 @@ module.exports = () => {
       id: 'v1-1621390039209-9647315286660',
       name: 'FCP',
       fullName: 'First Contentful Paint',
+      navigationType: 'navigate',
+      rating: 'good',
       delta: 866.8799999868497,
       value: 2125.6949999951757,
       entries: [
         jasmine.createSpyObj('PerformancePaintTiming', ['apply', 'bind', 'call', 'toString']),
       ],
+      attribution: {
+        loadState: 'completed',
+      },
     },
   };
 

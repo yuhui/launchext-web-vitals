@@ -26,6 +26,9 @@
             <coral-switch name="reportAllChangesFID" value="yes">
               First Input Delay (FID)
             </coral-switch>
+            <coral-switch name="reportAllChangesINP" value="yes" checked="">
+              Interaction to Next Paint (INP)
+            </coral-switch>
             <coral-switch name="reportAllChangesLCP" value="yes">
               Largest Contentful Paint (LCP)
             </coral-switch>
@@ -36,6 +39,24 @@
         </div>
       </div>
 
+      <div id="duration-threshold-container" class="coral-FormGroup-item">
+        <label for="duration-threshold-inp" class="coral-FormGroup-itemLabel">
+          Duration threshold for Interaction to Next Paint (INP)
+          <coral-icon icon="Asterisk" class="coral-FieldLabel-requiredIcon" size="XXS" alt="required"></coral-icon>
+        </label>
+        <div class="coral-InputGroup" style="width: 100%;" role="presentation">
+          <input id="duration-threshold-inp" name="durationThresholdINP" value="40" class="coral-InputGroup-input" is="coral-textfield">
+          <coral-icon icon="info" title="Info" size="S"></coral-icon>
+          <coral-tooltip target="_prev" variant="info" placement="right" offset="8">
+            A custom duration threshold can be passed to control what event-timing entries are
+            considered for INP reporting. The default threshold is 40, which means INP scores of
+            less than 40 are reported as 0. Note that this will not affect your 75th percentile INP
+            value unless that value is also less than 40 (well below the recommended good
+            threshold).
+          </coral-tooltip>
+        </div>
+      </div>
+
       <p>
         In most cases, you only want to report the metric when it is ready to be reported.
         However, you can report every change (e.g. each layout shift as it happens), for
@@ -43,6 +64,13 @@
         recommended).
         <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#report-the-value-on-every-change" target="_blank" rel="noopener noreferrer">
           Learn more.
+        </a>
+      </p>
+      <p>
+        <b>The exception is with Interaction to Next Paint (INP).</b> INP should be continually
+        monitored for changes throughout the entire lifespan of a page.
+        <a class="coral-Link" href="https://web.dev/inp/" target="_blank" rel="noopener noreferrer">
+          Learn more about Interaction to Next Paint (INP).
         </a>
       </p>
     </form>
@@ -73,6 +101,11 @@
           <li class="coral-List-item">
             <a class="coral-Link" href="https://web.dev/fid/" target="_blank" rel="noopener noreferrer">
               First Input Delay (FID)
+            </a>
+          </li>
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://web.dev/inp/" target="_blank" rel="noopener noreferrer">
+              Interaction to Next Paint (INP)
             </a>
           </li>
           <li class="coral-List-item">
@@ -167,6 +200,17 @@
         init: (info) => {
           const { settings } = info;
           if (settings) {
+            const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+            // this setting was added in v1.2.0
+            if (
+              !hasOwnProperty.call(settings, 'reportAllChangesINP')
+              || !hasOwnProperty.call(settings, 'durationThresholdINP')
+            ) {
+              info.settings.reportAllChangesINP = 'yes';
+              info.settings.durationThresholdINP = 40;
+            }
+
             setFormValues(FORM_ID, info.settings);
           }
         },
@@ -174,9 +218,11 @@
         getSettings: () => {
           const formValues = getFormValues(FORM_ID);
           const {
+            durationThresholdINP,
             reportAllChangesCLS,
             reportAllChangesFCP,
             reportAllChangesFID,
+            reportAllChangesINP,
             reportAllChangesLCP,
             reportAllChangesTTFB,
           } = formValues;
@@ -191,6 +237,9 @@
           if (reportAllChangesFID === '') {
             formValues.reportAllChangesFID = 'no';
           }
+          if (reportAllChangesINP === '') {
+            formValues.reportAllChangesINP = 'no';
+          }
           if (reportAllChangesLCP === '') {
             formValues.reportAllChangesLCP = 'no';
           }
@@ -198,28 +247,47 @@
             formValues.reportAllChangesTTFB = 'no';
           }
 
+          formValues.durationThresholdINP = stringToInteger(durationThresholdINP);
+
           return formValues;
         },
 
         validate: () => {
           const formValues = getFormValues(FORM_ID);
           const {
+            durationThresholdINP,
             reportAllChangesCLS,
             reportAllChangesFCP,
             reportAllChangesFID,
+            reportAllChangesINP,
             reportAllChangesLCP,
             reportAllChangesTTFB,
           } = formValues;
 
+          const durationThresholdINPNum = stringToInteger(durationThresholdINP);
+          const durationThresholdINPNumIsNotNull = durationThresholdINPNum !== null;
+          const durationThresholdINPNumIsInteger = durationThresholdINPNumIsNotNull
+            ? valueIsInteger(durationThresholdINPNum)
+            : false;
+          const durationThresholdINPNumIsPercentile = durationThresholdINPNumIsInteger
+            ? (durationThresholdINPNumIsInteger >= 0 && durationThresholdINPNumIsInteger <= 100)
+            : false;
+          const durationThresholdINPIsValid = durationThresholdINPNumIsNotNull
+            && durationThresholdINPNumIsInteger
+            && durationThresholdINPNumIsPercentile;
+
           const reportAllChangesCLSIsValid = ['', 'yes'].includes(reportAllChangesCLS);
           const reportAllChangesFCPIsValid = ['', 'yes'].includes(reportAllChangesFCP);
           const reportAllChangesFIDIsValid = ['', 'yes'].includes(reportAllChangesFID);
+          const reportAllChangesINPIsValid = ['', 'yes'].includes(reportAllChangesINP);
           const reportAllChangesLCPIsValid = ['', 'yes'].includes(reportAllChangesLCP);
           const reportAllChangesTTFBIsValid = ['', 'yes'].includes(reportAllChangesTTFB);
 
-          return reportAllChangesCLSIsValid
+          return durationThresholdINPIsValid
+            && reportAllChangesCLSIsValid
             && reportAllChangesFCPIsValid
             && reportAllChangesFIDIsValid
+            && reportAllChangesINPIsValid
             && reportAllChangesLCPIsValid
             && reportAllChangesTTFBIsValid;
         }

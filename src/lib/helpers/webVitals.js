@@ -141,6 +141,14 @@ const triggerFID = (data) => {
 };
 
 /**
+ * Callback function when Interaction to Next Paint (INP) has been measured.
+ */
+const triggerINP = (data) => {
+  logger.info('Web Vitals INP measured.');
+  processTriggers(INTERACTION_TO_NEXT_PAINT, data);
+};
+
+/**
  * Callback function when Largest Contentful Paint (LCP) has been measured.
  */
 const triggerLCP = (data) => {
@@ -162,16 +170,20 @@ const triggerTTFB = (data) => {
  * Returns with an error log if the script could not be loaded.
  *
  * @param {Object} settings The configuration settings object.
+ * @param {number} [settings.durationThresholdINP=40] Duration threshold for INP.
  * @param {number} [settings.reportAllChangesCLS=no] Whether to report all CLS changes.
  * @param {number} [settings.reportAllChangesFCP=no] Whether to report all FCP changes.
  * @param {number} [settings.reportAllChangesFID=no] Whether to report all FID changes.
+ * @param {number} [settings.reportAllChangesINP=yes] Whether to report all INP changes.
  * @param {number} [settings.reportAllChangesLCP=no] Whether to report all LCP changes.
  * @param {number} [settings.reportAllChangesTTFB=no] Whether to report all TTFB changes.
  */
 const loadWebVitals = function({
+  durationThresholdINP = 40,
   reportAllChangesCLS = 'no',
   reportAllChangesFCP = 'no',
   reportAllChangesFID = 'no',
+  reportAllChangesINP = 'yes',
   reportAllChangesLCP = 'no',
   reportAllChangesTTFB = 'no',
 }) {
@@ -188,6 +200,10 @@ const loadWebVitals = function({
     webVitals.onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
     webVitals.onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
     webVitals.onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
+    webVitals.onINP(triggerINP, {
+      reportAllChanges: reportAllChangesINP === 'yes',
+      durationThreshold: durationThresholdINP,
+    });
     webVitals.onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
     webVitals.onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
   }, () => {
@@ -204,6 +220,7 @@ module.exports = {
   cls: CUMULATIVE_LAYOUT_SHIFT,
   fid: FIRST_INPUT_DELAY,
   fcp: FIRST_CONTENTFUL_PAINT,
+  inp: INTERACTION_TO_NEXT_PAINT,
   lcp: LARGEST_CONTENTFUL_PAINT,
   ttfb: TIME_TO_FIRST_BYTE,
 
