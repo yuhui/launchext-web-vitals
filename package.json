@@ -5,6 +5,9 @@
   "author": "Yuhui",
   "license": "GPL-3.0-or-later",
   "main": "main.js",
+  "dependencies": {
+    "@adobe/coral-spectrum": "^4.15.1"
+  },
   "devDependencies": {
     "@adobe/reactor-packager": "^4.2.0",
     "@adobe/reactor-releaser": "^3.0.3",
