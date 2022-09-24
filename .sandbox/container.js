@@ -6,8 +6,10 @@ module.exports = {
         "reportAllChangesCLS": "yes",
         "reportAllChangesFCP": "no",
         "reportAllChangesFID": "no",
+        "reportAllChangesINP": "yes",
         "reportAllChangesLCP": "no",
-        "reportAllChangesTTFB": "no"
+        "reportAllChangesTTFB": "no",
+        "durationThresholdINP": 40
       }
     }
   },
@@ -36,12 +38,24 @@ module.exports = {
   },
   "rules": [{
     "id": "RL1621174335540",
-    "name": "Cumulative Layout Shift (CLS), Largest Contentful Paint (LCP)",
+    "name": "Cumulative Layout Shift (CLS), First Contentful Paint (FCP), First Input Delay (FID), Interaction to Next Paint (INP), Largest Contentful Paint (LCP), Time to First Byte (TTFB)",
     "events": [{
       "modulePath": "web-vitals-js/src/lib/events/cumulativeLayoutShift.js",
       "settings": {}
     }, {
+      "modulePath": "web-vitals-js/src/lib/events/firstContentfulPaint.js",
+      "settings": {}
+    }, {
+      "modulePath": "web-vitals-js/src/lib/events/firstInputDelay.js",
+      "settings": {}
+    }, {
+      "modulePath": "web-vitals-js/src/lib/events/interactionToNextPaint.js",
+      "settings": {}
+    }, {
       "modulePath": "web-vitals-js/src/lib/events/largestContentfulPaint.js",
+      "settings": {}
+    }, {
+      "modulePath": "web-vitals-js/src/lib/events/timeToFirstByte.js",
       "settings": {}
     }],
     "actions": [{
@@ -60,10 +74,14 @@ module.exports = {
   "company": {
     "orgId": "ABCDEFGHIJKLMNOPQRSTUVWX@AdobeOrg"
   },
+  "environment": {
+    "id": "EN00000000000000000000000000000000",
+    "stage": "development"
+  },
   "buildInfo": {
-    "turbineVersion": "26.0.2",
-    "turbineBuildDate": "2021-05-16T14:12:54.209Z",
-    "buildDate": "2021-05-16T14:12:54.209Z",
+    "turbineVersion": "27.2.1",
+    "turbineBuildDate": "2022-09-18T13:56:08.029Z",
+    "buildDate": "2022-09-18T13:56:08.029Z",
     "environment": "development"
   }
 }
