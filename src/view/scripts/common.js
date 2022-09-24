@@ -112,6 +112,28 @@ function setFormValues(formId, formValues) {
     } else {
       form[fieldName].value = fieldValue;
     }
+
+    /**
+    * IMPORTANT!
+    * Coral's <coral-select> and <coral-autocomplete> include a <input> that contains the selected
+    * value.
+    * Since that <input> isn't a <select>, the <coral-select> / <coral-autocomplete> will show its
+    * default value.
+    * So the <coral-select> / <coral-autocomplete>'s value needs to be updated to match its <input>
+    * value.
+    */
+    const coralSelectSelector = `coral-select[name="${fieldName}"]`;
+    const coralAutocompleteSelector = `coral-autocomplete[name="${fieldName}"]`;
+    const coralSelectAutocompleteSelector = `${coralSelectSelector},${coralAutocompleteSelector}`;
+    const coralSelect = document.querySelector(`${coralSelectAutocompleteSelector}`);
+
+    if (coralSelect) {
+      const coralSelectItemSelector = `coral-select-item[value="${fieldValue}"]`;
+      const coralAutocompleteItemSelector = `coral-autocomplete-item[value="${fieldValue}"]`;
+      const coralItemSelector = `${coralSelectItemSelector},${coralAutocompleteItemSelector}`;
+      const coralItem = coralSelect.querySelector(coralItemSelector);
+      coralItem.selected = 'selected';
+    }
   });
 }
 
