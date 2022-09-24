@@ -16,7 +16,7 @@
 
 'use strict';
 
-var webVitals = require('../helpers/webVitals');
+const webVitals = require('../helpers/webVitals');
 
 /**
  * Web Vitals Largest Contentful Paint metric event.
@@ -26,9 +26,10 @@ var webVitals = require('../helpers/webVitals');
  * @param {Object} settings The event settings object.
  * @param {ruleTrigger} trigger The trigger callback.
  */
- module.exports = function(settings, trigger) {
-  webVitals.registerEventStateTrigger(
-    webVitals.lcp,
+module.exports = function(settings, trigger) {
+  const { registerEventStateTrigger, lcp } = webVitals;
+  registerEventStateTrigger(
+    lcp,
     settings,
     trigger
   );

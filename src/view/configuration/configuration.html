@@ -160,57 +160,67 @@
     <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
     <script src="../scripts/common.js"></script>
     <script>
-      var FORM_ID = 'extension-configuration';
+      const FORM_ID = 'extension-configuration';
 
       window.extensionBridge.register({
-        init: function(info) {
-          if (info.settings) {
+        init: (info) => {
+          const { settings } = info;
+          if (settings) {
             setFormValues(FORM_ID, info.settings);
           }
         },
 
-        getSettings: function() {
-          var formValues = getFormValues(FORM_ID);
+        getSettings: () => {
+          const formValues = getFormValues(FORM_ID);
+          const {
+            reportAllChangesCLS,
+            reportAllChangesFCP,
+            reportAllChangesFID,
+            reportAllChangesLCP,
+            reportAllChangesTTFB,
+          } = formValues;
 
           // rewrite value so as not to deal with empty strings
-          if (formValues.reportAllChangesCLS === '') {
+          if (reportAllChangesCLS === '') {
             formValues.reportAllChangesCLS = 'no';
           }
-          if (formValues.reportAllChangesFCP === '') {
+          if (reportAllChangesFCP === '') {
             formValues.reportAllChangesFCP = 'no';
           }
-          if (formValues.reportAllChangesFID === '') {
+          if (reportAllChangesFID === '') {
             formValues.reportAllChangesFID = 'no';
           }
-          if (formValues.reportAllChangesLCP === '') {
+          if (reportAllChangesLCP === '') {
             formValues.reportAllChangesLCP = 'no';
           }
-          if (formValues.reportAllChangesTTFB === '') {
+          if (reportAllChangesTTFB === '') {
             formValues.reportAllChangesTTFB = 'no';
           }
 
           return formValues;
         },
 
-        validate: function() {
-          var formValues = getFormValues(FORM_ID);
-          var reportAllChangesCLS = formValues.reportAllChangesCLS;
-          var reportAllChangesFCP = formValues.reportAllChangesFCP;
-          var reportAllChangesFID = formValues.reportAllChangesFID;
-          var reportAllChangesLCP = formValues.reportAllChangesLCP;
-          var reportAllChangesTTFB = formValues.reportAllChangesTTFB;
+        validate: () => {
+          const formValues = getFormValues(FORM_ID);
+          const {
+            reportAllChangesCLS,
+            reportAllChangesFCP,
+            reportAllChangesFID,
+            reportAllChangesLCP,
+            reportAllChangesTTFB,
+          } = formValues;
 
-          var reportAllChangesCLSIsValid = ['', 'yes'].indexOf(reportAllChangesCLS) > -1;
-          var reportAllChangesFCPIsValid = ['', 'yes'].indexOf(reportAllChangesFCP) > -1;
-          var reportAllChangesFIDIsValid = ['', 'yes'].indexOf(reportAllChangesFID) > -1;
-          var reportAllChangesLCPIsValid = ['', 'yes'].indexOf(reportAllChangesLCP) > -1;
-          var reportAllChangesTTFBIsValid = ['', 'yes'].indexOf(reportAllChangesTTFB) > -1;
+          const reportAllChangesCLSIsValid = ['', 'yes'].includes(reportAllChangesCLS);
+          const reportAllChangesFCPIsValid = ['', 'yes'].includes(reportAllChangesFCP);
+          const reportAllChangesFIDIsValid = ['', 'yes'].includes(reportAllChangesFID);
+          const reportAllChangesLCPIsValid = ['', 'yes'].includes(reportAllChangesLCP);
+          const reportAllChangesTTFBIsValid = ['', 'yes'].includes(reportAllChangesTTFB);
 
-          return reportAllChangesCLSIsValid &&
-            reportAllChangesFCPIsValid &&
-            reportAllChangesFIDIsValid &&
-            reportAllChangesLCPIsValid &&
-            reportAllChangesTTFBIsValid;
+          return reportAllChangesCLSIsValid
+            && reportAllChangesFCPIsValid
+            && reportAllChangesFIDIsValid
+            && reportAllChangesLCPIsValid
+            && reportAllChangesTTFBIsValid;
         }
       });
     </script>

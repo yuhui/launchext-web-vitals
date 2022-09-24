@@ -16,7 +16,7 @@
 
 'use strict';
 
-var webVitals = require('../helpers/webVitals');
+const webVitals = require('../helpers/webVitals');
 
 /**
  * Web Vitals First Input Delay metric event.
@@ -26,8 +26,9 @@ var webVitals = require('../helpers/webVitals');
  * @param {ruleTrigger} trigger The trigger callback.
  */
 module.exports = function(settings, trigger) {
-  webVitals.registerEventStateTrigger(
-    webVitals.fid,
+  const { registerEventStateTrigger, fid } = webVitals;
+  registerEventStateTrigger(
+    fid,
     settings,
     trigger
   );

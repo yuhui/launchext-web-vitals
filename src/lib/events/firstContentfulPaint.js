@@ -16,7 +16,7 @@
 
 'use strict';
 
-var webVitals = require('../helpers/webVitals');
+const webVitals = require('../helpers/webVitals');
 
 /**
  * Web Vitals First Contentful Paint metric event.
@@ -27,8 +27,9 @@ var webVitals = require('../helpers/webVitals');
  * @param {ruleTrigger} trigger The trigger callback.
  */
 module.exports = function(settings, trigger) {
-  webVitals.registerEventStateTrigger(
-    webVitals.fcp,
+  const { registerEventStateTrigger, fcp } = webVitals;
+  registerEventStateTrigger(
+    fcp,
     settings,
     trigger
   );

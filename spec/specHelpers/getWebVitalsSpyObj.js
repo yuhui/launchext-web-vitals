@@ -19,8 +19,8 @@
 /**
  * Return a `webVitals` spy object for use with event unit testing.
  */
-module.exports = function() {
-  var webVitalsSpyObj = jasmine.createSpyObj(
+module.exports = () => {
+  const webVitalsSpyObj = jasmine.createSpyObj(
     [
       'registerEventStateTrigger',
     ],

@@ -18,41 +18,42 @@
 
 /** Get the form */
 function getForm(formId) {
-  var form = document.getElementById(formId);
+  const form = document.getElementById(formId);
   return form;
 }
 
 /** Get the values from the form */
 function getFormValues(formId) {
-  var formValues = {};
+  const formValues = {};
 
-  var form = getForm(formId);
+  const form = getForm(formId);
   if (!form || form.nodeName !== 'FORM') {
     return formValues;
   }
 
-  for (var i = 0, j = form.elements.length; i < j; i++) {
-    var formElement = form.elements[i];
-    if (formElement.name === '') {
-      continue;
+  [...form.elements].forEach((formElement) => {
+    const { checked, name, nodeName, options, type, value } = formElement;
+    if (name === '') {
+      return;
     }
-    switch (formElement.nodeName) {
+
+    switch (nodeName) {
       case 'INPUT':
-        switch (formElement.type) {
+        switch (type) {
           case 'text':
           case 'hidden':
           case 'password':
           case 'button':
           case 'reset':
           case 'submit':
-            formValues[formElement.name] = formElement.value;
+            formValues[name] = value;
             break;
           case 'checkbox':
           case 'radio':
-            if (formElement.checked) {
-              formValues[formElement.name] = formElement.value;
-            } else if (formElement.type === 'checkbox') {
-              formValues[formElement.name] = '';
+            if (checked) {
+              formValues[name] = value;
+            } else if (type === 'checkbox') {
+              formValues[name] = '';
             }
             break;
         }
@@ -60,33 +61,34 @@ function getFormValues(formId) {
       case 'file':
         break;
       case 'TEXTAREA':
-        formValues[formElement.name] = formElement.value;
+        formValues[name] = value;
         break;
       case 'SELECT':
-        switch (formElement.type) {
+        switch (type) {
           case 'select-one':
-            formValues[formElement.name] = formElement.value;
+            formValues[name] = value;
             break;
           case 'select-multiple':
-            for (var k = 0, l = formElement.options.length; k < l; k++) {
-              if (formElement.options[k].selected) {
-                formValues[formElement.name] = formElement.options[j].value;
+            options.forEach((option) => {
+              const {selected, value} = option;
+              if (selected) {
+                formValues[name] = value;
               }
-            }
+            });
             break;
         }
         break;
       case 'BUTTON':
-        switch (formElement.type) {
+        switch (type) {
           case 'reset':
           case 'submit':
           case 'button':
-            formValues[formElement.name] = formElement.value;
+            formValues[name] = value;
             break;
         }
         break;
     }
-  }
+  });
 
   return formValues;
 }
@@ -94,40 +96,60 @@ function getFormValues(formId) {
 /** Set the values in the form */
 // eslint-disable-next-line no-unused-vars
 function setFormValues(formId, formValues) {
-  var form = getForm(formId);
-  var formFields = getFormFields(formId);
-  for (var i = 0, j = formFields.length; i < j; i++) {
-    var field = formFields[i];
-    if (field in formValues) {
-      if (form[field].type === 'checkbox') {
-        form[field].checked = formValues[field] === form[field].value ? true : false;
-      } else {
-        form[field].value = formValues[field];
-      }
+  const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+  const form = getForm(formId);
+  const formFieldNames = getFormFieldNames(formId);
+  formFieldNames.forEach((fieldName) => {
+    if (!hasOwnProperty.call(formValues, fieldName)) {
+      return;
     }
-  }
+
+    const fieldValue = formValues[fieldName];
+
+    if (form[fieldName].type === 'checkbox') {
+      form[fieldName].checked = form[fieldName].value === fieldValue;
+    } else {
+      form[fieldName].value = fieldValue;
+    }
+  });
 }
 
-/** Get the fields in the form */
+/** Get the names of fields in the form */
 // eslint-disable-next-line no-unused-vars
-function getFormFields(formId) {
-  var formValues = getFormValues(formId);
+function getFormFieldNames(formId) {
+  const formValues = getFormValues(formId);
   return Object.keys(formValues);
 }
 
 /** Check if a form value is a data element token */
 // eslint-disable-next-line no-unused-vars
 function isDataElementToken(formValue) {
-  return /^%.+%$/.test(formValue);
+  return /^%([^%]+)%$/.test(formValue);
+}
+
+/** Convert a string value to an integer */
+// eslint-disable-next-line no-unused-vars
+function stringToInteger(value) {
+  const numberMatch = value.match(/([0-9]+)/);
+  return numberMatch ? parseInt(numberMatch[1], 10) : null;
+}
+
+/** Check if a value is an integer */
+// eslint-disable-next-line no-unused-vars
+function valueIsInteger(value) {
+  return (`${value}`).length > 0
+    && !Number.isNaN(parseInt(value, 10))
+    && parseInt(value, 10) === Number(value);
 }
 
 /** Show or hide an element based on the value of a form field */
 // eslint-disable-next-line no-unused-vars
 function toggleElement(formId, toggleField, toggleValue, selectorToToggle) {
-  var formValues = getFormValues(formId);
-  var toggleFieldValue = formValues[toggleField];
+  const formValues = getFormValues(formId);
+  const toggleFieldValue = formValues[toggleField];
 
-  var elementToShowHide = document.querySelector(selectorToToggle);
+  const elementToShowHide = document.querySelector(selectorToToggle);
   if (toggleFieldValue === toggleValue) {
     elementToShowHide.classList.remove('hide');
     elementToShowHide.classList.add('show');
@@ -140,9 +162,10 @@ function toggleElement(formId, toggleField, toggleValue, selectorToToggle) {
 /** Show or hide an input's error message based on the validity of that input */
 // eslint-disable-next-line no-unused-vars
 function toggleInputErrorMessage(inputName, inputIsValid) {
-  var inputElement = document.querySelector('input[name="' + inputName + '"]');
-  var errorMessage =
-    inputElement.parentNode.parentNode.parentNode.parentNode.querySelector('span.error-message');
+  const inputElement = document.querySelector(`input[name="${inputName}"]`);
+  const inputElementGrandparentNode = inputElement.parentNode.parentNode;
+  const inputElementGreatGreatGrandparentNode = inputElementGrandparentNode.parentNode.parentNode;
+  const errorMessage = inputElementGreatGreatGrandparentNode.querySelector('span.error-message');
   if (inputIsValid) {
     inputElement.classList.remove('spectrum-Alert--error');
     errorMessage.classList.remove('show');

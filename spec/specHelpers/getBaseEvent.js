@@ -19,8 +19,8 @@
 /**
  * Return a base `event` object for use with data element unit testing.
  */
-module.exports = function() {
-  var baseEvent = {
+module.exports = () => {
+  const baseEvent = {
     webvitals: {
       id: 'v1-1621390039209-9647315286660',
       name: 'FCP',
@@ -28,7 +28,7 @@ module.exports = function() {
       delta: 866.8799999868497,
       value: 2125.6949999951757,
       entries: [
-        jasmine.createSpyObj('PerformancePaintTiming', ['apply', 'bind', 'call', 'toString'])
+        jasmine.createSpyObj('PerformancePaintTiming', ['apply', 'bind', 'call', 'toString']),
       ],
     },
   };

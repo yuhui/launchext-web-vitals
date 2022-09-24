@@ -16,40 +16,40 @@
 
 'use strict';
 
-describe('metricFullName data element delegate', function() {
-  var dataElementDelegate = require('../../../src/lib/dataElements/metricFullName');
-  var getBaseEvent = require('../../specHelpers/getBaseEvent');
+describe('metricFullName data element delegate', () => {
+  const dataElementDelegate = require('../../../src/lib/dataElements/metricFullName');
+  const getBaseEvent = require('../../specHelpers/getBaseEvent');
 
-  beforeEach(function() {
+  beforeEach(() => {
     this.event = getBaseEvent();
     this.settings = {}; // this data element does not have any custom settings
   });
 
-  describe('with invalid "event" argument', function() {
+  describe('with invalid "event" argument', () => {
     it(
       'should be undefined when "webvitals" property is missing',
-      function() {
+      () => {
         delete this.event.webvitals;
-        var result = dataElementDelegate(this.settings, this.event);
+        const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
       }
     );
 
     it(
       'should be undefined when "fullName" property is missing',
-      function() {
+      () => {
         delete this.event.webvitals.fullName;
-        var result = dataElementDelegate(this.settings, this.event);
+        const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
       }
     );
   });
 
-  describe('with valid "event" argument', function() {
+  describe('with valid "event" argument', () => {
     it(
       'should be a string',
-      function() {
-        var result = dataElementDelegate(this.settings, this.event);
+      () => {
+        const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeInstanceOf(String);
       }
     );

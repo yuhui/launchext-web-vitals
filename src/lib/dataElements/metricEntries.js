@@ -23,10 +23,12 @@
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
+ * @param {Object} [event.webvitals=null] The event's data.
  * @returns {Array}
  */
-module.exports = function(settings, event) {
-  if (event && event.webvitals) {
-    return event.webvitals.entries;
+module.exports = function(settings, { webvitals = null }) {
+  if (!webvitals) {
+    return;
   }
+  return webvitals.entries;
 };

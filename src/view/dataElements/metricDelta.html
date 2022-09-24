@@ -74,15 +74,15 @@
     <script src="../scripts/common.js"></script>
     <script>
       window.extensionBridge.register({
-        init: function(info) {
+        init: (info) => {
           if (info.settings) {}
         },
 
-        getSettings: function() {
+        getSettings: () => {
           return {};
         },
 
-        validate: function() {
+        validate: () => {
           return true;
         }
       });
