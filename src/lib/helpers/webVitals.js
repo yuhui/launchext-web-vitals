@@ -40,7 +40,8 @@ const WEB_VITALS_METRICS = [
 ];
 
 // constants related to setting up Web Vitals
-var WEB_VITALS_URL = 'https://unpkg.com/web-vitals';
+const WEB_VITALS_MAJOR_VERSION = '3.0';
+const WEB_VITALS_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
 
 // constants related to this Extension's settings
 const EXTENSION_SETTINGS = turbine.getExtensionSettings();
@@ -184,11 +185,11 @@ const loadWebVitals = function({
 
     logger.info('Web Vitals was loaded successfully.');
 
-    webVitals.getCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
-    webVitals.getFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
-    webVitals.getnFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
-    webVitals.getLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
-    webVitals.getTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
+    webVitals.onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
+    webVitals.onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
+    webVitals.onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
+    webVitals.onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
+    webVitals.onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
   }, () => {
     logger.error('Web Vitals could not be loaded.');
   });
