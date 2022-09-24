@@ -39,7 +39,7 @@
       <p>
         In most cases, you only want to report the metric when it is ready to be reported.
         However, you can report every change (e.g. each layout shift as it happens), for
-        example, when debugging. But in general, reporting all changes is not needed (or
+        example, when debugging. But in general, reporting all changes is not needed (nor
         recommended).
         <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#report-the-value-on-every-change" target="_blank" rel="noopener noreferrer">
           Learn more.
@@ -104,7 +104,7 @@
       </ol>
 
       <p>
-        This extension loads the required Web Vitals library, <code class="coral-Code--XS">webvitals.js</code>, when
+        This extension loads the required Web Vitals library, <code class="coral-Code--XS">web-vitals.js</code>, when
         the Launch library is loaded. No Rule Action is needed to do this.
       </p>
 
@@ -113,10 +113,10 @@
           Accuracy of measurements
         </coral-alert-header>
         <coral-alert-content>
-          Since <code class="coral-Code--XS">webvitals.js</code> is loaded after the Launch library itself has been
-          loaded, some Web Vitals metrics may not be measured as accurately as when they are
-          implemented directly into the web pages. In some cases, the Web Vitals metrics may
-          just not be measured at all.
+          Since <code class="coral-Code--XS">web-vitals.js</code> is loaded after the Launch
+          library itself has been loaded, some Web Vitals metrics may not be measured as
+          accurately as when they are implemented directly into the web pages. In some cases, the
+          Web Vitals metrics may just not be measured at all.
         </coral-alert-content>
       </coral-alert>
     </section>
