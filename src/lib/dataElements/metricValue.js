@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Yuhui. All rights reserved.
+ * Copyright 2021-2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,12 @@
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
+ * @param {Object} [event.webvitals=null] The event's data.
  * @returns {float}
  */
-module.exports = function(settings, event) {
-  if (event && event.webvitals) {
-    return event.webvitals.value;
+module.exports = function(settings, { webvitals = null }) {
+  if (!webvitals) {
+    return;
   }
+  return webvitals.value;
 };

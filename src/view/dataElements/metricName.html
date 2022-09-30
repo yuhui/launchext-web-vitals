@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>Metric Name Data Element</title>
-    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
-    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js" data-coral-icons-external="js"></script>
+    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
   </head>
   <body class="coral--light coral-Body--S u-coral-margin">
     <h3 class="coral-Heading--M">No configuration necessary</h3>
@@ -16,11 +16,12 @@
         This Data Element returns the name of the measured metric in acronym form. It can be one
         of the following:
         <ul class="coral-List">
-          <li class="coral-List-item">CLS</li>
-          <li class="coral-List-item">FCP</li>
-          <li class="coral-List-item">FID</li>
-          <li class="coral-List-item">LCP</li>
-          <li class="coral-List-item">TTFB</li>
+          <li class="coral-List-item"><code class="coral-Code--S">CLS</code></li>
+          <li class="coral-List-item"><code class="coral-Code--S">FCP</code></li>
+          <li class="coral-List-item"><code class="coral-Code--S">FID</code></li>
+          <li class="coral-List-item"><code class="coral-Code--S">INP</code></li>
+          <li class="coral-List-item"><code class="coral-Code--S">LCP</code></li>
+          <li class="coral-List-item"><code class="coral-Code--S">TTFB</code></li>
         </ul>
       </p>
 
@@ -64,7 +65,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2021 Yuhui. All rights reserved.
+        Copyright &copy; 2021-2022 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
@@ -78,15 +79,15 @@
     <script src="../scripts/common.js"></script>
     <script>
       window.extensionBridge.register({
-        init: function(info) {
+        init: (info) => {
           if (info.settings) {}
         },
 
-        getSettings: function() {
+        getSettings: () => {
           return {};
         },
 
-        validate: function() {
+        validate: () => {
           return true;
         }
       });

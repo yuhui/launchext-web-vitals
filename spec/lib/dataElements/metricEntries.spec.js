@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Yuhui. All rights reserved.
+ * Copyright 2021-2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,40 +16,40 @@
 
 'use strict';
 
-describe('metricEntries data element delegate', function() {
-  var dataElementDelegate = require('../../../src/lib/dataElements/metricEntries');
-  var getBaseEvent = require('../../specHelpers/getBaseEvent');
+describe('metricEntries data element delegate', () => {
+  const dataElementDelegate = require('../../../src/lib/dataElements/metricEntries');
+  const getBaseEvent = require('../../specHelpers/getBaseEvent');
 
-  beforeEach(function() {
+  beforeEach(() => {
     this.event = getBaseEvent(['metricEntries']);
     this.settings = {}; // this data element does not have any custom settings
   });
 
-  describe('with invalid "event" argument', function() {
+  describe('with invalid "event" argument', () => {
     it(
       'should be undefined when "webvitals" property is missing',
-      function() {
+      () => {
         delete this.event.webvitals;
-        var result = dataElementDelegate(this.settings, this.event);
+        const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
       }
     );
 
     it(
       'should be undefined when "entries" property is missing',
-      function() {
+      () => {
         delete this.event.webvitals.entries;
-        var result = dataElementDelegate(this.settings, this.event);
+        const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
       }
     );
   });
 
-  describe('with valid "event" argument', function() {
+  describe('with valid "event" argument', () => {
     it(
       'should be an array of defined items',
-      function() {
-        var result = dataElementDelegate(this.settings, this.event);
+      () => {
+        const result = dataElementDelegate(this.settings, this.event);
         var resultEvaluation = result.reduce(function(previousEvalution, item) {
           return previousEvalution && typeof(item) !== 'undefined';
         }, true);

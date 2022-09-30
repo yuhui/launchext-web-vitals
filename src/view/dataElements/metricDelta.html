@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>Metric Delta Data Element</title>
-    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
-    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js" data-coral-icons-external="js"></script>
+    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
   </head>
   <body class="coral--light coral-Body--S u-coral-margin">
     <h3 class="coral-Heading--M">No configuration necessary</h3>
@@ -60,7 +60,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2021 Yuhui. All rights reserved.
+        Copyright &copy; 2021-2022 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
@@ -74,15 +74,15 @@
     <script src="../scripts/common.js"></script>
     <script>
       window.extensionBridge.register({
-        init: function(info) {
+        init: (info) => {
           if (info.settings) {}
         },
 
-        getSettings: function() {
+        getSettings: () => {
           return {};
         },
 
-        validate: function() {
+        validate: () => {
           return true;
         }
       });

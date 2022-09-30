@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>First Contentful Paint Event</title>
-    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
-    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js" data-coral-icons-external="js"></script>
+    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
   </head>
   <body class="coral--light coral-Body--S u-coral-margin">
     <h3 class="coral-Heading--M">No configuration necessary</h3>
@@ -50,12 +50,156 @@
           Accuracy of measurements
         </coral-alert-header>
         <coral-alert-content>
-          Since <code class="coral-Code--XS">webvitals.js</code> is loaded after the Launch library itself has been
-          loaded, some Web Vitals metrics may not be measured as accurately as when they are
-          implemented directly into the web pages. In some cases, the Web Vitals metrics may
-          just not be measured at all.
+          Since <code class="coral-Code--XS">web-vitals.js</code> is loaded after the Launch
+          library itself has been loaded, some Web Vitals metrics may not be measured as
+          accurately as when they are implemented directly into the web pages. In some cases, the
+          Web Vitals metrics may just not be measured at all.
         </coral-alert-content>
       </coral-alert>
+
+      <p>
+        The following Data Elements are available for use with your Rule's Conditions and Actions.
+      </p>
+      <table is="coral-table" variant="quiet">
+        <colgroup>
+          <col is="coral-table-column" sortable="" sortabledirection="ascending">
+          <col is="coral-table-column" sortable="" sortabledirection="ascending">
+          <col is="coral-table-column">
+        </colgroup>
+        <thead is="coral-table-head">
+          <tr is="coral-table-row">
+            <th is="coral-table-headercell">Data Element</th>
+            <th is="coral-table-headercell">Data type</th>
+            <th is="coral-table-headercell">Value</th>
+          </tr>
+        </thead>
+        <tbody is="coral-table-body">
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric ID
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Unique ID representing this measured metric that's specific to the current web page
+              shown in the user's web browser
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Name
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Name of the measured metric in acronym form: <code class="coral-Code--S">FCP</code>.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Full Name
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Full name of the measured metric: <code class="coral-Code--S">First
+                Contentful Paint</code>.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Value
+            </td>
+            <td is="coral-table-cell">
+              Number
+            </td>
+            <td is="coral-table-cell">
+              Current value of the measured metric.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Rating
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Rating of the measured metric. It can be one of the following:
+              <ul class="coral-List">
+                <li class="coral-List-item"><code class="coral-Code--S">good</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">needs-improvement</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">poor</code></li>
+              </ul>
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Delta
+            </td>
+            <td is="coral-table-cell">
+              Number
+            </td>
+            <td is="coral-table-cell">
+              Delta between the current value and the last-reported value of the measured metric.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Entries
+            </td>
+            <td is="coral-table-cell">
+              Array of <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformancePaintTiming" target="_blank" rel="noopener noreferrer">PerformancePaintTimings</a>
+            </td>
+            <td is="coral-table-cell">
+              Array of the performance entries used in the measured metric's value calculation.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Navigation Type
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Navigation type of the measured metric. It can be one of the following:
+              <ul class="coral-List">
+                <li class="coral-List-item"><code class="coral-Code--S">navigate</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">reload</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">back-forward</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">back-forward-cache</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">prerender</code></li>
+              </ul>
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Attributions
+            </td>
+            <td is="coral-table-cell">
+              Various
+            </td>
+            <td is="coral-table-cell">
+              Potentially-helpful debugging information that can be sent along with the metric
+              value for the current page visit in order to help identify issues happening to
+              real-users in the field.<br />
+              Refer to the "Metric Attribution" Data Element type in this extension for
+              more information about the allowed attributions:
+              <ul class="coral-List">
+                <li class="coral-List-item">Time to First Byte</li>
+                <li class="coral-List-item">First Byte to FCP</li>
+                <li class="coral-List-item">Load State</li>
+                <li class="coral-List-item">FCP Entry</li>
+                <li class="coral-List-item">Navigation Entry</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </section>
 
     <hr class="coral-Divider--S">
@@ -85,7 +229,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2021 Yuhui. All rights reserved.
+        Copyright &copy; 2021-2022 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
@@ -98,15 +242,15 @@
     <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
     <script>
       window.extensionBridge.register({
-        init: function(info) {
+        init: (info) => {
           if (info.settings) {}
         },
 
-        getSettings: function() {
+        getSettings: () => {
           return {};
         },
 
-        validate: function() {
+        validate: () => {
           return true;
         }
       });

@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Interaction to Next Paint Event</title>
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
+  </head>
+  <body class="coral--light coral-Body--S u-coral-margin">
+    <h3 class="coral-Heading--M">No configuration necessary</h3>
+
+    <section class="coral-Well">
+      <h4 class="coral-Heading--S coral-Heading--light">How this Event works</h4>
+      <p>
+        This Event is triggered when the user's browser responds to the user's first interaction
+        on the current page.
+        <a class="coral-Link" href="https://web.dev/inp/" target="_blank" rel="noopener noreferrer">
+          Learn more about Interaction to Next Paint (INP).
+        </a>
+      </p>
+      <p>
+        Interaction to Next Paint (INP) should be continually monitored for changes throughout the
+        entire lifespan of a page.
+        <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#oninp" target="_blank" rel="noopener noreferrer">
+          Learn more.
+        </a>
+      </p>
+      <p>
+        This Event works with the following web browsers only:
+      </p>
+      <ul class="coral-List">
+        <li class="coral-List-item">Chromium-based browsers, e.g. Google Chrome, Microsoft Edge, Opera, Samsung
+          Internet</li>
+      </ul>
+      <p>
+        You are advised to send your analytics data with a beacon.
+        <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#send-the-results-to-an-analytics-endpoint" target="_blank" rel="noopener noreferrer">
+          Learn more.
+        </a><br />
+        With Adobe Analytics, you can do this by setting <code class="coral-Code--XS">s.useBeacon = true;</code> in your
+        "Set Variables" Action.
+      </p>
+
+      <coral-alert variant="warning">
+        <coral-alert-header>
+          Accuracy of measurements
+        </coral-alert-header>
+        <coral-alert-content>
+          Since <code class="coral-Code--XS">web-vitals.js</code> is loaded after the Launch
+          library itself has been loaded, some Web Vitals metrics may not be measured as
+          accurately as when they are implemented directly into the web pages. In some cases, the
+          Web Vitals metrics may just not be measured at all.
+        </coral-alert-content>
+      </coral-alert>
+
+      <p>
+        The following Data Elements are available for use with your Rule's Conditions and Actions.
+      </p>
+      <table is="coral-table" variant="quiet">
+        <colgroup>
+          <col is="coral-table-column" sortable="" sortabledirection="ascending">
+          <col is="coral-table-column" sortable="" sortabledirection="ascending">
+          <col is="coral-table-column">
+        </colgroup>
+        <thead is="coral-table-head">
+          <tr is="coral-table-row">
+            <th is="coral-table-headercell">Data Element</th>
+            <th is="coral-table-headercell">Data type</th>
+            <th is="coral-table-headercell">Value</th>
+          </tr>
+        </thead>
+        <tbody is="coral-table-body">
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric ID
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Unique ID representing this measured metric that's specific to the current web page
+              shown in the user's web browser
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Name
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Name of the measured metric in acronym form: <code class="coral-Code--S">INP</code>.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Full Name
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Full name of the measured metric: <code class="coral-Code--S">Interaction
+              to Next Paint</code>.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Value
+            </td>
+            <td is="coral-table-cell">
+              Number
+            </td>
+            <td is="coral-table-cell">
+              Current value of the measured metric.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Rating
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Rating of the measured metric. It can be one of the following:
+              <ul class="coral-List">
+                <li class="coral-List-item"><code class="coral-Code--S">good</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">needs-improvement</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">poor</code></li>
+              </ul>
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Delta
+            </td>
+            <td is="coral-table-cell">
+              Number
+            </td>
+            <td is="coral-table-cell">
+              Delta between the current value and the last-reported value of the measured metric.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Entries
+            </td>
+            <td is="coral-table-cell">
+              Array of <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEventTiming" target="_blank" rel="noopener noreferrer">PerformanceEventTimings</a>
+            </td>
+            <td is="coral-table-cell">
+              Array of the performance entries used in the measured metric's value calculation.
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Navigation Type
+            </td>
+            <td is="coral-table-cell">
+              String
+            </td>
+            <td is="coral-table-cell">
+              Navigation type of the measured metric. It can be one of the following:
+              <ul class="coral-List">
+                <li class="coral-List-item"><code class="coral-Code--S">navigate</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">reload</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">back-forward</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">back-forward-cache</code></li>
+                <li class="coral-List-item"><code class="coral-Code--S">prerender</code></li>
+              </ul>
+            </td>
+          </tr>
+          <tr is="coral-table-row">
+            <td is="coral-table-cell" role="rowheader">
+              Metric Attributions
+            </td>
+            <td is="coral-table-cell">
+              Various
+            </td>
+            <td is="coral-table-cell">
+              Potentially-helpful debugging information that can be sent along with the metric
+              value for the current page visit in order to help identify issues happening to
+              real-users in the field.<br />
+              Refer to the "Metric Attribution" Data Element type in this extension for
+              more information about the allowed attributions:
+              <ul class="coral-List">
+                <li class="coral-List-item">Event Target</li>
+                <li class="coral-List-item">Event Time</li>
+                <li class="coral-List-item">Event Type</li>
+                <li class="coral-List-item">Event Entry</li>
+                <li class="coral-List-item">Load State</li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <hr class="coral-Divider--S">
+
+    <footer class="coral--lightest coral-Body--XS">
+      <div id="donations">
+        <p>
+          Donate: <a class="coral-Link" href="https://paypal.me/yuhuibc" target="_blank">PayPal</a>
+        </p>
+      </div>
+      <div id="support">
+        <p>
+          Support Information
+        </p>
+        <ul class="coral-List">
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://github.com/yuhui/launchext-web-vitals/issues" target="_blank">
+              Open a ticket
+            </a>
+          </li>
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://github.com/yuhui/launchext-web-vitals/blob/master/CHANGELOG.md" target="_blank">
+              Read change log
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <p>
+        Copyright &copy; 2022 Yuhui. All rights reserved.
+      </p>
+      <p>
+        <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
+        <a class="coral-Link" href="https://yuhui.sg/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a class="coral-Link" href="https://yuhui.sg/cookie-policy.html" target="_blank">Cookie Policy</a> |
+        <a class="coral-Link" href="https://yuhui.sg/acceptable-use-policy.html" target="_blank">Acceptable Use Policy</a>
+      </p>
+    </footer>
+
+    <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
+    <script>
+      window.extensionBridge.register({
+        init: (info) => {
+          if (info.settings) {}
+        },
+
+        getSettings: () => {
+          return {};
+        },
+
+        validate: () => {
+          return true;
+        }
+      });
+    </script>
+  </body>
+</html>

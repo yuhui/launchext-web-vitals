@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Yuhui. All rights reserved.
+ * Copyright 2021-2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,43 +16,44 @@
 
 'use strict';
 
-var window = require('@adobe/reactor-window');
-var loadScript = require('@adobe/reactor-load-script');
+const window = require('@adobe/reactor-window');
+const loadScript = require('@adobe/reactor-load-script');
 
-var logger = turbine.logger;
+const logger = turbine.logger;
 
 // constants related to Web Vitals metrics
-var CUMULATIVE_LAYOUT_SHIFT = 'Cumulative Layout Shift';
-var FIRST_CONTENTFUL_PAINT = 'First Contentful Paint';
-var FIRST_INPUT_DELAY = 'First Input Delay';
-var LARGEST_CONTENTFUL_PAINT = 'Largest Contentful Paint';
-var TIME_TO_FIRST_BYTE = 'Time to First Byte';
+const CUMULATIVE_LAYOUT_SHIFT = 'Cumulative Layout Shift';
+const FIRST_CONTENTFUL_PAINT = 'First Contentful Paint';
+const FIRST_INPUT_DELAY = 'First Input Delay';
+const INTERACTION_TO_NEXT_PAINT = 'Interaction to Next Paint';
+const LARGEST_CONTENTFUL_PAINT = 'Largest Contentful Paint';
+const TIME_TO_FIRST_BYTE = 'Time to First Byte';
 
 // set of Web Vitals metrics
-var WEB_VITALS_METRICS = [
+const WEB_VITALS_METRICS = [
   CUMULATIVE_LAYOUT_SHIFT,
   FIRST_CONTENTFUL_PAINT,
   FIRST_INPUT_DELAY,
+  INTERACTION_TO_NEXT_PAINT,
   LARGEST_CONTENTFUL_PAINT,
   TIME_TO_FIRST_BYTE,
 ];
 
 // constants related to setting up Web Vitals
-var WEB_VITALS_URL = 'https://unpkg.com/web-vitals';
+const WEB_VITALS_MAJOR_VERSION = '3.0';
+const WEB_VITALS_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
 
 // constants related to this Extension's settings
-var EXTENSION_SETTINGS = turbine.getExtensionSettings();
+const EXTENSION_SETTINGS = turbine.getExtensionSettings();
 
 /**
  * Create the registry of all WebVitals metric events.
  * Every registered event has a list of triggers, where one trigger corresponds to one Launch Rule.
  */
-var registry = {};
-// use a for loop instead of forEach for efficiency
-for (var i = 0, j = WEB_VITALS_METRICS.length; i < j; i++) {
-  var webVitalsMetric = WEB_VITALS_METRICS[i];
+const registry = {};
+WEB_VITALS_METRICS.forEach((webVitalsMetric) => {
   registry[webVitalsMetric] = [];
-}
+});
 
 /**
  * Synthetic Web Vitals metric event to send to the trigger callback.
@@ -62,11 +63,11 @@ for (var i = 0, j = WEB_VITALS_METRICS.length; i < j; i++) {
  * @param {Object} metricData Data returned for the Web Vitals metric.
  * See `getWebVitalsMetrics()`.
  *
- * @return {Event} Event object that is specific to the Web Vitals metric.
+ * @return {Object} Event object that is specific to the Web Vitals metric.
  */
-var createGetWebVitalsMetricEvent = function(element, metricData) {
+const createGetWebVitalsMetricEvent = (element, metricData) => {
   return {
-    element: element,
+    element,
     target: element,
     webvitals: metricData,
   };
@@ -80,15 +81,8 @@ var createGetWebVitalsMetricEvent = function(element, metricData) {
  *
  * @return {Object} Data about the current Web Vitals metric.
  */
-var getWebVitalsMetricData = function(webVitalsMetric, data) {
-  var metricData = {
-    id: data.id,
-    name: data.name,
-    fullName: webVitalsMetric,
-    delta: data.delta,
-    value: data.value,
-    entries: data.entries,
-  };
+const getWebVitalsMetricData = (webVitalsMetric, data) => {
+  const metricData = Object.assign({}, data, { fullName: webVitalsMetric });
 
   return metricData;
 };
@@ -99,11 +93,10 @@ var getWebVitalsMetricData = function(webVitalsMetric, data) {
  * @param {Object} metricData Data about the current Web Vitals metric.
  * @param {Object} triggerData Data that had been set with the Launch Rule.
  * See module.exports below.
- * @param {Object} triggerData.trigger The Launch Rule's trigger function.
+ * @param {ruleTrigger} triggerData.trigger The Launch Rule's trigger function.
  */
-var processTrigger = function(metricData, triggerData) {
-  var trigger = triggerData.trigger;
-  var getWebVitalsMetricEvent = createGetWebVitalsMetricEvent.bind(window);
+const processTrigger = (metricData, { trigger }) => {
+  const getWebVitalsMetricEvent = createGetWebVitalsMetricEvent.bind(window);
 
   trigger(getWebVitalsMetricEvent(window, metricData));
 };
@@ -114,21 +107,19 @@ var processTrigger = function(metricData, triggerData) {
  * @param {string} webVitalsMetric The Web Vitals metric.
  * @param {Object} data Data measured for the Web Vitals metric.
  */
-var processTriggers = function(webVitalsMetric, data) {
-  var metricData = getWebVitalsMetricData(webVitalsMetric, data);
+const processTriggers = (webVitalsMetric, data) => {
+  const metricData = getWebVitalsMetricData(webVitalsMetric, data);
 
-  var webVitalsMetricRegistry = registry[webVitalsMetric];
-  // use a for loop instead of forEach for efficiency
-  for (var i = 0, j = webVitalsMetricRegistry.length; i < j; i++) {
-    var triggerData = webVitalsMetricRegistry[i];
+  const webVitalsMetricTriggerData = registry[webVitalsMetric];
+  webVitalsMetricTriggerData.forEach((triggerData) => {
     processTrigger(metricData, triggerData);
-  }
+  });
 };
 
 /**
  * Callback function when Cumulative Layout Shift (CLS) has been measured.
  */
-var triggerCLS = function(data) {
+const triggerCLS = (data) => {
   logger.info('Web Vitals CLS measured.');
   processTriggers(CUMULATIVE_LAYOUT_SHIFT, data);
 };
@@ -136,7 +127,7 @@ var triggerCLS = function(data) {
 /**
  * Callback function when First Contentful Paint (FCP) has been measured.
  */
-var triggerFCP = function(data) {
+const triggerFCP = (data) => {
   logger.info('Web Vitals FCP measured.');
   processTriggers(FIRST_CONTENTFUL_PAINT, data);
 };
@@ -144,15 +135,23 @@ var triggerFCP = function(data) {
 /**
  * Callback function when First Input Delay (FID) has been measured.
  */
-var triggerFID = function(data) {
+const triggerFID = (data) => {
   logger.info('Web Vitals FID measured.');
   processTriggers(FIRST_INPUT_DELAY, data);
 };
 
 /**
+ * Callback function when Interaction to Next Paint (INP) has been measured.
+ */
+const triggerINP = (data) => {
+  logger.info('Web Vitals INP measured.');
+  processTriggers(INTERACTION_TO_NEXT_PAINT, data);
+};
+
+/**
  * Callback function when Largest Contentful Paint (LCP) has been measured.
  */
-var triggerLCP = function(data) {
+const triggerLCP = (data) => {
   logger.info('Web Vitals LCP measured.');
   processTriggers(LARGEST_CONTENTFUL_PAINT, data);
 };
@@ -160,7 +159,7 @@ var triggerLCP = function(data) {
 /**
  * Callback function when Time to First Byte (TTFB) has been measured.
  */
-var triggerTTFB = function(data) {
+const triggerTTFB = (data) => {
   logger.info('Web Vitals TTFB measured.');
   processTriggers(TIME_TO_FIRST_BYTE, data);
 };
@@ -169,18 +168,46 @@ var triggerTTFB = function(data) {
  * Load the Web Vitals script asynchronously.
  * If successful, registers Web Vitals metric events to work with the Web Vitals metrics.
  * Returns with an error log if the script could not be loaded.
+ *
+ * @param {Object} settings The configuration settings object.
+ * @param {number} [settings.durationThresholdINP=40] Duration threshold for INP.
+ * @param {number} [settings.reportAllChangesCLS=no] Whether to report all CLS changes.
+ * @param {number} [settings.reportAllChangesFCP=no] Whether to report all FCP changes.
+ * @param {number} [settings.reportAllChangesFID=no] Whether to report all FID changes.
+ * @param {number} [settings.reportAllChangesINP=yes] Whether to report all INP changes.
+ * @param {number} [settings.reportAllChangesLCP=no] Whether to report all LCP changes.
+ * @param {number} [settings.reportAllChangesTTFB=no] Whether to report all TTFB changes.
  */
-var loadWebVitals = function(settings) {
-  loadScript(WEB_VITALS_URL).then(function() {
-    logger.info('Web Vitals was loaded successfully');
+const loadWebVitals = function({
+  durationThresholdINP = 40,
+  reportAllChangesCLS = 'no',
+  reportAllChangesFCP = 'no',
+  reportAllChangesFID = 'no',
+  reportAllChangesINP = 'yes',
+  reportAllChangesLCP = 'no',
+  reportAllChangesTTFB = 'no',
+}) {
+  loadScript(WEB_VITALS_URL).then(() => {
+    if (!webVitals) {
+      logger.error(
+        'Web Vitals could not be loaded, possibly because web-vitals.js could not be found.'
+      );
+      return;
+    }
 
-    webVitals.getCLS(triggerCLS, settings.reportAllChangesCLS === 'yes');
-    webVitals.getFCP(triggerFCP, settings.reportAllChangesFCP === 'yes');
-    webVitals.getFID(triggerFID, settings.reportAllChangesFID === 'yes');
-    webVitals.getLCP(triggerLCP, settings.reportAllChangesLCP === 'yes');
-    webVitals.getTTFB(triggerTTFB, settings.reportAllChangesTTFB === 'yes');
-  }, function() {
-    logger.error('Web Vitals could not be loaded');
+    logger.info('Web Vitals was loaded successfully.');
+
+    webVitals.onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
+    webVitals.onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
+    webVitals.onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
+    webVitals.onINP(triggerINP, {
+      reportAllChanges: reportAllChangesINP === 'yes',
+      durationThreshold: durationThresholdINP,
+    });
+    webVitals.onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
+    webVitals.onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
+  }, () => {
+    logger.error('Web Vitals could not be loaded.');
   });
 };
 
@@ -193,6 +220,7 @@ module.exports = {
   cls: CUMULATIVE_LAYOUT_SHIFT,
   fid: FIRST_INPUT_DELAY,
   fcp: FIRST_CONTENTFUL_PAINT,
+  inp: INTERACTION_TO_NEXT_PAINT,
   lcp: LARGEST_CONTENTFUL_PAINT,
   ttfb: TIME_TO_FIRST_BYTE,
 
@@ -203,10 +231,10 @@ module.exports = {
    * @param {Object} settings The event settings object.
    * @param {ruleTrigger} trigger The trigger callback.
    */
-  registerEventStateTrigger: function(webVitalsMetric, settings, trigger) {
+  registerEventStateTrigger: (webVitalsMetric, settings, trigger) => {
     registry[webVitalsMetric].push({
-      settings: settings,
-      trigger: trigger
+      settings,
+      trigger,
     });
   },
 };

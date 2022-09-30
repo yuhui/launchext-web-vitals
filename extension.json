@@ -2,14 +2,14 @@
   "displayName": "Web Vitals",
   "name": "web-vitals-js",
   "platform": "web",
-  "version": "1.1.1",
-  "description": "Measure page quality signals from Web Vitals (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
+  "version": "1.2.0",
+  "description": "Measure page quality signals from Web Vitals 3.0 (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
   "author": {
     "name": "Yuhui",
     "url": "https://yuhui.sg",
     "email": "dev@yuhui.sg"
   },
-  "exchangeUrl": "https://exchange.adobe.com/experiencecloud.details.106769.web-vitals.html",
+  "exchangeUrl": "https://exchange.adobe.com/apps/ec/106769/web-vitals",
   "iconPath": "web-vitals-icon.svg",
   "viewBasePath": "src/view/",
   "configuration": {
@@ -18,6 +18,12 @@
       "$schema": "http://json-schema.org/draft-04/schema#",
       "type": "object",
       "properties": {
+        "durationThresholdINP": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 100,
+          "default": 40
+        },
         "reportAllChangesCLS": {
           "type": "string",
           "enum": [ "no", "yes" ],
@@ -32,6 +38,11 @@
           "type": "string",
           "enum": [ "no", "yes" ],
           "default": "no"
+        },
+        "reportAllChangesINP": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "yes"
         },
         "reportAllChangesLCP": {
           "type": "string",
@@ -100,6 +111,19 @@
       "viewPath": "events/firstContentfulPaint.html"
     },
     {
+      "displayName": "Interaction to Next Paint (INP)",
+      "name": "interaction-to-next-paint",
+      "categoryName": "Other Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "libPath": "src/lib/events/interactionToNextPaint.js",
+      "viewPath": "events/interactionToNextPaint.html"
+    },
+    {
       "displayName": "Time to First Byte (TTFB)",
       "name": "time-to-first-byte",
       "categoryName": "Other Web Vitals",
@@ -114,6 +138,50 @@
     }
   ],
   "dataElements": [
+    {
+      "displayName": "Attribution",
+      "name": "metric-attribution",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "metricAttributionItem": {
+            "enum": [
+              "connectionTime",
+              "dnsTime",
+              "element",
+              "elementRenderDelay",
+              "eventEntry",
+              "eventTarget",
+              "eventTime",
+              "eventType",
+              "fcpEntry",
+              "firstByteToFCP",
+              "largestShiftEntry",
+              "largestShiftSource",
+              "largestShiftTarget",
+              "largestShiftTime",
+              "largestShiftValue",
+              "lcpEntry",
+              "lcpResourceEntry",
+              "loadState",
+              "navigationEntry",
+              "requestTime",
+              "resourceLoadDelay",
+              "resourceLoadTime",
+              "timeToFirstByte",
+              "url",
+              "waitingTime"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": ["metricAttributionItem"]
+      },
+      "libPath": "src/lib/dataElements/metricAttribution.js",
+      "viewPath": "dataElements/metricAttribution.html"
+    },
     {
       "displayName": "Delta",
       "name": "metric-delta",
@@ -178,6 +246,32 @@
       },
       "libPath": "src/lib/dataElements/metricName.js",
       "viewPath": "dataElements/metricName.html"
+    },
+    {
+      "displayName": "Navigation Type",
+      "name": "metric-navigation-type",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "libPath": "src/lib/dataElements/metricNavigationType.js",
+      "viewPath": "dataElements/metricNavigationType.html"
+    },
+    {
+      "displayName": "Rating",
+      "name": "metric-rating",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "libPath": "src/lib/dataElements/metricRating.js",
+      "viewPath": "dataElements/metricRating.html"
     },
     {
       "displayName": "Value",

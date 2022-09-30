@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Yuhui. All rights reserved.
+ * Copyright 2021-2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,8 +19,8 @@
 /**
  * Return a `webVitals` spy object for use with event unit testing.
  */
-module.exports = function() {
-  var webVitalsSpyObj = jasmine.createSpyObj(
+module.exports = () => {
+  const webVitalsSpyObj = jasmine.createSpyObj(
     [
       'registerEventStateTrigger',
     ],
@@ -28,6 +28,7 @@ module.exports = function() {
       cls: 'Cumulative Layout Shift',
       fid: 'First Input Delay',
       fcp: 'First Contentful Paint',
+      inp: 'Interaction to Next Paint',
       lcp: 'Largest Contentful Paint',
       ttfb: 'Time to First Byte',
     }

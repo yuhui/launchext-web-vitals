@@ -1,5 +1,5 @@
 /**
- * Copyright 2021 Yuhui. All rights reserved.
+ * Copyright 2021-2022 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,24 @@
 
 'use strict';
 
-var proxyquire = require('proxyquire').noCallThru();
-var eventState = 'Time to First Byte';
+const proxyquire = require('proxyquire').noCallThru();
+const eventState = 'Time to First Byte';
 
-describe('"' + eventState + '" event delegate', function() {
+describe(`"${eventState}" event delegate`, () => {
   it(
     'sends the trigger to the webVitals helper module once only',
-    function() {
-      var getWebVitalsSpyObj = require('../../specHelpers/getWebVitalsSpyObj');
-      var webVitalsSpyObj = getWebVitalsSpyObj();
+    () => {
+      const getWebVitalsSpyObj = require('../../specHelpers/getWebVitalsSpyObj');
+      const webVitalsSpyObj = getWebVitalsSpyObj();
 
-      var eventDelegate = proxyquire('../../../src/lib/events/timeToFirstByte', {
+      const eventDelegate = proxyquire('../../../src/lib/events/timeToFirstByte', {
         '../helpers/webVitals': webVitalsSpyObj,
       });
-      var settings = {};
-      var trigger = function() {};
+      const settings = {};
+      const trigger = () => {};
 
       eventDelegate(settings, trigger);
-      var result = webVitalsSpyObj.registerEventStateTrigger;
+      const result = webVitalsSpyObj.registerEventStateTrigger;
       expect(result).toHaveBeenCalledTimes(1);
       expect(result).toHaveBeenCalledWith(eventState, settings, trigger);
     }

@@ -3,9 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <title>Web Vitals Configuration</title>
-    <link rel="stylesheet" href="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/css/coral.min.css">
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
-    <script src="https://unpkg.com/@adobe/coral-spectrum@4.5.0/dist/js/coral.min.js" data-coral-icons-external="js"></script>
+    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
   </head>
   <body class="coral--light coral-Body--S u-coral-margin">
     <form id="extension-configuration" class="coral-Form">
@@ -26,6 +26,9 @@
             <coral-switch name="reportAllChangesFID" value="yes">
               First Input Delay (FID)
             </coral-switch>
+            <coral-switch name="reportAllChangesINP" value="yes" checked="">
+              Interaction to Next Paint (INP)
+            </coral-switch>
             <coral-switch name="reportAllChangesLCP" value="yes">
               Largest Contentful Paint (LCP)
             </coral-switch>
@@ -36,13 +39,38 @@
         </div>
       </div>
 
+      <div id="duration-threshold-container" class="coral-FormGroup-item">
+        <label for="duration-threshold-inp" class="coral-FormGroup-itemLabel">
+          Duration threshold for Interaction to Next Paint (INP)
+          <coral-icon icon="Asterisk" class="coral-FieldLabel-requiredIcon" size="XXS" alt="required"></coral-icon>
+        </label>
+        <div class="coral-InputGroup" style="width: 100%;" role="presentation">
+          <input id="duration-threshold-inp" name="durationThresholdINP" value="40" class="coral-InputGroup-input" is="coral-textfield">
+          <coral-icon icon="info" title="Info" size="S"></coral-icon>
+          <coral-tooltip target="_prev" variant="info" placement="right" offset="8">
+            A custom duration threshold can be passed to control what event-timing entries are
+            considered for INP reporting. The default threshold is 40, which means INP scores of
+            less than 40 are reported as 0. Note that this will not affect your 75th percentile INP
+            value unless that value is also less than 40 (well below the recommended good
+            threshold).
+          </coral-tooltip>
+        </div>
+      </div>
+
       <p>
         In most cases, you only want to report the metric when it is ready to be reported.
         However, you can report every change (e.g. each layout shift as it happens), for
-        example, when debugging. But in general, reporting all changes is not needed (or
+        example, when debugging. But in general, reporting all changes is not needed (nor
         recommended).
         <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#report-the-value-on-every-change" target="_blank" rel="noopener noreferrer">
           Learn more.
+        </a>
+      </p>
+      <p>
+        <b>The exception is with Interaction to Next Paint (INP).</b> INP should be continually
+        monitored for changes throughout the entire lifespan of a page.
+        <a class="coral-Link" href="https://web.dev/inp/" target="_blank" rel="noopener noreferrer">
+          Learn more about Interaction to Next Paint (INP).
         </a>
       </p>
     </form>
@@ -54,6 +82,7 @@
         <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals" target="_blank" rel="noopener noreferrer">
           Learn more about Web Vitals, as defined by Google.
         </a>
+        This extension loads Web Vitals 3.0.x.
       </p>
 
       <p>
@@ -72,6 +101,11 @@
           <li class="coral-List-item">
             <a class="coral-Link" href="https://web.dev/fid/" target="_blank" rel="noopener noreferrer">
               First Input Delay (FID)
+            </a>
+          </li>
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://web.dev/inp/" target="_blank" rel="noopener noreferrer">
+              Interaction to Next Paint (INP)
             </a>
           </li>
           <li class="coral-List-item">
@@ -103,7 +137,7 @@
       </ol>
 
       <p>
-        This extension loads the required Web Vitals library, <code class="coral-Code--XS">webvitals.js</code>, when
+        This extension loads the required Web Vitals library, <code class="coral-Code--XS">web-vitals.js</code>, when
         the Launch library is loaded. No Rule Action is needed to do this.
       </p>
 
@@ -112,10 +146,10 @@
           Accuracy of measurements
         </coral-alert-header>
         <coral-alert-content>
-          Since <code class="coral-Code--XS">webvitals.js</code> is loaded after the Launch library itself has been
-          loaded, some Web Vitals metrics may not be measured as accurately as when they are
-          implemented directly into the web pages. In some cases, the Web Vitals metrics may
-          just not be measured at all.
+          Since <code class="coral-Code--XS">web-vitals.js</code> is loaded after the Launch
+          library itself has been loaded, some Web Vitals metrics may not be measured as
+          accurately as when they are implemented directly into the web pages. In some cases, the
+          Web Vitals metrics may just not be measured at all.
         </coral-alert-content>
       </coral-alert>
     </section>
@@ -147,7 +181,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2021 Yuhui. All rights reserved.
+        Copyright &copy; 2021-2022 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
@@ -160,57 +194,102 @@
     <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
     <script src="../scripts/common.js"></script>
     <script>
-      var FORM_ID = 'extension-configuration';
+      const FORM_ID = 'extension-configuration';
 
       window.extensionBridge.register({
-        init: function(info) {
-          if (info.settings) {
+        init: (info) => {
+          const { settings } = info;
+          if (settings) {
+            const hasOwnProperty = Object.prototype.hasOwnProperty;
+
+            // this setting was added in v1.2.0
+            if (
+              !hasOwnProperty.call(settings, 'reportAllChangesINP')
+              || !hasOwnProperty.call(settings, 'durationThresholdINP')
+            ) {
+              info.settings.reportAllChangesINP = 'yes';
+              info.settings.durationThresholdINP = 40;
+            }
+
             setFormValues(FORM_ID, info.settings);
           }
         },
 
-        getSettings: function() {
-          var formValues = getFormValues(FORM_ID);
+        getSettings: () => {
+          const formValues = getFormValues(FORM_ID);
+          const {
+            durationThresholdINP,
+            reportAllChangesCLS,
+            reportAllChangesFCP,
+            reportAllChangesFID,
+            reportAllChangesINP,
+            reportAllChangesLCP,
+            reportAllChangesTTFB,
+          } = formValues;
 
           // rewrite value so as not to deal with empty strings
-          if (formValues.reportAllChangesCLS === '') {
+          if (reportAllChangesCLS === '') {
             formValues.reportAllChangesCLS = 'no';
           }
-          if (formValues.reportAllChangesFCP === '') {
+          if (reportAllChangesFCP === '') {
             formValues.reportAllChangesFCP = 'no';
           }
-          if (formValues.reportAllChangesFID === '') {
+          if (reportAllChangesFID === '') {
             formValues.reportAllChangesFID = 'no';
           }
-          if (formValues.reportAllChangesLCP === '') {
+          if (reportAllChangesINP === '') {
+            formValues.reportAllChangesINP = 'no';
+          }
+          if (reportAllChangesLCP === '') {
             formValues.reportAllChangesLCP = 'no';
           }
-          if (formValues.reportAllChangesTTFB === '') {
+          if (reportAllChangesTTFB === '') {
             formValues.reportAllChangesTTFB = 'no';
           }
+
+          formValues.durationThresholdINP = stringToInteger(durationThresholdINP);
 
           return formValues;
         },
 
-        validate: function() {
-          var formValues = getFormValues(FORM_ID);
-          var reportAllChangesCLS = formValues.reportAllChangesCLS;
-          var reportAllChangesFCP = formValues.reportAllChangesFCP;
-          var reportAllChangesFID = formValues.reportAllChangesFID;
-          var reportAllChangesLCP = formValues.reportAllChangesLCP;
-          var reportAllChangesTTFB = formValues.reportAllChangesTTFB;
+        validate: () => {
+          const formValues = getFormValues(FORM_ID);
+          const {
+            durationThresholdINP,
+            reportAllChangesCLS,
+            reportAllChangesFCP,
+            reportAllChangesFID,
+            reportAllChangesINP,
+            reportAllChangesLCP,
+            reportAllChangesTTFB,
+          } = formValues;
 
-          var reportAllChangesCLSIsValid = ['', 'yes'].indexOf(reportAllChangesCLS) > -1;
-          var reportAllChangesFCPIsValid = ['', 'yes'].indexOf(reportAllChangesFCP) > -1;
-          var reportAllChangesFIDIsValid = ['', 'yes'].indexOf(reportAllChangesFID) > -1;
-          var reportAllChangesLCPIsValid = ['', 'yes'].indexOf(reportAllChangesLCP) > -1;
-          var reportAllChangesTTFBIsValid = ['', 'yes'].indexOf(reportAllChangesTTFB) > -1;
+          const durationThresholdINPNum = stringToInteger(durationThresholdINP);
+          const durationThresholdINPNumIsNotNull = durationThresholdINPNum !== null;
+          const durationThresholdINPNumIsInteger = durationThresholdINPNumIsNotNull
+            ? valueIsInteger(durationThresholdINPNum)
+            : false;
+          const durationThresholdINPNumIsPercentile = durationThresholdINPNumIsInteger
+            ? (durationThresholdINPNumIsInteger >= 0 && durationThresholdINPNumIsInteger <= 100)
+            : false;
+          const durationThresholdINPIsValid = durationThresholdINPNumIsNotNull
+            && durationThresholdINPNumIsInteger
+            && durationThresholdINPNumIsPercentile;
 
-          return reportAllChangesCLSIsValid &&
-            reportAllChangesFCPIsValid &&
-            reportAllChangesFIDIsValid &&
-            reportAllChangesLCPIsValid &&
-            reportAllChangesTTFBIsValid;
+          const reportAllChangesCLSIsValid = ['', 'yes'].includes(reportAllChangesCLS);
+          const reportAllChangesFCPIsValid = ['', 'yes'].includes(reportAllChangesFCP);
+          const reportAllChangesFIDIsValid = ['', 'yes'].includes(reportAllChangesFID);
+          const reportAllChangesINPIsValid = ['', 'yes'].includes(reportAllChangesINP);
+          const reportAllChangesLCPIsValid = ['', 'yes'].includes(reportAllChangesLCP);
+          const reportAllChangesTTFBIsValid = ['', 'yes'].includes(reportAllChangesTTFB);
+
+          return durationThresholdINPIsValid
+            && reportAllChangesCLSIsValid
+            && reportAllChangesFCPIsValid
+            && reportAllChangesFIDIsValid
+            && reportAllChangesINPIsValid
+            && reportAllChangesLCPIsValid
+            && reportAllChangesTTFBIsValid;
         }
       });
     </script>
