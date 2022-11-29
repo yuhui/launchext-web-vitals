@@ -55,7 +55,7 @@ const EXTENSION_SETTINGS = turbine.getExtensionSettings();
 
 /**
  * Create the registry of all WebVitals metric events.
- * Every registered event has a list of triggers, where one trigger corresponds to one Launch Rule.
+ * Every registered event has a list of triggers, where one trigger corresponds to one Tags Rule.
  */
 const registry = {};
 WEB_VITALS_METRICS.forEach((webVitalsMetric) => {
@@ -98,9 +98,9 @@ const getWebVitalsMetricData = (webVitalsMetric, data) => {
  * Run a trigger that had been registered with the specified Web Vitals metric.
  *
  * @param {Object} metricData Data about the current Web Vitals metric.
- * @param {Object} triggerData Data that had been set with the Launch Rule.
+ * @param {Object} triggerData Data that had been set with the Tags Rule.
  * See module.exports below.
- * @param {ruleTrigger} triggerData.trigger The Launch Rule's trigger function.
+ * @param {ruleTrigger} triggerData.trigger The Tags Rule's trigger function.
  */
 const processTrigger = (metricData, { trigger }) => {
   const getWebVitalsMetricEvent = createGetWebVitalsMetricEvent.bind(window);
