@@ -40,6 +40,9 @@ describe('metricNavigationType data element delegate', () => {
         delete this.event.webvitals;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
       }
     );
 
@@ -49,6 +52,23 @@ describe('metricNavigationType data element delegate', () => {
         delete this.event.webvitals.navigationType;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Metric navigation type not available.');
+      }
+    );
+
+    it(
+      'should be undefined when "navigationType" property is an invalid value',
+      () => {
+        this.event.webvitals.navigationType = 'foo';
+        const result = dataElementDelegate(this.settings, this.event);
+        expect(result).toBeUndefined();
+
+        const logError = global.turbine.logger.error;
+        expect(logError).toHaveBeenCalledWith(
+          `Invalid metric navigation type: "${this.event.webvitals.navigationType}".`
+        );
       }
     );
   });
