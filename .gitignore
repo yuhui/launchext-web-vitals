@@ -1,5 +1,6 @@
 # Personal
 setup
+vendor
 *.zip
 
 # Visual Studio Code

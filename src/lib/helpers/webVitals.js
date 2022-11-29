@@ -83,7 +83,7 @@ const createGetWebVitalsMetricEvent = (element, metricData) => {
 /**
  * Get data for the current Web Vitals metric.
  *
- * @param {string} webVitalsMetric The Web Vitals metric.
+ * @param {String} webVitalsMetric The Web Vitals metric.
  * @param {Object} data Data measured for the Web Vitals metric.
  *
  * @return {Object} Data about the current Web Vitals metric.
@@ -111,10 +111,11 @@ const processTrigger = (metricData, { trigger }) => {
 /**
  * When a Web Vitals metric has been measured, run all triggers registered with that metric.
  *
- * @param {string} webVitalsMetric The Web Vitals metric.
+ * @param {String} webVitalsMetric The Web Vitals metric.
  * @param {Object} data Data measured for the Web Vitals metric.
  */
 const processTriggers = (webVitalsMetric, data) => {
+  logger.debug(`${webVitalsMetric} measured.`);
   const metricData = getWebVitalsMetricData(webVitalsMetric, data);
 
   const webVitalsMetricTriggerData = registry[webVitalsMetric];
@@ -311,7 +312,7 @@ loadWebVitals(EXTENSION_SETTINGS);
 
 module.exports = {
   /**
-   * WebVitals event states (exposed from constants)
+   * Web Vitals event states (exposed from constants)
    */
   cls: CUMULATIVE_LAYOUT_SHIFT,
   fid: FIRST_INPUT_DELAY,
@@ -323,12 +324,12 @@ module.exports = {
   /**
    * Register the Web Vitals metrics for triggering in Rules.
    *
-   * @param {string} webVitalsMetric The Web Vitals metric.
+   * @param {String} webVitalsMetricAbbreviation The Web Vitals metric abbreviation.
    * @param {Object} settings The event settings object.
    * @param {ruleTrigger} trigger The trigger callback.
    */
-  registerEventStateTrigger: (webVitalsMetric, settings, trigger) => {
-    registry[webVitalsMetric].push({
+  registerEventStateTrigger: (webVitalsMetricAbbreviation, settings, trigger) => {
+    registry[webVitalsMetricAbbreviation].push({
       settings,
       trigger,
     });
