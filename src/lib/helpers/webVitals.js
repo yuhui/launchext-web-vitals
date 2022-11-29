@@ -124,51 +124,76 @@ const processTriggers = (webVitalsMetric, data) => {
 };
 
 /**
+ * Used by Web Vitals callback functions after a metric has been measured.
+ *
+ * @param {String} webVitalsMetricAbbreviation The Web Vitals metric abbreviation.
+ * @param {Object} data Data measured for the Web Vitals metric.
+ */
+const triggerWebVitalsMetric = (webVitalsMetricAbbreviation, data) => {
+  let webVitalsMetric;
+  switch (webVitalsMetricAbbreviation) {
+    case 'CLS':
+      webVitalsMetric = CUMULATIVE_LAYOUT_SHIFT;
+      break;
+    case 'FCP':
+      webVitalsMetric = FIRST_CONTENTFUL_PAINT;
+      break;
+    case 'FID':
+      webVitalsMetric = FIRST_INPUT_DELAY;
+      break;
+    case 'INP':
+      webVitalsMetric = INTERACTION_TO_NEXT_PAINT;
+      break;
+    case 'LCP':
+      webVitalsMetric = LARGEST_CONTENTFUL_PAINT;
+      break;
+    case 'TTFB':
+      webVitalsMetric = TIME_TO_FIRST_BYTE;
+      break;
+  }
+  processTriggers(webVitalsMetric, data);
+};
+
+/**
  * Callback function when Cumulative Layout Shift (CLS) has been measured.
  */
 const triggerCLS = (data) => {
-  logger.info('Web Vitals CLS measured.');
-  processTriggers(CUMULATIVE_LAYOUT_SHIFT, data);
+  triggerWebVitalsMetric('CLS', data);
 };
 
 /**
  * Callback function when First Contentful Paint (FCP) has been measured.
  */
 const triggerFCP = (data) => {
-  logger.info('Web Vitals FCP measured.');
-  processTriggers(FIRST_CONTENTFUL_PAINT, data);
+  triggerWebVitalsMetric('FCP', data);
 };
 
 /**
  * Callback function when First Input Delay (FID) has been measured.
  */
 const triggerFID = (data) => {
-  logger.info('Web Vitals FID measured.');
-  processTriggers(FIRST_INPUT_DELAY, data);
+  triggerWebVitalsMetric('FID', data);
 };
 
 /**
  * Callback function when Interaction to Next Paint (INP) has been measured.
  */
 const triggerINP = (data) => {
-  logger.info('Web Vitals INP measured.');
-  processTriggers(INTERACTION_TO_NEXT_PAINT, data);
+  triggerWebVitalsMetric('INP', data);
 };
 
 /**
  * Callback function when Largest Contentful Paint (LCP) has been measured.
  */
 const triggerLCP = (data) => {
-  logger.info('Web Vitals LCP measured.');
-  processTriggers(LARGEST_CONTENTFUL_PAINT, data);
+  triggerWebVitalsMetric('LCP', data);
 };
 
 /**
  * Callback function when Time to First Byte (TTFB) has been measured.
  */
 const triggerTTFB = (data) => {
-  logger.info('Web Vitals TTFB measured.');
-  processTriggers(TIME_TO_FIRST_BYTE, data);
+  triggerWebVitalsMetric('TTFB', data);
 };
 
 /**
