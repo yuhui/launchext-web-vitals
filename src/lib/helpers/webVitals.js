@@ -20,6 +20,7 @@ const window = require('@adobe/reactor-window');
 const loadScript = require('@adobe/reactor-load-script');
 
 const logger = turbine.logger;
+const toString = Object.prototype.toString;
 
 // constants related to Web Vitals metrics
 const CUMULATIVE_LAYOUT_SHIFT = 'Cumulative Layout Shift';
@@ -40,8 +41,14 @@ const WEB_VITALS_METRICS = [
 ];
 
 // constants related to setting up Web Vitals
-const WEB_VITALS_MAJOR_VERSION = '3.0';
-const WEB_VITALS_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
+const WEB_VITALS_LIBRARY_TYPES = [
+  'bundle',
+  'cdn',
+  'url',
+];
+const WEB_VITALS_CDN_MAJOR_VERSION = '3.1';
+const WEB_VITALS_CDN_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
+const WEB_VITALS_VENDOR_SCRIPT_FILENAME = 'web-vitals.attribution.iife.js';
 
 // constants related to this Extension's settings
 const EXTENSION_SETTINGS = turbine.getExtensionSettings();
@@ -170,13 +177,15 @@ const triggerTTFB = (data) => {
  * Returns with an error log if the script could not be loaded.
  *
  * @param {Object} settings The configuration settings object.
- * @param {number} [settings.durationThresholdINP=40] Duration threshold for INP.
- * @param {number} [settings.reportAllChangesCLS=no] Whether to report all CLS changes.
- * @param {number} [settings.reportAllChangesFCP=no] Whether to report all FCP changes.
- * @param {number} [settings.reportAllChangesFID=no] Whether to report all FID changes.
- * @param {number} [settings.reportAllChangesINP=yes] Whether to report all INP changes.
- * @param {number} [settings.reportAllChangesLCP=no] Whether to report all LCP changes.
- * @param {number} [settings.reportAllChangesTTFB=no] Whether to report all TTFB changes.
+ * @param {Number} settings.durationThresholdINP=40 Duration threshold for INP.
+ * @param {String} settings.reportAllChangesCLS=no Whether to report all CLS changes.
+ * @param {String} settings.reportAllChangesFCP=no Whether to report all FCP changes.
+ * @param {String} settings.reportAllChangesFID=no Whether to report all FID changes.
+ * @param {String} settings.reportAllChangesINP=yes Whether to report all INP changes.
+ * @param {String} settings.reportAllChangesLCP=no Whether to report all LCP changes.
+ * @param {String} settings.reportAllChangesTTFB=no Whether to report all TTFB changes.
+ * @param {String} settings.webVitalsLibraryType=cdn Where to load web-vitals.js from.
+ * @param {String} settings.webVitalsLibraryUrl=default URL to load web-vitals.js.
  */
 const loadWebVitals = function({
   durationThresholdINP = 40,
@@ -186,16 +195,38 @@ const loadWebVitals = function({
   reportAllChangesINP = 'yes',
   reportAllChangesLCP = 'no',
   reportAllChangesTTFB = 'no',
+  webVitalsLibraryType = 'cdn',
+  webVitalsLibraryUrl = 'default',
 }) {
-  loadScript(WEB_VITALS_URL).then(() => {
-    if (!webVitals) {
-      logger.error(
-        'Web Vitals could not be loaded, possibly because web-vitals.js could not be found.'
-      );
+  if (!WEB_VITALS_LIBRARY_TYPES.includes(webVitalsLibraryType)) {
+    logger.error(`Unknown Web Vitals library type provided: "${webVitalsLibraryType}".`);
+    return;
+  }
+
+  let webVitalsUrl = WEB_VITALS_CDN_URL;
+  switch (webVitalsLibraryType) {
+    case 'bundle':
+      webVitalsUrl = turbine.getHostedLibFileUrl(WEB_VITALS_VENDOR_SCRIPT_FILENAME);
+      break;
+    case 'url':
+      webVitalsUrl = webVitalsLibraryUrl;
+      break;
+  }
+  if (!webVitalsUrl) {
+    logger.error(`Invalid URL to load Web Vitals library from: "${webVitalsUrl}".`);
+    return;
+  }
+  const webVitalsLibraryLocation = webVitalsLibraryType === 'bundle'
+    ? 'this extension'
+    : `"${webVitalsUrl}"`;
+
+  loadScript(webVitalsUrl).then(() => {
+    if (!window.webVitals) {
+      logger.error(`Web Vitals could not be loaded from ${webVitalsLibraryLocation}.`);
       return;
     }
 
-    logger.info('Web Vitals was loaded successfully.');
+    logger.debug(`Web Vitals was loaded successfully from ${webVitalsLibraryLocation}.`);
 
     webVitals.onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
     webVitals.onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
@@ -207,7 +238,7 @@ const loadWebVitals = function({
     webVitals.onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
     webVitals.onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
   }, () => {
-    logger.error('Web Vitals could not be loaded.');
+    logger.error(`Web Vitals could not be loaded from ${webVitalsLibraryLocation}.`);
   });
 };
 

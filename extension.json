@@ -11,6 +11,7 @@
   },
   "exchangeUrl": "https://exchange.adobe.com/apps/ec/106769/web-vitals",
   "iconPath": "web-vitals-icon.svg",
+  "hostedLibFiles": [ "vendor/web-vitals.attribution.iife.js" ],
   "viewBasePath": "src/view/",
   "configuration": {
     "viewPath": "configuration/configuration.html",
@@ -53,6 +54,15 @@
           "type": "string",
           "enum": [ "no", "yes" ],
           "default": "no"
+        },
+        "webVitalsLibraryType": {
+          "type": "string",
+          "enum": [ "bundle", "cdn", "url" ],
+          "default": "cdn"
+        },
+        "webVitalsLibraryUrl": {
+          "type": "string",
+          "default": "default"
         }
       }
     }
