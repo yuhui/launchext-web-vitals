@@ -5,39 +5,76 @@
     <title>Web Vitals Configuration</title>
     <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
-    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
+    <script src="../dist/js/coral.min.js"></script>
   </head>
   <body class="coral--light coral-Body--S u-coral-margin">
     <form id="extension-configuration" class="coral-Form">
       <h4 class="coral-Heading--M">Extension Configuration</h4>
 
-      <div class="coral-FormGroup-item">
+      <div id="web-vitals-library-type-container" class="coral-FormGroup-item">
+        <label class="coral-FormGroup-itemLabel coral-FieldLabel--left">
+          Load <code class="coral-Code--XS">web-vitals.js</code> from
+          <coral-icon icon="Asterisk" class="coral-FieldLabel-requiredIcon" size="XXS" alt="required"></coral-icon>
+        </label>
+        <coral-radiogroup orientation="vertical">
+          <coral-radio name="webVitalsLibraryType" value="cdn" checked="">
+            the <code class="coral-Code--S">unpkg.com</code> CDN
+            <em>
+              (most updated library, uses Web Vitals 3.1.x with attribution)
+            </em>
+          </coral-radio>
+          <coral-radio name="webVitalsLibraryType" value="bundle" checked="">
+            the library that is bundled with this extension
+            <em>
+              (loads quickly, uses Web Vitals 3.1.0 with attribution)
+            </em>
+          </coral-radio>
+          <coral-radio name="webVitalsLibraryType" value="url">
+            a specific URL
+          </coral-radio>
+        </coral-radiogroup>
+      </div>
+
+      <div id="web-vitals-library-url-container" class="coral-FormGroup-item hide">
+        <label for="web-vitals-library-url" class="coral-FormGroup-itemLabel coral-FieldLabel--left">
+          URL to load <code class="coral-Code--XS">web-vitals.js</code> from.
+          <b>Important!</b> Ensure that you use the IIFE version, for example,
+          <code class="coral-Code--XS">web-vitals.attribution.iife.js</code>.
+        </label>
+        <div class="coral-InputGroup" style="width: 100%;" role="presentation">
+          <input id="web-vitals-library-url" name="webVitalsLibraryUrl" value="" class="coral-InputGroup-input" is="coral-textfield" placeholder="https://www.website.com/web-vitals.attribution.iife.js">
+        </div>
+      </div>
+
+      <br class="coral-Divider--S">
+
+      <div id="report-all-changes-container" class="coral-FormGroup-item">
         <label class="coral-FormGroup-itemLabel coral-FieldLabel--left">
           Report the selected metrics with every change:
         </label>
-        <div id="report-all-changes-container" class="coral-FormGroup-itemField">
-          <coral-checkboxgroup orientation="vertical">
-            <coral-switch name="reportAllChangesCLS" value="yes">
-              Cumulative Layout Shift (CLS)
-            </coral-switch>
-            <coral-switch name="reportAllChangesFCP" value="yes">
-              First Contentful Paint (FCP)
-            </coral-switch>
-            <coral-switch name="reportAllChangesFID" value="yes">
-              First Input Delay (FID)
-            </coral-switch>
-            <coral-switch name="reportAllChangesINP" value="yes" checked="">
-              Interaction to Next Paint (INP)
-            </coral-switch>
-            <coral-switch name="reportAllChangesLCP" value="yes">
-              Largest Contentful Paint (LCP)
-            </coral-switch>
-            <coral-switch name="reportAllChangesTTFB" value="yes">
-              Time to First Byte (TTFB)
-            </coral-switch>
-          </coral-checkboxgroup>
-        </div>
+        <coral-checkboxgroup orientation="vertical">
+          <coral-switch name="reportAllChangesCLS" value="yes">
+            Cumulative Layout Shift (CLS)
+          </coral-switch>
+          <coral-switch name="reportAllChangesFCP" value="yes">
+            First Contentful Paint (FCP)
+          </coral-switch>
+          <coral-switch name="reportAllChangesFID" value="yes">
+            First Input Delay (FID)
+          </coral-switch>
+          <coral-switch name="reportAllChangesINP" value="yes" checked="">
+            Interaction to Next Paint (INP)
+          </coral-switch>
+          <coral-switch name="reportAllChangesLCP" value="yes">
+            Largest Contentful Paint (LCP)
+          </coral-switch>
+          <coral-switch name="reportAllChangesTTFB" value="yes">
+            Time to First Byte (TTFB)
+          </coral-switch>
+        </coral-checkboxgroup>
       </div>
+
+      <br class="coral-Divider--S">
 
       <div id="duration-threshold-container" class="coral-FormGroup-item">
         <label for="duration-threshold-inp" class="coral-FormGroup-itemLabel">
@@ -82,7 +119,6 @@
         <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals" target="_blank" rel="noopener noreferrer">
           Learn more about Web Vitals, as defined by Google.
         </a>
-        This extension loads Web Vitals 3.0.x.
       </p>
 
       <p>
@@ -138,7 +174,7 @@
 
       <p>
         This extension loads the required Web Vitals library, <code class="coral-Code--XS">web-vitals.js</code>, when
-        the Launch library is loaded. No Rule Action is needed to do this.
+        the Tags library is loaded. No Rule Action is needed to do this.
       </p>
 
       <coral-alert variant="warning">
@@ -146,8 +182,8 @@
           Accuracy of measurements
         </coral-alert-header>
         <coral-alert-content>
-          Since <code class="coral-Code--XS">web-vitals.js</code> is loaded after the Launch
-          library itself has been loaded, some Web Vitals metrics may not be measured as
+          Since <code class="coral-Code--XS">web-vitals.js</code> is loaded <em>after</em> the
+          Tags library itself has been loaded, some Web Vitals metrics may not be measured as
           accurately as when they are implemented directly into the web pages. In some cases, the
           Web Vitals metrics may just not be measured at all.
         </coral-alert-content>
@@ -196,13 +232,28 @@
     <script>
       const FORM_ID = 'extension-configuration';
 
+      const WEB_VITALS_LIBRARY_TYPES = [
+        'bundle',
+        'cdn',
+        'url',
+      ];
+
+      const toggleWebVitalsLibraryUrlContainer = () => {
+        toggleElement(
+          FORM_ID,
+          'webVitalsLibraryType',
+          'url',
+          '#web-vitals-library-url-container',
+        );
+      };
+
       window.extensionBridge.register({
         init: (info) => {
           const { settings } = info;
           if (settings) {
             const hasOwnProperty = Object.prototype.hasOwnProperty;
 
-            // this setting was added in v1.2.0
+            // these settings were added in v1.2.0
             if (
               !hasOwnProperty.call(settings, 'reportAllChangesINP')
               || !hasOwnProperty.call(settings, 'durationThresholdINP')
@@ -211,7 +262,21 @@
               info.settings.durationThresholdINP = 40;
             }
 
+            // these settings were added in v1.3.0
+            if (!hasOwnProperty.call(settings, 'webVitalsLibraryType')) {
+              info.settings.webVitalsLibraryType = 'cdn';
+            }
+            if (
+              !hasOwnProperty.call(settings, 'webVitalsLibraryUrl')
+              || settings.webVitalsLibraryUrl === 'default'
+              || settings.webVitalsLibraryType === 'cdn'
+            ) {
+              info.settings.webVitalsLibraryUrl = '';
+            }
+
             setFormValues(FORM_ID, info.settings);
+
+            toggleWebVitalsLibraryUrlContainer();
           }
         },
 
@@ -225,9 +290,11 @@
             reportAllChangesINP,
             reportAllChangesLCP,
             reportAllChangesTTFB,
+            webVitalsLibraryUrl,
           } = formValues;
 
-          // rewrite value so as not to deal with empty strings
+          formValues.durationThresholdINP = stringToInteger(durationThresholdINP);
+
           if (reportAllChangesCLS === '') {
             formValues.reportAllChangesCLS = 'no';
           }
@@ -246,8 +313,10 @@
           if (reportAllChangesTTFB === '') {
             formValues.reportAllChangesTTFB = 'no';
           }
+          if (webVitalsLibraryUrl === '') {
+            formValues.webVitalsLibraryUrl = 'default';
+          }
 
-          formValues.durationThresholdINP = stringToInteger(durationThresholdINP);
 
           return formValues;
         },
@@ -262,6 +331,8 @@
             reportAllChangesINP,
             reportAllChangesLCP,
             reportAllChangesTTFB,
+            webVitalsLibraryType,
+            // don't need to validate webVitalsLibraryUrl
           } = formValues;
 
           const durationThresholdINPNum = stringToInteger(durationThresholdINP);
@@ -283,14 +354,25 @@
           const reportAllChangesLCPIsValid = ['', 'yes'].includes(reportAllChangesLCP);
           const reportAllChangesTTFBIsValid = ['', 'yes'].includes(reportAllChangesTTFB);
 
+          const webVitalsLibraryTypeIsValid = WEB_VITALS_LIBRARY_TYPES.includes(webVitalsLibraryType);
+
           return durationThresholdINPIsValid
             && reportAllChangesCLSIsValid
             && reportAllChangesFCPIsValid
             && reportAllChangesFIDIsValid
             && reportAllChangesINPIsValid
             && reportAllChangesLCPIsValid
-            && reportAllChangesTTFBIsValid;
+            && reportAllChangesTTFBIsValid
+            && webVitalsLibraryTypeIsValid;
         }
+      });
+
+      const webVitalsLibraryTypeRadioSelector = '#web-vitals-library-type-container coral-radio';
+      const webVitalsLibraryTypeRadios = document.querySelectorAll(
+        webVitalsLibraryTypeRadioSelector
+      );
+      webVitalsLibraryTypeRadios.forEach((radio) => {
+        radio.addEventListener('click', (event) => toggleWebVitalsLibraryUrlContainer());
       });
     </script>
   </body>

@@ -5,7 +5,7 @@
     <title>Metric Attribution Data Element</title>
     <link rel="stylesheet" href="../dist/css/coral.min.css">
     <link rel="stylesheet" href="../stylesheets/style.css">
-    <script src="../dist/js/coral.min.js" data-coral-icons-external="js"></script>
+    <script src="../dist/js/coral.min.js"></script>
   </head>
   <body class="coral--light coral-Body--S u-coral-margin">
     <form id="data-element-configuration" class="coral-Form coral-FormGroup--labelsAbove">
@@ -17,7 +17,7 @@
           <coral-icon icon="Asterisk" class="coral-FieldLabel-requiredIcon" size="XXS" alt="required"></coral-icon>
         </label>
         <div class="coral-InputGroup" style="width: 100%;" role="presentation">
-          <coral-select id="metric-attribution-item" name="metricAttributionItem" class="coral-Form-field" labelledby="metric-attribution-item-label">
+          <coral-select id="metric-attribution-item" name="metricAttributionItem" class="coral-Form-field" labelledby="metric-attribution-item-label" style="width: 100%;">
             <coral-select-item value="connectionTime">Connection Time (TTFB)</coral-select-item>
             <coral-select-item value="dnsTime">DNS Time (TTFB)</coral-select-item>
             <coral-select-item value="element">Element (LCP)</coral-select-item>
@@ -55,7 +55,33 @@
         potentially-helpful debugging information that can be sent along with the metric value for
         the current page visit in order to help identify issues happening to real-users in the
         field.
+        <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#attribution" target="_blank" rel="noopener noreferrer">
+          Refer to the Web Vitals project to learn more about the
+          <code class="coral-Code--XS">attribution</code> metric property.
+        </a>
       </p>
+
+      <coral-alert variant="warning">
+        <coral-alert-header>
+          Web Vitals <code class="coral-Code--XS">attribution</code> build required
+        </coral-alert-header>
+        <coral-alert-content>
+          <p>
+            If you are loading the Web Vitals library from your own URL, <em>and</em> you want to use
+            this Data Element, then you <span class="text-underline">must</span> ensure that your
+            Web Vitals library includes the <code class="coral-Code--XS">attribution</code> build.
+            <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#attribution-build" target="_blank" rel="noopener noreferrer">
+              Learn more.
+            </a>
+          </p>
+          <p>
+            If you are loading the Web Vitals library from the one that is bundled with this extension
+            or from the <code class="coral-Code--XS">unpkg.com</code> CDN, then the
+            <code class="coral-Code--XS">attribution</code> build has been included already, so you can
+            use this Data Element.
+          </p>
+        </coral-alert-content>
+      </coral-alert>
 
       <p>
         <b>This data element <span class="text-underline">must</span> be used with an Event from
@@ -68,473 +94,6 @@
         <li class="coral-List-item"><code class="coral-Code--XS">%data element name%</code></li>
         <li class="coral-List-item"><code class="coral-Code--XS">_satellite.getVar('data element name', event)</code></li>
       </ul>
-
-      <table is="coral-table" variant="quiet">
-        <colgroup>
-          <col is="coral-table-column" sortable="" sortabledirection="ascending">
-          <col is="coral-table-column">
-          <col is="coral-table-column" sortable="" sortabledirection="ascending">
-          <col is="coral-table-column">
-        </colgroup>
-        <thead is="coral-table-head">
-          <tr is="coral-table-row">
-            <th is="coral-table-headercell">Attribution</th>
-            <th is="coral-table-headercell">Definition</th>
-            <th is="coral-table-headercell">Data Type</th>
-            <th is="coral-table-headercell">Events that it can be reported with</th>
-          </tr>
-        </thead>
-        <tbody is="coral-table-body">
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Load State
-            </td>
-            <td is="coral-table-cell">
-              CLS: The loading state of the document at the time when the largest layout shift
-              contribution to the page's CLS score occurred.<br />
-              FCP: The loading state of the document at the time when FCP occurred. Ideally,
-              documents can paint before they finish loading (e.g. the loading or DOM interactive
-              phases).<br />
-              FID: The loading state of the document at the time when the first interaction
-              occurred. If the first interaction occurred while the document was loading and
-              executing script (e.g. usually in the DOM interactive phase), it can result in long
-              input delays.<br />
-              INP: The loading state of the document at the time when the Web Vitals event
-              corresponding to Web Vitals metric occurred. If the interaction occurred while the
-              document was loading and executing script (e.g. usually in the DOM interactive
-              phase), it can result in long delays.<br />
-              Possible values:
-              <ul class="coral-List--condensed">
-                <li class="coral-List-item"><code class="coral-Code--S">loading</code></li>
-                <li class="coral-List-item"><code class="coral-Code--S">dom-interactive</code></li>
-                <li class="coral-List-item"><code class="coral-Code--S">dom-content-loaded</code></li>
-                <li class="coral-List-item"><code class="coral-Code--S">complete</code></li>
-              </ul>
-            </td>
-            <td is="coral-table-cell">
-              String
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Cumulative Layout Shift</li>
-                <li class="coral-List-item">First Contentful Paint</li>
-                <li class="coral-List-item">First Input Delay</li>
-                <li class="coral-List-item">Interaction to Next Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Largest Shift Target
-            </td>
-            <td>
-              A selector identifying the first element (in document order) that shifted when the
-              single largest layout shift contributing to the page's CLS score occurred.
-            </td>
-            <td is="coral-table-cell">
-              String
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Cumulative Layout Shift</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Largest Shift Time
-            </td>
-            <td is="coral-table-cell">
-              The time when the single largest layout shift contributing to the page's CLS score
-              occurred.
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/DOMHighResTimeStamp" target="_blank" rel="noopener noreferrer">DOMHighResTimeStamp</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Cumulative Layout Shift</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Largest Shift Value
-            </td>
-            <td is="coral-table-cell">
-              The layout shift score of the single largest layout shift contributing to the page's
-              CLS score.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Cumulative Layout Shift</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Largest Shift Entry
-            </td>
-            <td is="coral-table-cell">
-              Represents the single largest layout shift contributing to the page's CLS score.
-              (Useful when you need more than just Largest Shift Target, Largest Shift Time, and
-              Largest Shift Value.)
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/LayoutShift" target="_blank" rel="noopener noreferrer">LayoutShift</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Cumulative Layout Shift</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Largest Shift Source
-            </td>
-            <td is="coral-table-cell">
-              The first element source (in document order) among the sources list of the Largest
-              Shift Entry object. (Useful when you need more than just Largest Shift Target,
-              Largest Shift Time, and Largest Shift Value.)
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/LayoutShiftAttribution" target="_blank" rel="noopener noreferrer">LayoutShiftAttribution</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Cumulative Layout Shift</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Time to First Byte
-            </td>
-            <td is="coral-table-cell">
-              The time from when the user initiates loading the page until when the browser
-              receives the first byte of the response (a.k.a. TTFB).
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Contentful Paint</li>
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              First Byte To FCP
-            </td>
-            <td is="coral-table-cell">
-              The delta between TTFB and the first contentful paint (FCP).
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              FCP Entry
-            </td>
-            <td is="coral-table-cell">
-              The PerformancePaintTiming entry corresponding to FCP.
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformancePaintTiming" target="_blank" rel="noopener noreferrer">PerformancePaintTiming</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Navigation Entry
-            </td>
-            <td is="coral-table-cell">
-              FCP, LCP: The navigation entry of the current page, which is useful for diagnosing
-              general page load issues.<br />
-              TTFB: The PerformanceNavigationTiming entry used to determine TTFB.
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceNavigationTiming" target="_blank" rel="noopener noreferrer">PerformanceNavigationTiming</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Contentful Paint</li>
-                <li class="coral-List-item">Largest Contentful Paint</li>
-                <li class="coral-List-item">Time to First Byte</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Event Target
-            </td>
-            <td is="coral-table-cell">
-              A selector identifying the element that the user interacted with. This element will
-              be the target of the Web Vitals event dispatched.
-            </td>
-            <td is="coral-table-cell">
-              String
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Input Delay</li>
-                <li class="coral-List-item">Interaction to Next Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Event Time
-            </td>
-            <td is="coral-table-cell">
-              The time when the user interacted. This time will match the timestamp value of the
-              Web Vitals event dispatched.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Input Delay</li>
-                <li class="coral-List-item">Interaction to Next Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Event Type
-            </td>
-            <td is="coral-table-cell">
-              The type of the Web Vitals event dispatched corresponding to the Web Vitals metric.
-            </td>
-            <td is="coral-table-cell">
-              String
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Input Delay</li>
-                <li class="coral-List-item">Interaction to Next Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Event Entry
-            </td>
-            <td is="coral-table-cell">
-              The PerformanceEventTiming entry corresponding to the Web Vitals metric.
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEventTiming" target="_blank" rel="noopener noreferrer">PerformanceEventTiming</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">First Input Delay</li>
-                <li class="coral-List-item">Interaction to Next Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Element
-            </td>
-            <td is="coral-table-cell">
-              The element corresponding to the largest contentful paint for the page.
-            </td>
-            <td is="coral-table-cell">
-              String
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              URL
-            </td>
-            <td is="coral-table-cell">
-              The URL (if applicable) of the LCP image resource. If the LCP element is a text node,
-              this value will not be set.
-            </td>
-            <td is="coral-table-cell">
-              String
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Resource Load Delay
-            </td>
-            <td is="coral-table-cell">
-              The delta between TTFB and when the browser starts loading the LCP resource (if there
-              is one, otherwise 0.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Resource Load Time
-            </td>
-            <td is="coral-table-cell">
-              The total time it takes to load the LCP resource itself (if there is one, otherwise
-              0).
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Element Render Delay
-            </td>
-            <td is="coral-table-cell">
-              The delta between when the LCP resource finishes loading until the LCP element is
-              fully rendered.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              LCP Resource Entry
-            </td>
-            <td is="coral-table-cell">
-              The resource entry for the LCP resource (if applicable), which is useful for
-              diagnosing resource load issues.
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceResourceTiming" target="_blank" rel="noopener noreferrer">PerformanceResourceTiming</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              LCP Entry
-            </td>
-            <td is="coral-table-cell">
-              The Largest Contentful Paint entry corresponding to LCP.
-            </td>
-            <td is="coral-table-cell">
-              <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/LargestContentfulPaint" target="_blank" rel="noopener noreferrer">LargestContentfulPaint</a>
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Largest Contentful Paint</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Waiting Time
-            </td>
-            <td is="coral-table-cell">
-              The total time from when the user initiates loading the page to when the DNS lookup
-              begins. This includes redirects, service worker startup, and HTTP cache lookup times.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Time to First Byte</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              DNS Time
-            </td>
-            <td is="coral-table-cell">
-              The total time to resolve the DNS for the current request.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Time to First Byte</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Connection Time
-            </td>
-            <td is="coral-table-cell">
-              The total time to create the connection to the requested domain.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Time to First Byte</li>
-              </ul>
-            </td>
-          </tr>
-          <tr is="coral-table-row">
-            <td is="coral-table-cell" role="rowheader">
-              Request Time
-            </td>
-            <td is="coral-table-cell">
-              The time from when the request was sent until the first byte of the response was
-              received. This includes network time as well as server processing time.
-            </td>
-            <td is="coral-table-cell">
-              Number
-            </td>
-            <td is="coral-table-cell">
-              <ul class="coral-List">
-                <li class="coral-List-item">Time to First Byte</li>
-              </ul>
-            </td>
-          </tr>
-        </tbody>
-      </table>
     </section>
 
     <hr class="coral-Divider--S">

@@ -17,6 +17,11 @@
 'use strict';
 
 describe('metricAttribution data element delegate', () => {
+  // mock turbine.logger
+  global.turbine = global.turbine || {
+    logger: jasmine.createSpyObj('', ['debug', 'info', 'warn', 'alert', 'error']),
+  };
+
   const dataElementDelegate = require('../../../src/lib/dataElements/metricAttribution');
   const getBaseEvent = require('../../specHelpers/getBaseEvent');
 
@@ -34,15 +39,9 @@ describe('metricAttribution data element delegate', () => {
         delete this.settings.metricAttributionItem;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
-      }
-    );
 
-    it(
-      'should be undefined when "metricAttributionItem" value is not found in "attribution"',
-      () => {
-        delete this.event.webvitals.attribution[this.settings.metricAttributionItem];
-        const result = dataElementDelegate(this.settings, this.event);
-        expect(result).toBeUndefined();
+        const logError = global.turbine.logger.error;
+        expect(logError).toHaveBeenCalledWith('No metric attribution item provided.');
       }
     );
   });
@@ -54,15 +53,35 @@ describe('metricAttribution data element delegate', () => {
         delete this.event.webvitals;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
       }
     );
 
     it(
-      'should be undefined when "attribution" property is missing',
+      'should be undefined when "attribution" property is missing in "webvitals"',
       () => {
         delete this.event.webvitals.attribution;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Metric attribution not available.');
+      }
+    );
+
+    it(
+      'should be undefined when "metricAttributionItem" property is missing in "attribution"',
+      () => {
+        delete this.event.webvitals.attribution[this.settings.metricAttributionItem];
+        const result = dataElementDelegate(this.settings, this.event);
+        expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith(
+          `Metric attribution item "${this.settings.metricAttributionItem}" not available.`
+        );
       }
     );
   });

@@ -16,6 +16,14 @@
 
 'use strict';
 
+const logger = turbine.logger;
+
+const RATINGS = [
+  'good',
+  'needs-improvement',
+  'poor',
+];
+
 /**
  * Rating data element.
  * This data element returns the rating of the metric.
@@ -26,12 +34,23 @@
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
- * @param {Object} [event.webvitals=null] The event's data.
+ * @param {Object} event.webvitals=null The event's data.
  * @returns {String}
  */
 module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
+    logger.warn('Web Vitals not available.');
     return;
   }
-  return webvitals.rating;
+  const { rating = null } = webvitals;
+  if (!rating) {
+    logger.warn('Metric rating not available.');
+    return;
+  }
+  if (!RATINGS.includes(rating)) {
+    logger.error(`Invalid metric rating: "${rating}".`);
+    return;
+  }
+
+  return rating;
 };

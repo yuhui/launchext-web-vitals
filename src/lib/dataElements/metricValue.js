@@ -16,18 +16,27 @@
 
 'use strict';
 
+const logger = turbine.logger;
+
 /**
  * Value data element.
  * This data element returns the current value of the metric.
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
- * @param {Object} [event.webvitals=null] The event's data.
- * @returns {float}
+ * @param {Object} event.webvitals=null The event's data.
+ * @returns {Float}
  */
 module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
+    logger.warn('Web Vitals not available.');
     return;
   }
-  return webvitals.value;
+  const { value = null } = webvitals;
+  if (!value) {
+    logger.warn('Metric value not available.');
+    return;
+  }
+
+  return value;
 };

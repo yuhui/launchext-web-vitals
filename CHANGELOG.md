@@ -1,3 +1,13 @@
+1.3.0 (released 29 November 2022)
+---------------------------------
+
+- Updated web-vitals.js library to version 3.1.
+- Bundled web-vitals.js library in the extension.
+- Allow user to specify where to load the web-vitals.js library from: unpkg.com CDN, extension bundle, or own URL.
+- Added error checks to validate Web Vitals events and metrics.
+- Removed documentation of Web Vitals metrics values in favour of linking to the Web Vitals Github repository's README.
+- Updated Adobe Coral to version 4.15.7.
+
 1.2.0 (released 29 September 2022)
 ----------------------------------
 

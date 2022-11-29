@@ -32,6 +32,9 @@ describe('metricFullName data element delegate', () => {
         delete this.event.webvitals;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
       }
     );
 
@@ -41,6 +44,9 @@ describe('metricFullName data element delegate', () => {
         delete this.event.webvitals.fullName;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Metric full name not available.');
       }
     );
   });

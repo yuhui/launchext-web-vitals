@@ -20,6 +20,7 @@ const window = require('@adobe/reactor-window');
 const loadScript = require('@adobe/reactor-load-script');
 
 const logger = turbine.logger;
+const toString = Object.prototype.toString;
 
 // constants related to Web Vitals metrics
 const CUMULATIVE_LAYOUT_SHIFT = 'Cumulative Layout Shift';
@@ -40,15 +41,21 @@ const WEB_VITALS_METRICS = [
 ];
 
 // constants related to setting up Web Vitals
-const WEB_VITALS_MAJOR_VERSION = '3.0';
-const WEB_VITALS_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
+const WEB_VITALS_LIBRARY_TYPES = [
+  'bundle',
+  'cdn',
+  'url',
+];
+const WEB_VITALS_CDN_MAJOR_VERSION = '3.1';
+const WEB_VITALS_CDN_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
+const WEB_VITALS_VENDOR_SCRIPT_FILENAME = 'web-vitals.attribution.iife.js';
 
 // constants related to this Extension's settings
 const EXTENSION_SETTINGS = turbine.getExtensionSettings();
 
 /**
  * Create the registry of all WebVitals metric events.
- * Every registered event has a list of triggers, where one trigger corresponds to one Launch Rule.
+ * Every registered event has a list of triggers, where one trigger corresponds to one Tags Rule.
  */
 const registry = {};
 WEB_VITALS_METRICS.forEach((webVitalsMetric) => {
@@ -76,7 +83,7 @@ const createGetWebVitalsMetricEvent = (element, metricData) => {
 /**
  * Get data for the current Web Vitals metric.
  *
- * @param {string} webVitalsMetric The Web Vitals metric.
+ * @param {String} webVitalsMetric The Web Vitals metric.
  * @param {Object} data Data measured for the Web Vitals metric.
  *
  * @return {Object} Data about the current Web Vitals metric.
@@ -91,9 +98,9 @@ const getWebVitalsMetricData = (webVitalsMetric, data) => {
  * Run a trigger that had been registered with the specified Web Vitals metric.
  *
  * @param {Object} metricData Data about the current Web Vitals metric.
- * @param {Object} triggerData Data that had been set with the Launch Rule.
+ * @param {Object} triggerData Data that had been set with the Tags Rule.
  * See module.exports below.
- * @param {ruleTrigger} triggerData.trigger The Launch Rule's trigger function.
+ * @param {ruleTrigger} triggerData.trigger The Tags Rule's trigger function.
  */
 const processTrigger = (metricData, { trigger }) => {
   const getWebVitalsMetricEvent = createGetWebVitalsMetricEvent.bind(window);
@@ -104,10 +111,11 @@ const processTrigger = (metricData, { trigger }) => {
 /**
  * When a Web Vitals metric has been measured, run all triggers registered with that metric.
  *
- * @param {string} webVitalsMetric The Web Vitals metric.
+ * @param {String} webVitalsMetric The Web Vitals metric.
  * @param {Object} data Data measured for the Web Vitals metric.
  */
 const processTriggers = (webVitalsMetric, data) => {
+  logger.debug(`${webVitalsMetric} measured.`);
   const metricData = getWebVitalsMetricData(webVitalsMetric, data);
 
   const webVitalsMetricTriggerData = registry[webVitalsMetric];
@@ -117,51 +125,76 @@ const processTriggers = (webVitalsMetric, data) => {
 };
 
 /**
+ * Used by Web Vitals callback functions after a metric has been measured.
+ *
+ * @param {String} webVitalsMetricAbbreviation The Web Vitals metric abbreviation.
+ * @param {Object} data Data measured for the Web Vitals metric.
+ */
+const triggerWebVitalsMetric = (webVitalsMetricAbbreviation, data) => {
+  let webVitalsMetric;
+  switch (webVitalsMetricAbbreviation) {
+    case 'CLS':
+      webVitalsMetric = CUMULATIVE_LAYOUT_SHIFT;
+      break;
+    case 'FCP':
+      webVitalsMetric = FIRST_CONTENTFUL_PAINT;
+      break;
+    case 'FID':
+      webVitalsMetric = FIRST_INPUT_DELAY;
+      break;
+    case 'INP':
+      webVitalsMetric = INTERACTION_TO_NEXT_PAINT;
+      break;
+    case 'LCP':
+      webVitalsMetric = LARGEST_CONTENTFUL_PAINT;
+      break;
+    case 'TTFB':
+      webVitalsMetric = TIME_TO_FIRST_BYTE;
+      break;
+  }
+  processTriggers(webVitalsMetric, data);
+};
+
+/**
  * Callback function when Cumulative Layout Shift (CLS) has been measured.
  */
 const triggerCLS = (data) => {
-  logger.info('Web Vitals CLS measured.');
-  processTriggers(CUMULATIVE_LAYOUT_SHIFT, data);
+  triggerWebVitalsMetric('CLS', data);
 };
 
 /**
  * Callback function when First Contentful Paint (FCP) has been measured.
  */
 const triggerFCP = (data) => {
-  logger.info('Web Vitals FCP measured.');
-  processTriggers(FIRST_CONTENTFUL_PAINT, data);
+  triggerWebVitalsMetric('FCP', data);
 };
 
 /**
  * Callback function when First Input Delay (FID) has been measured.
  */
 const triggerFID = (data) => {
-  logger.info('Web Vitals FID measured.');
-  processTriggers(FIRST_INPUT_DELAY, data);
+  triggerWebVitalsMetric('FID', data);
 };
 
 /**
  * Callback function when Interaction to Next Paint (INP) has been measured.
  */
 const triggerINP = (data) => {
-  logger.info('Web Vitals INP measured.');
-  processTriggers(INTERACTION_TO_NEXT_PAINT, data);
+  triggerWebVitalsMetric('INP', data);
 };
 
 /**
  * Callback function when Largest Contentful Paint (LCP) has been measured.
  */
 const triggerLCP = (data) => {
-  logger.info('Web Vitals LCP measured.');
-  processTriggers(LARGEST_CONTENTFUL_PAINT, data);
+  triggerWebVitalsMetric('LCP', data);
 };
 
 /**
  * Callback function when Time to First Byte (TTFB) has been measured.
  */
 const triggerTTFB = (data) => {
-  logger.info('Web Vitals TTFB measured.');
-  processTriggers(TIME_TO_FIRST_BYTE, data);
+  triggerWebVitalsMetric('TTFB', data);
 };
 
 /**
@@ -170,13 +203,15 @@ const triggerTTFB = (data) => {
  * Returns with an error log if the script could not be loaded.
  *
  * @param {Object} settings The configuration settings object.
- * @param {number} [settings.durationThresholdINP=40] Duration threshold for INP.
- * @param {number} [settings.reportAllChangesCLS=no] Whether to report all CLS changes.
- * @param {number} [settings.reportAllChangesFCP=no] Whether to report all FCP changes.
- * @param {number} [settings.reportAllChangesFID=no] Whether to report all FID changes.
- * @param {number} [settings.reportAllChangesINP=yes] Whether to report all INP changes.
- * @param {number} [settings.reportAllChangesLCP=no] Whether to report all LCP changes.
- * @param {number} [settings.reportAllChangesTTFB=no] Whether to report all TTFB changes.
+ * @param {Number} settings.durationThresholdINP=40 Duration threshold for INP.
+ * @param {String} settings.reportAllChangesCLS=no Whether to report all CLS changes.
+ * @param {String} settings.reportAllChangesFCP=no Whether to report all FCP changes.
+ * @param {String} settings.reportAllChangesFID=no Whether to report all FID changes.
+ * @param {String} settings.reportAllChangesINP=yes Whether to report all INP changes.
+ * @param {String} settings.reportAllChangesLCP=no Whether to report all LCP changes.
+ * @param {String} settings.reportAllChangesTTFB=no Whether to report all TTFB changes.
+ * @param {String} settings.webVitalsLibraryType=cdn Where to load web-vitals.js from.
+ * @param {String} settings.webVitalsLibraryUrl=default URL to load web-vitals.js.
  */
 const loadWebVitals = function({
   durationThresholdINP = 40,
@@ -186,28 +221,90 @@ const loadWebVitals = function({
   reportAllChangesINP = 'yes',
   reportAllChangesLCP = 'no',
   reportAllChangesTTFB = 'no',
+  webVitalsLibraryType = 'cdn',
+  webVitalsLibraryUrl = 'default',
 }) {
-  loadScript(WEB_VITALS_URL).then(() => {
-    if (!webVitals) {
-      logger.error(
-        'Web Vitals could not be loaded, possibly because web-vitals.js could not be found.'
-      );
+  if (!WEB_VITALS_LIBRARY_TYPES.includes(webVitalsLibraryType)) {
+    logger.error(`Unknown Web Vitals library type provided: "${webVitalsLibraryType}".`);
+    return;
+  }
+
+  let webVitalsUrl = WEB_VITALS_CDN_URL;
+  switch (webVitalsLibraryType) {
+    case 'bundle':
+      webVitalsUrl = turbine.getHostedLibFileUrl(WEB_VITALS_VENDOR_SCRIPT_FILENAME);
+      break;
+    case 'url':
+      webVitalsUrl = webVitalsLibraryUrl;
+      break;
+  }
+  if (!webVitalsUrl) {
+    logger.error(`Invalid URL to load Web Vitals library from: "${webVitalsUrl}".`);
+    return;
+  }
+  const webVitalsLibraryLocation = webVitalsLibraryType === 'bundle'
+    ? 'this extension'
+    : `"${webVitalsUrl}"`;
+
+  loadScript(webVitalsUrl).then(() => {
+    if (!window.webVitals) {
+      logger.error(`Web Vitals could not be loaded from ${webVitalsLibraryLocation}.`);
       return;
     }
 
-    logger.info('Web Vitals was loaded successfully.');
+    logger.debug(`Web Vitals was loaded successfully from ${webVitalsLibraryLocation}.`);
 
-    webVitals.onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
-    webVitals.onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
-    webVitals.onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
-    webVitals.onINP(triggerINP, {
-      reportAllChanges: reportAllChangesINP === 'yes',
-      durationThreshold: durationThresholdINP,
-    });
-    webVitals.onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
-    webVitals.onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
+    const {
+      onCLS = null,
+      onFCP = null,
+      onFID = null,
+      onINP = null,
+      onLCP = null,
+      onTTFB = null
+    } = window.webVitals;
+    const failedToLoadListeners = [];
+    if (onCLS && toString.call(onCLS) === '[object Function]') {
+      onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
+    } else {
+      failedToLoadListeners.push('onCLS');
+    }
+    if (onFCP && toString.call(onFCP) === '[object Function]') {
+      onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
+    } else {
+      failedToLoadListeners.push('onFCP');
+    }
+    if (onFID && toString.call(onFID) === '[object Function]') {
+      onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
+    } else {
+      failedToLoadListeners.push('onFID');
+    }
+    if (onINP && toString.call(onINP) === '[object Function]') {
+      onINP(triggerINP, {
+        reportAllChanges: reportAllChangesINP === 'yes',
+        durationThreshold: durationThresholdINP,
+      });
+    } else {
+      failedToLoadListeners.push('onINP');
+    }
+    if (onLCP && toString.call(onLCP) === '[object Function]') {
+      onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
+    } else {
+      failedToLoadListeners.push('onLCP');
+    }
+    if (onTTFB && toString.call(onTTFB) === '[object Function]') {
+      onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
+    } else {
+      failedToLoadListeners.push('onTTFB');
+    }
+
+    if (failedToLoadListeners.length > 0) {
+      const failedToLoadListenersString = failedToLoadListeners.map((listener) => {
+        return `"webVitals.${listener}()"`;
+      }).join(', ');
+      logger.warn(`${failedToLoadListenersString} could not be loaded.`);
+    }
   }, () => {
-    logger.error('Web Vitals could not be loaded.');
+    logger.error(`Web Vitals could not be loaded from ${webVitalsLibraryLocation}.`);
   });
 };
 
@@ -215,7 +312,7 @@ loadWebVitals(EXTENSION_SETTINGS);
 
 module.exports = {
   /**
-   * WebVitals event states (exposed from constants)
+   * Web Vitals event states (exposed from constants)
    */
   cls: CUMULATIVE_LAYOUT_SHIFT,
   fid: FIRST_INPUT_DELAY,
@@ -227,12 +324,12 @@ module.exports = {
   /**
    * Register the Web Vitals metrics for triggering in Rules.
    *
-   * @param {string} webVitalsMetric The Web Vitals metric.
+   * @param {String} webVitalsMetricAbbreviation The Web Vitals metric abbreviation.
    * @param {Object} settings The event settings object.
    * @param {ruleTrigger} trigger The trigger callback.
    */
-  registerEventStateTrigger: (webVitalsMetric, settings, trigger) => {
-    registry[webVitalsMetric].push({
+  registerEventStateTrigger: (webVitalsMetricAbbreviation, settings, trigger) => {
+    registry[webVitalsMetricAbbreviation].push({
       settings,
       trigger,
     });

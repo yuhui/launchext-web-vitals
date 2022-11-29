@@ -3,6 +3,8 @@ module.exports = {
     "web-vitals-js": {
       "displayName": "Web Vitals",
       "settings": {
+        "webVitalsLibraryType": "cdn",
+        "webVitalsLibraryUrl": "https://yuhui.sg/launch/web-vitals.js",
         "reportAllChangesCLS": "yes",
         "reportAllChangesFCP": "no",
         "reportAllChangesFID": "no",
@@ -80,8 +82,8 @@ module.exports = {
   },
   "buildInfo": {
     "turbineVersion": "27.2.1",
-    "turbineBuildDate": "2022-09-18T13:56:08.029Z",
-    "buildDate": "2022-09-18T13:56:08.029Z",
+    "turbineBuildDate": "2022-11-27T15:09:30.387Z",
+    "buildDate": "2022-11-27T15:09:30.387Z",
     "environment": "development"
   }
 }

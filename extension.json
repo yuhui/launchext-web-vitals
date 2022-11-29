@@ -2,15 +2,16 @@
   "displayName": "Web Vitals",
   "name": "web-vitals-js",
   "platform": "web",
-  "version": "1.2.0",
-  "description": "Measure page quality signals from Web Vitals 3.0 (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
+  "version": "1.3.0",
+  "description": "Measure page quality signals from Web Vitals 3.1 (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
   "author": {
     "name": "Yuhui",
     "url": "https://yuhui.sg",
     "email": "dev@yuhui.sg"
   },
-  "exchangeUrl": "https://exchange.adobe.com/apps/ec/106769/web-vitals",
+  "exchangeUrl": "https://exchange.adobe.com/apps/ec/106769",
   "iconPath": "web-vitals-icon.svg",
+  "hostedLibFiles": [ "vendor/web-vitals.attribution.iife.js" ],
   "viewBasePath": "src/view/",
   "configuration": {
     "viewPath": "configuration/configuration.html",
@@ -53,6 +54,15 @@
           "type": "string",
           "enum": [ "no", "yes" ],
           "default": "no"
+        },
+        "webVitalsLibraryType": {
+          "type": "string",
+          "enum": [ "bundle", "cdn", "url" ],
+          "default": "cdn"
+        },
+        "webVitalsLibraryUrl": {
+          "type": "string",
+          "default": "default"
         }
       }
     }

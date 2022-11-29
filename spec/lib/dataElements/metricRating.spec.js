@@ -38,6 +38,9 @@ describe('metricRating data element delegate', () => {
         delete this.event.webvitals;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
       }
     );
 
@@ -47,6 +50,23 @@ describe('metricRating data element delegate', () => {
         delete this.event.webvitals.rating;
         const result = dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith('Metric rating not available.');
+      }
+    );
+
+    it(
+      'should be undefined when "rating" property is an invalid value',
+      () => {
+        this.event.webvitals.rating = 'foo';
+        const result = dataElementDelegate(this.settings, this.event);
+        expect(result).toBeUndefined();
+
+        const logError = global.turbine.logger.error;
+        expect(logError).toHaveBeenCalledWith(
+          `Invalid metric rating: "${this.event.webvitals.rating}".`
+        );
       }
     );
   });

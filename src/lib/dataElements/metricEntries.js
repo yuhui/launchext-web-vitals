@@ -16,6 +16,8 @@
 
 'use strict';
 
+const logger = turbine.logger;
+
 /**
  * Entries data element.
  * This data element returns an array of the performance entries used in the metric's value
@@ -23,12 +25,19 @@
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
- * @param {Object} [event.webvitals=null] The event's data.
+ * @param {Object} event.webvitals=null The event's data.
  * @returns {Array}
  */
 module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
+    logger.warn('Web Vitals not available.');
     return;
   }
-  return webvitals.entries;
+  const { entries = null } = webvitals;
+  if (!entries) {
+    logger.warn('Metric entries not available.');
+    return;
+  }
+
+  return entries;
 };
