@@ -16,6 +16,8 @@
 
 'use strict';
 
+const logger = turbine.logger;
+
 /**
  * Name data element.
  * This data element returns the name of the metric (in acronym form).
@@ -29,12 +31,19 @@
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
- * @param {Object} [event.webvitals=null] The event's data.
+ * @param {Object} event.webvitals=null The event's data.
  * @returns {String}
  */
 module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
+    logger.warn('Web Vitals not available.');
     return;
   }
-  return webvitals.name;
+  const { name = null } = webvitals;
+  if (!name) {
+    logger.warn('Metric name not available.');
+    return;
+  }
+
+  return name;
 };

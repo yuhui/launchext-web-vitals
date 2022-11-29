@@ -228,15 +228,55 @@ const loadWebVitals = function({
 
     logger.debug(`Web Vitals was loaded successfully from ${webVitalsLibraryLocation}.`);
 
-    webVitals.onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
-    webVitals.onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
-    webVitals.onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
-    webVitals.onINP(triggerINP, {
-      reportAllChanges: reportAllChangesINP === 'yes',
-      durationThreshold: durationThresholdINP,
-    });
-    webVitals.onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
-    webVitals.onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
+    const {
+      onCLS = null,
+      onFCP = null,
+      onFID = null,
+      onINP = null,
+      onLCP = null,
+      onTTFB = null
+    } = window.webVitals;
+    const failedToLoadListeners = [];
+    if (onCLS && toString.call(onCLS) === '[object Function]') {
+      onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
+    } else {
+      failedToLoadListeners.push('onCLS');
+    }
+    if (onFCP && toString.call(onFCP) === '[object Function]') {
+      onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
+    } else {
+      failedToLoadListeners.push('onFCP');
+    }
+    if (onFID && toString.call(onFID) === '[object Function]') {
+      onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
+    } else {
+      failedToLoadListeners.push('onFID');
+    }
+    if (onINP && toString.call(onINP) === '[object Function]') {
+      onINP(triggerINP, {
+        reportAllChanges: reportAllChangesINP === 'yes',
+        durationThreshold: durationThresholdINP,
+      });
+    } else {
+      failedToLoadListeners.push('onINP');
+    }
+    if (onLCP && toString.call(onLCP) === '[object Function]') {
+      onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
+    } else {
+      failedToLoadListeners.push('onLCP');
+    }
+    if (onTTFB && toString.call(onTTFB) === '[object Function]') {
+      onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
+    } else {
+      failedToLoadListeners.push('onTTFB');
+    }
+
+    if (failedToLoadListeners.length > 0) {
+      const failedToLoadListenersString = failedToLoadListeners.map((listener) => {
+        return `"webVitals.${listener}()"`;
+      }).join(', ');
+      logger.warn(`${failedToLoadListenersString} could not be loaded.`);
+    }
   }, () => {
     logger.error(`Web Vitals could not be loaded from ${webVitalsLibraryLocation}.`);
   });

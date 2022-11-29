@@ -16,6 +16,16 @@
 
 'use strict';
 
+const logger = turbine.logger;
+
+const NAVIGATION_TYPES = [
+  'navigate',
+  'reload',
+  'back-forward',
+  'back-forward-cache',
+  'prerender',
+];
+
 /**
  * Navigation Type data element.
  * This data element returns the navigation type of the metric.
@@ -28,12 +38,23 @@
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
- * @param {Object} [event.webvitals=null] The event's data.
+ * @param {Object} event.webvitals=null The event's data.
  * @returns {String}
  */
 module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
+    logger.warn('Web Vitals not available.');
     return;
   }
-  return webvitals.navigationType;
+  const { navigationType = null } = webvitals;
+  if (!navigationType) {
+    logger.warn('Metric navigation type not available.');
+    return;
+  }
+  if (!NAVIGATION_TYPES.includes(navigationType)) {
+    logger.error(`Invalid metric navigation type: "${navigationType}".`);
+    return;
+  }
+
+  return navigationType;
 };

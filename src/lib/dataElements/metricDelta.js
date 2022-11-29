@@ -16,18 +16,27 @@
 
 'use strict';
 
+const logger = turbine.logger;
+
 /**
  * Delta data element.
  * This data element returns the delta between the current value and the last-reported value.
  *
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
- * @param {Object} [event.webvitals=null] The event's data.
- * @returns {float}
+ * @param {Object} event.webvitals=null The event's data.
+ * @returns {Float}
  */
 module.exports = function(settings, { webvitals = null }) {
   if (!webvitals) {
+    logger.warn('Web Vitals not available.');
     return;
   }
-  return webvitals.delta;
+  const { delta = null } = webvitals;
+  if (!delta) {
+    logger.warn('Metric delta not available.');
+    return;
+  }
+
+  return delta;
 };
