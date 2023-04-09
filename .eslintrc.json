@@ -13,12 +13,15 @@
     "webVitals": true,
     /** jasmine */
     "jasmine": true,
+    "afterAll": true,
+    "afterEach": true,
     "beforeAll": true,
     "beforeEach": true,
     "describe": true,
     "expect": true,
     "it": true
   },
+  "parser": "babel-eslint",
   "parserOptions": {
     "sourceType": "script"
   },
