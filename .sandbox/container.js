@@ -3,8 +3,8 @@ module.exports = {
     "web-vitals-js": {
       "displayName": "Web Vitals",
       "settings": {
-        "webVitalsLibraryType": "cdn",
-        "webVitalsLibraryUrl": "https://yuhui.sg/launch/web-vitals.js",
+        "webVitalsLibraryType": "bundle",
+        "webVitalsLibraryUrl": "default",
         "reportAllChangesCLS": "yes",
         "reportAllChangesFCP": "no",
         "reportAllChangesFID": "no",
@@ -35,6 +35,15 @@ module.exports = {
       "cleanText": false,
       "forceLowerCase": false,
       "modulePath": "web-vitals-js/src/lib/dataElements/metricDelta.js",
+      "storageDuration": ""
+    },
+    "Metric FID Rating Thresholds": {
+      "settings": {
+        "metric": "FID"
+      },
+      "cleanText": false,
+      "forceLowerCase": false,
+      "modulePath": "web-vitals-js/src/lib/dataElements/metricRatingThresholds.js",
       "storageDuration": ""
     }
   },
@@ -81,9 +90,9 @@ module.exports = {
     "stage": "development"
   },
   "buildInfo": {
-    "turbineVersion": "27.2.1",
-    "turbineBuildDate": "2022-11-27T15:09:30.387Z",
-    "buildDate": "2022-11-27T15:09:30.387Z",
+    "turbineVersion": "27.5.0",
+    "turbineBuildDate": "2023-04-08T15:26:48.022Z",
+    "buildDate": "2023-04-08T15:26:48.022Z",
     "environment": "development"
   }
 }

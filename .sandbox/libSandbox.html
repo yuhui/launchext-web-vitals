@@ -10,7 +10,16 @@
 
 <body>
   <h1>Reactor Extension Library Sandbox</h1>
+  <p>FID Rating Thresholds: <span id="fidRatingThresholds"></span></p>
   <p><img src="https://www.atatus.com/blog/content/images/2020/12/webvitals_nohit.png" /></p>
+
+  <script>
+    window.addEventListener('load', () => {
+      const fidRatingThresholdsValue = _satellite.getVar('Metric FID Rating Thresholds');
+      const fidRatingThresholds = document.getElementById('fidRatingThresholds');
+      fidRatingThresholds.textContent = JSON.stringify(fidRatingThresholdsValue);
+    });
+  </script>
 </body>
 
 </html>
