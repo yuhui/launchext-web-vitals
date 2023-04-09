@@ -189,15 +189,28 @@ module.exports = {
   /**
    * Register the Web Vitals metrics for triggering in Rules.
    *
-   * @param {String} webVitalsMetricAbbreviation The Web Vitals metric abbreviation.
-   * @param {Object} settings The event settings object.
-   * @param {ruleTrigger} trigger The trigger callback.
+   * @param {String} metric=null The Web Vitals metric.
+   * @param {Object} settings={} The event settings object.
+   * @param {ruleTrigger} trigger=null The trigger callback.
    */
-  registerEventStateTrigger: (webVitalsMetricAbbreviation, settings, trigger) => {
-    if (!METRIC_TRIGGERS.has(webVitalsMetricAbbreviation)) {
-      METRIC_TRIGGERS.set(webVitalsMetricAbbreviation, []);
+  registerEventStateTrigger: (metric = null, settings = {}, trigger = null) => {
+    if (!metric) {
+      logger.error('Web Vitals metric not specified.');
+      return;
     }
-    const metricTriggers = METRIC_TRIGGERS.get(webVitalsMetricAbbreviation);
+    if (!WEB_VITALS_METRICS.has(metric)) {
+      logger.error(`Invalid Web Vitals metric specified: ${metric}.`);
+      return;
+    }
+    if (!trigger) {
+      logger.error('Rule event not specified.');
+      return;
+    }
+
+    if (!METRIC_TRIGGERS.has(metric)) {
+      METRIC_TRIGGERS.set(metric, []);
+    }
+    const metricTriggers = METRIC_TRIGGERS.get(metric);
     metricTriggers.push({
       settings,
       trigger,

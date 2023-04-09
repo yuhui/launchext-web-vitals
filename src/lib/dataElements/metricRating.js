@@ -37,7 +37,14 @@ const RATINGS = [
  * @param {Object} event.webvitals=null The event's data.
  * @returns {String}
  */
-module.exports = function(settings, { webvitals = null }) {
+module.exports = (settings, event = null) => {
+  if (!event) {
+    logger.warn(
+      '"event" argument not specified. Use _satellite.getVar("data element name", event);'
+    );
+    return;
+  }
+  const { webvitals = null } = event;
   if (!webvitals) {
     logger.warn('Web Vitals not available.');
     return;
