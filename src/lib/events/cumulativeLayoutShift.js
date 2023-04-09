@@ -16,7 +16,7 @@
 
 'use strict';
 
-const webVitals = require('../helpers/webVitals');
+const { registerEventStateTrigger } = require('../helpers/webVitals');
 
 /**
  * Web Vitals Cumulative Layout Shift metric event.
@@ -25,10 +25,9 @@ const webVitals = require('../helpers/webVitals');
  * @param {Object} settings The event settings object.
  * @param {ruleTrigger} trigger The trigger callback.
  */
-module.exports = function(settings, trigger) {
-  const { registerEventStateTrigger, cls } = webVitals;
+module.exports = (settings, trigger) => {
   registerEventStateTrigger(
-    cls,
+    'CLS',
     settings,
     trigger
   );
