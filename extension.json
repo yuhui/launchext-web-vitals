@@ -2,8 +2,8 @@
   "displayName": "Web Vitals",
   "name": "web-vitals-js",
   "platform": "web",
-  "version": "1.3.0",
-  "description": "Measure page quality signals from Web Vitals 3.1 (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
+  "version": "1.4.0",
+  "description": "Measure page quality signals from Web Vitals 3.3.1 (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
   "author": {
     "name": "Yuhui",
     "url": "https://yuhui.sg",
