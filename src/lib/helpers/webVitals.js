@@ -43,11 +43,11 @@ const WEB_VITALS_METRICS = new Map([
 ]);
 
 // constants related to setting up Web Vitals
-const WEB_VITALS_LIBRARY_TYPES = [
+const WEB_VITALS_LIBRARY_TYPES = new Set([
   'bundle',
   'cdn',
   'url',
-];
+]);
 const WEB_VITALS_CDN_MAJOR_VERSION = '3';
 const WEB_VITALS_CDN_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
 const WEB_VITALS_VENDOR_SCRIPT_FILENAME = 'web-vitals.attribution.iife.js';
@@ -59,80 +59,33 @@ const EXTENSION_SETTINGS = turbine.getExtensionSettings();
  * Create the registry of all WebVitals metric events.
  * Every registered event has a list of triggers, where one trigger corresponds to one Tags Rule.
  */
-const registry = {};
+const METRIC_TRIGGERS = new Map();
 /**
+ * Create the list of all WebVitals metric rating thresholds.
+*/
+const METRIC_RATING_THRESHOLDS = new Map();
 
 /**
  * Used by Web Vitals callback functions after a metric has been measured.
  *
- * @param {String} webVitalsMetricAbbreviation The Web Vitals metric abbreviation.
  * @param {Object} data Data measured for the Web Vitals metric.
  */
-const triggerWebVitalsMetric = (webVitalsMetricAbbreviation, data) => {
-  let webVitalsMetric;
-  switch (webVitalsMetricAbbreviation) {
-    case 'CLS':
-      webVitalsMetric = CUMULATIVE_LAYOUT_SHIFT;
-      break;
-    case 'FCP':
-      webVitalsMetric = FIRST_CONTENTFUL_PAINT;
-      break;
-    case 'FID':
-      webVitalsMetric = FIRST_INPUT_DELAY;
-      break;
-    case 'INP':
-      webVitalsMetric = INTERACTION_TO_NEXT_PAINT;
-      break;
-    case 'LCP':
-      webVitalsMetric = LARGEST_CONTENTFUL_PAINT;
-      break;
-    case 'TTFB':
-      webVitalsMetric = TIME_TO_FIRST_BYTE;
-      break;
+const triggerWebVitalsMetric = (data) => {
+  const metric = data.name;
+
+  if (!METRIC_TRIGGERS.has(metric)) {
+    logger.debug(`No Rule events found for Web Vitals metric: ${metric}.`);
+    return;
   }
-  processTriggers(webVitalsMetric, data);
-};
 
-/**
- * Callback function when Cumulative Layout Shift (CLS) has been measured.
- */
-const triggerCLS = (data) => {
-  triggerWebVitalsMetric('CLS', data);
-};
+  logger.debug(`${metric} measured.`);
 
-/**
- * Callback function when First Contentful Paint (FCP) has been measured.
- */
-const triggerFCP = (data) => {
-  triggerWebVitalsMetric('FCP', data);
-};
+  const metricFullName = WEB_VITALS_METRICS.get(metric) || metric;
+  const metricData = getWebVitalsMetricData(data, metricFullName);
 
-/**
- * Callback function when First Input Delay (FID) has been measured.
- */
-const triggerFID = (data) => {
-  triggerWebVitalsMetric('FID', data);
-};
+  const metricTriggerData = METRIC_TRIGGERS.get(metric);
 
-/**
- * Callback function when Interaction to Next Paint (INP) has been measured.
- */
-const triggerINP = (data) => {
-  triggerWebVitalsMetric('INP', data);
-};
-
-/**
- * Callback function when Largest Contentful Paint (LCP) has been measured.
- */
-const triggerLCP = (data) => {
-  triggerWebVitalsMetric('LCP', data);
-};
-
-/**
- * Callback function when Time to First Byte (TTFB) has been measured.
- */
-const triggerTTFB = (data) => {
-  triggerWebVitalsMetric('TTFB', data);
+  processTriggers(metricData, metricTriggerData);
 };
 
 /**
@@ -151,18 +104,13 @@ const triggerTTFB = (data) => {
  * @param {String} settings.webVitalsLibraryType=cdn Where to load web-vitals.js from.
  * @param {String} settings.webVitalsLibraryUrl=default URL to load web-vitals.js.
  */
-const loadWebVitals = function({
+const loadWebVitals = ({
   durationThresholdINP = 40,
-  reportAllChangesCLS = 'no',
-  reportAllChangesFCP = 'no',
-  reportAllChangesFID = 'no',
-  reportAllChangesINP = 'yes',
-  reportAllChangesLCP = 'no',
-  reportAllChangesTTFB = 'no',
   webVitalsLibraryType = 'cdn',
   webVitalsLibraryUrl = 'default',
-}) {
-  if (!WEB_VITALS_LIBRARY_TYPES.includes(webVitalsLibraryType)) {
+  ...options
+}) => {
+  if (!WEB_VITALS_LIBRARY_TYPES.has(webVitalsLibraryType)) {
     logger.error(`Unknown Web Vitals library type provided: "${webVitalsLibraryType}".`);
     return;
   }
@@ -192,48 +140,34 @@ const loadWebVitals = function({
 
     logger.debug(`Web Vitals was loaded successfully from ${webVitalsLibraryLocation}.`);
 
-    const {
-      onCLS = null,
-      onFCP = null,
-      onFID = null,
-      onINP = null,
-      onLCP = null,
-      onTTFB = null
-    } = window.webVitals;
     const failedToLoadListeners = [];
-    if (onCLS && toString.call(onCLS) === '[object Function]') {
-      onCLS(triggerCLS, { reportAllChanges: reportAllChangesCLS === 'yes' });
-    } else {
-      failedToLoadListeners.push('onCLS');
-    }
-    if (onFCP && toString.call(onFCP) === '[object Function]') {
-      onFCP(triggerFCP, { reportAllChanges: reportAllChangesFCP === 'yes' });
-    } else {
-      failedToLoadListeners.push('onFCP');
-    }
-    if (onFID && toString.call(onFID) === '[object Function]') {
-      onFID(triggerFID, { reportAllChanges: reportAllChangesFID === 'yes' });
-    } else {
-      failedToLoadListeners.push('onFID');
-    }
-    if (onINP && toString.call(onINP) === '[object Function]') {
-      onINP(triggerINP, {
-        reportAllChanges: reportAllChangesINP === 'yes',
-        durationThreshold: durationThresholdINP,
-      });
-    } else {
-      failedToLoadListeners.push('onINP');
-    }
-    if (onLCP && toString.call(onLCP) === '[object Function]') {
-      onLCP(triggerLCP, { reportAllChanges: reportAllChangesLCP === 'yes' });
-    } else {
-      failedToLoadListeners.push('onLCP');
-    }
-    if (onTTFB && toString.call(onTTFB) === '[object Function]') {
-      onTTFB(triggerTTFB, { reportAllChanges: reportAllChangesTTFB === 'yes' });
-    } else {
-      failedToLoadListeners.push('onTTFB');
-    }
+    const reportAllChangesAcceptableValues = new Set(['no', 'yes']);
+    let onMetric;
+    let ratingThresholds;
+    let reportAllChanges;
+    let reportOptions;
+
+    const metrics = WEB_VITALS_METRICS.keys();
+    for (const metric of metrics) {
+      onMetric = window.webVitals[`on${metric}`];
+      if (onMetric && toString.call(onMetric) === '[object Function]') {
+        reportOptions = {};
+
+        reportAllChanges = options[`reportAllChanges${metric}`];
+        if (!reportAllChangesAcceptableValues.has(reportAllChanges)) {
+          reportAllChanges = metric === 'INP' ? 'yes' : 'no';
+        }
+        reportOptions.reportAllChanges = reportAllChanges === 'yes'
+
+        if (metric === 'INP') {
+          reportOptions.durationThreshold = durationThresholdINP;
+        }
+
+        onMetric(triggerWebVitalsMetric, reportOptions);
+      } else {
+        failedToLoadListeners.push(`on${metric}`);
+      }
+    };
 
     if (failedToLoadListeners.length > 0) {
       const failedToLoadListenersString = failedToLoadListeners.map((listener) => {
@@ -260,7 +194,11 @@ module.exports = {
    * @param {ruleTrigger} trigger The trigger callback.
    */
   registerEventStateTrigger: (webVitalsMetricAbbreviation, settings, trigger) => {
-    registry[webVitalsMetricAbbreviation].push({
+    if (!METRIC_TRIGGERS.has(webVitalsMetricAbbreviation)) {
+      METRIC_TRIGGERS.set(webVitalsMetricAbbreviation, []);
+    }
+    const metricTriggers = METRIC_TRIGGERS.get(webVitalsMetricAbbreviation);
+    metricTriggers.push({
       settings,
       trigger,
     });
