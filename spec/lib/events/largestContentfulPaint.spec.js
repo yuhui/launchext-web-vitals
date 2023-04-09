@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2022 Yuhui. All rights reserved.
+ * Copyright 2021-2023 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,25 +17,33 @@
 'use strict';
 
 const proxyquire = require('proxyquire').noCallThru();
-const eventState = 'Largest Contentful Paint';
 
-describe(`"${eventState}" event delegate`, () => {
+const mockWebVitals = require('../../specHelpers/mockWebVitals');
+
+const METRIC = 'LCP';
+const webVitals = mockWebVitals();
+
+describe(`"${METRIC}" event delegate`, () => {
+  beforeEach(() => {
+    this.eventDelegate = proxyquire('../../../src/lib/events/largestContentfulPaint', {
+      '../helpers/webVitals': webVitals,
+    });
+    this.settings = {};
+    this.trigger = jasmine.createSpy();
+  });
+
   it(
     'sends the trigger to the webVitals helper module once only',
     () => {
-      const getWebVitalsSpyObj = require('../../specHelpers/getWebVitalsSpyObj');
-      const webVitalsSpyObj = getWebVitalsSpyObj();
+      this.eventDelegate(this.settings, this.trigger);
 
-      const eventDelegate = proxyquire('../../../src/lib/events/largestContentfulPaint', {
-        '../helpers/webVitals': webVitalsSpyObj,
-      });
-      const settings = {};
-      const trigger = () => {};
-
-      eventDelegate(settings, trigger);
-      const result = webVitalsSpyObj.registerEventStateTrigger;
-      expect(result).toHaveBeenCalledTimes(1);
-      expect(result).toHaveBeenCalledWith(eventState, settings, trigger);
+      const { registerEventStateTrigger } = webVitals;
+      expect(registerEventStateTrigger).toHaveBeenCalledTimes(1);
+      expect(registerEventStateTrigger).toHaveBeenCalledWith(
+        METRIC,
+        this.settings,
+        this.trigger
+      );
     }
   );
 });

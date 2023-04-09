@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2022 Yuhui. All rights reserved.
+ * Copyright 2023 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,22 +17,24 @@
 'use strict';
 
 /**
- * Return a `webVitals` spy object for use with event unit testing.
+ * Return a base `event` object for use with data element unit testing.
  */
 module.exports = () => {
-  const webVitalsSpyObj = jasmine.createSpyObj(
-    [
-      'registerEventStateTrigger',
+  const baseData = {
+    id: 'v1-1621390039209-9647315286660',
+    name: 'FCP',
+    fullName: 'First Contentful Paint',
+    navigationType: 'navigate',
+    rating: 'good',
+    delta: 866.8799999868497,
+    value: 2125.6949999951757,
+    entries: [
+      jasmine.createSpyObj('PerformancePaintTiming', ['apply', 'bind', 'call', 'toString']),
     ],
-    {
-      cls: 'Cumulative Layout Shift',
-      fid: 'First Input Delay',
-      fcp: 'First Contentful Paint',
-      inp: 'Interaction to Next Paint',
-      lcp: 'Largest Contentful Paint',
-      ttfb: 'Time to First Byte',
-    }
-  );
+    attribution: {
+      loadState: 'completed',
+    },
+  };
 
-  return webVitalsSpyObj;
+  return baseData;
 };

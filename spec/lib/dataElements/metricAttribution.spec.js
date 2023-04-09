@@ -1,5 +1,5 @@
 /**
- * Copyright 2022 Yuhui. All rights reserved.
+ * Copyright 2022-2023 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,28 +16,43 @@
 
 'use strict';
 
-describe('metricAttribution data element delegate', () => {
-  // mock turbine.logger
-  global.turbine = global.turbine || {
-    logger: jasmine.createSpyObj('', ['debug', 'info', 'warn', 'alert', 'error']),
-  };
+const mockBaseEvent = require('../../specHelpers/mockBaseEvent');
+const mockTurbine = require('../../specHelpers/mockTurbine');
 
-  const dataElementDelegate = require('../../../src/lib/dataElements/metricAttribution');
-  const getBaseEvent = require('../../specHelpers/getBaseEvent');
+describe('metricAttribution data element delegate', () => {
+  beforeAll(() => {
+    global.turbine = mockTurbine;
+    this.dataElementDelegate = require('../../../src/lib/dataElements/metricAttribution');
+  });
 
   beforeEach(() => {
-    this.event = getBaseEvent();
+    this.event = mockBaseEvent();
     this.settings = {
       metricAttributionItem: 'loadState',
     };
   });
 
+  afterAll(() => {
+    delete global.turbine;
+  });
+
   describe('with invalid "settings" argument', () => {
+    it(
+      'should be undefined when "settings" argument is missing',
+      () => {
+        const result = this.dataElementDelegate(undefined, this.event);
+        expect(result).toBeUndefined();
+
+        const logError = global.turbine.logger.error;
+        expect(logError).toHaveBeenCalledWith('No metric attribution item provided.');
+      }
+    );
+
     it(
       'should be undefined when "metricAttributionItem" property is missing',
       () => {
         delete this.settings.metricAttributionItem;
-        const result = dataElementDelegate(this.settings, this.event);
+        const result = this.dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
 
         const logError = global.turbine.logger.error;
@@ -48,10 +63,23 @@ describe('metricAttribution data element delegate', () => {
 
   describe('with invalid "event" argument', () => {
     it(
+      'should be undefined when "event" argument is missing',
+      () => {
+        const result = this.dataElementDelegate(this.settings);
+        expect(result).toBeUndefined();
+
+        const logWarn = global.turbine.logger.warn;
+        expect(logWarn).toHaveBeenCalledWith(
+          '"event" argument not specified. Use _satellite.getVar("data element name", event);'
+        );
+      }
+    );
+
+    it(
       'should be undefined when "webvitals" property is missing',
       () => {
         delete this.event.webvitals;
-        const result = dataElementDelegate(this.settings, this.event);
+        const result = this.dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
 
         const logWarn = global.turbine.logger.warn;
@@ -63,7 +91,7 @@ describe('metricAttribution data element delegate', () => {
       'should be undefined when "attribution" property is missing in "webvitals"',
       () => {
         delete this.event.webvitals.attribution;
-        const result = dataElementDelegate(this.settings, this.event);
+        const result = this.dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
 
         const logWarn = global.turbine.logger.warn;
@@ -75,7 +103,7 @@ describe('metricAttribution data element delegate', () => {
       'should be undefined when "metricAttributionItem" property is missing in "attribution"',
       () => {
         delete this.event.webvitals.attribution[this.settings.metricAttributionItem];
-        const result = dataElementDelegate(this.settings, this.event);
+        const result = this.dataElementDelegate(this.settings, this.event);
         expect(result).toBeUndefined();
 
         const logWarn = global.turbine.logger.warn;
@@ -86,11 +114,11 @@ describe('metricAttribution data element delegate', () => {
     );
   });
 
-  describe('with valid "event" argument', () => {
+  describe('with valid "settings" and "event" arguments', () => {
     it(
       'should be defined',
       () => {
-        const result = dataElementDelegate(this.settings, this.event);
+        const result = this.dataElementDelegate(this.settings, this.event);
         expect(result).toBeDefined();
       }
     );
