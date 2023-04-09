@@ -23,22 +23,22 @@ const logger = turbine.logger;
 const toString = Object.prototype.toString;
 
 // constants related to Web Vitals metrics
-const CUMULATIVE_LAYOUT_SHIFT = 'Cumulative Layout Shift';
-const FIRST_CONTENTFUL_PAINT = 'First Contentful Paint';
-const FIRST_INPUT_DELAY = 'First Input Delay';
-const INTERACTION_TO_NEXT_PAINT = 'Interaction to Next Paint';
-const LARGEST_CONTENTFUL_PAINT = 'Largest Contentful Paint';
-const TIME_TO_FIRST_BYTE = 'Time to First Byte';
+const CLS = 'CLS';
+const FCP = 'FCP';
+const FID = 'FID';
+const INP = 'INP';
+const LCP = 'LCP';
+const TTFB = 'TTFB';
 
-// set of Web Vitals metrics
-const WEB_VITALS_METRICS = [
-  CUMULATIVE_LAYOUT_SHIFT,
-  FIRST_CONTENTFUL_PAINT,
-  FIRST_INPUT_DELAY,
-  INTERACTION_TO_NEXT_PAINT,
-  LARGEST_CONTENTFUL_PAINT,
-  TIME_TO_FIRST_BYTE,
-];
+// map of Web Vitals metrics and their full names
+const WEB_VITALS_METRICS = new Map([
+  [CLS, 'Cumulative Layout Shift'],
+  [FCP, 'First Contentful Paint'],
+  [FID, 'First Input Delay'],
+  [INP, 'Interaction to Next Paint'],
+  [LCP, 'Largest Contentful Paint'],
+  [TTFB, 'Time to First Byte'],
+]);
 
 // constants related to setting up Web Vitals
 const WEB_VITALS_LIBRARY_TYPES = [
@@ -58,10 +58,6 @@ const EXTENSION_SETTINGS = turbine.getExtensionSettings();
  * Every registered event has a list of triggers, where one trigger corresponds to one Tags Rule.
  */
 const registry = {};
-WEB_VITALS_METRICS.forEach((webVitalsMetric) => {
-  registry[webVitalsMetric] = [];
-});
-
 /**
  * Synthetic Web Vitals metric event to send to the trigger callback.
  * Should be bound to `window`.
