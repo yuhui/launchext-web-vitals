@@ -21,6 +21,8 @@ const loadScript = require('@adobe/reactor-load-script');
 
 const logger = turbine.logger;
 const toString = Object.prototype.toString;
+const getWebVitalsMetricData = require('./getWebVitalsMetricData');
+const processTriggers = require('./processTriggers');
 
 // constants related to Web Vitals metrics
 const CLS = 'CLS';
@@ -59,66 +61,6 @@ const EXTENSION_SETTINGS = turbine.getExtensionSettings();
  */
 const registry = {};
 /**
- * Synthetic Web Vitals metric event to send to the trigger callback.
- * Should be bound to `window`.
- *
- * @param {DOMElement} element `window`.
- * @param {Object} metricData Data returned for the Web Vitals metric.
- * See `getWebVitalsMetrics()`.
- *
- * @return {Object} Event object that is specific to the Web Vitals metric.
- */
-const createGetWebVitalsMetricEvent = (element, metricData) => {
-  return {
-    element,
-    target: element,
-    webvitals: metricData,
-  };
-};
-
-/**
- * Get data for the current Web Vitals metric.
- *
- * @param {String} webVitalsMetric The Web Vitals metric.
- * @param {Object} data Data measured for the Web Vitals metric.
- *
- * @return {Object} Data about the current Web Vitals metric.
- */
-const getWebVitalsMetricData = (webVitalsMetric, data) => {
-  const metricData = Object.assign({}, data, { fullName: webVitalsMetric });
-
-  return metricData;
-};
-
-/**
- * Run a trigger that had been registered with the specified Web Vitals metric.
- *
- * @param {Object} metricData Data about the current Web Vitals metric.
- * @param {Object} triggerData Data that had been set with the Tags Rule.
- * See module.exports below.
- * @param {ruleTrigger} triggerData.trigger The Tags Rule's trigger function.
- */
-const processTrigger = (metricData, { trigger }) => {
-  const getWebVitalsMetricEvent = createGetWebVitalsMetricEvent.bind(window);
-
-  trigger(getWebVitalsMetricEvent(window, metricData));
-};
-
-/**
- * When a Web Vitals metric has been measured, run all triggers registered with that metric.
- *
- * @param {String} webVitalsMetric The Web Vitals metric.
- * @param {Object} data Data measured for the Web Vitals metric.
- */
-const processTriggers = (webVitalsMetric, data) => {
-  logger.debug(`${webVitalsMetric} measured.`);
-  const metricData = getWebVitalsMetricData(webVitalsMetric, data);
-
-  const webVitalsMetricTriggerData = registry[webVitalsMetric];
-  webVitalsMetricTriggerData.forEach((triggerData) => {
-    processTrigger(metricData, triggerData);
-  });
-};
 
 /**
  * Used by Web Vitals callback functions after a metric has been measured.
@@ -308,14 +250,7 @@ loadWebVitals(EXTENSION_SETTINGS);
 
 module.exports = {
   /**
-   * Web Vitals event states (exposed from constants)
    */
-  cls: CUMULATIVE_LAYOUT_SHIFT,
-  fid: FIRST_INPUT_DELAY,
-  fcp: FIRST_CONTENTFUL_PAINT,
-  inp: INTERACTION_TO_NEXT_PAINT,
-  lcp: LARGEST_CONTENTFUL_PAINT,
-  ttfb: TIME_TO_FIRST_BYTE,
 
   /**
    * Register the Web Vitals metrics for triggering in Rules.
