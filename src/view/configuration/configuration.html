@@ -268,10 +268,9 @@
             }
             if (
               !hasOwnProperty.call(settings, 'webVitalsLibraryUrl')
-              || settings.webVitalsLibraryUrl === 'default'
-              || settings.webVitalsLibraryType === 'cdn'
+              || settings.webVitalsLibraryType !== 'url'
             ) {
-              info.settings.webVitalsLibraryUrl = '';
+              info.settings.webVitalsLibraryUrl = 'default';
             }
 
             setFormValues(FORM_ID, info.settings);
@@ -290,6 +289,7 @@
             reportAllChangesINP,
             reportAllChangesLCP,
             reportAllChangesTTFB,
+            webVitalsLibraryType,
             webVitalsLibraryUrl,
           } = formValues;
 
@@ -313,8 +313,16 @@
           if (reportAllChangesTTFB === '') {
             formValues.reportAllChangesTTFB = 'no';
           }
-          if (webVitalsLibraryUrl === '') {
-            formValues.webVitalsLibraryUrl = 'default';
+
+          switch (webVitalsLibraryType) {
+            case 'bundle':
+            case 'cdn':
+              formValues.webVitalsLibraryUrl = 'default';
+              break;
+            default:
+              formValues.webVitalsLibraryType = 'cdn';
+              formValues.webVitalsLibraryUrl = 'default';
+              break;
           }
 
 
@@ -332,7 +340,7 @@
             reportAllChangesLCP,
             reportAllChangesTTFB,
             webVitalsLibraryType,
-            // don't need to validate webVitalsLibraryUrl
+            webVitalsLibraryUrl,
           } = formValues;
 
           const durationThresholdINPNum = stringToInteger(durationThresholdINP);
@@ -355,6 +363,12 @@
           const reportAllChangesTTFBIsValid = ['', 'yes'].includes(reportAllChangesTTFB);
 
           const webVitalsLibraryTypeIsValid = WEB_VITALS_LIBRARY_TYPES.includes(webVitalsLibraryType);
+          const webVitalsLibraryUrlIsValid = webVitalsLibraryType === 'url'
+            ? (
+              Object.prototype.toString.call(webVitalsLibraryUrl) === '[object String]'
+              && /^https?:\/\//.test(webVitalsLibraryUrl)
+            )
+            : webVitalsLibraryUrl === 'default';
 
           return durationThresholdINPIsValid
             && reportAllChangesCLSIsValid
@@ -363,7 +377,8 @@
             && reportAllChangesINPIsValid
             && reportAllChangesLCPIsValid
             && reportAllChangesTTFBIsValid
-            && webVitalsLibraryTypeIsValid;
+            && webVitalsLibraryTypeIsValid
+            && webVitalsLibraryUrlIsValid;
         }
       });
 
