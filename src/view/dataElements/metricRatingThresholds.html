@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Metric Rating Thresholds Data Element</title>
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <script src="../dist/js/coral.min.js"></script>
+  </head>
+  <body class="coral--light coral-Body--S u-coral-margin">
+    <form id="data-element-configuration" class="coral-Form coral-FormGroup--labelsAbove">
+      <h4 class="coral-Heading--M">Metric rating thresholds</h4>
+
+      <div id="metric-container" class="coral-FormGroup-item">
+        <label id="metric-label" for="metric" class="coral-FormGroup-itemLabel coral-FieldLabel--left">
+          Select a Web Vitals metric to get rating thresholds
+          <coral-icon icon="Asterisk" class="coral-FieldLabel-requiredIcon" size="XXS" alt="required"></coral-icon>
+        </label>
+        <div class="coral-InputGroup" style="width: 100%;" role="presentation">
+          <coral-select id="metric" name="metric" class="coral-Form-field" labelledby="metric-label"  placeholder="Choose a Web Vitals metric" style="width: 100%;">
+            <coral-select-item value="CLS">Cumulative Layout Shift (CLS)</coral-select-item>
+            <coral-select-item value="FCP">First Contentful Paint (FCP)</coral-select-item>
+            <coral-select-item value="FID">First Input Delay (FID) </coral-select-item>
+            <coral-select-item value="INP">Interaction to Next Paint (INP)</coral-select-item>
+            <coral-select-item value="LCP">Largest Contentful Paint (LCP)</coral-select-item>
+            <coral-select-item value="TTFB">Time to First Byte (TTFB)</coral-select-item>
+          </coral-select>
+        </div>
+      </div>
+    </form>
+
+    <section class="coral-Well">
+      <h4 class="coral-Heading--S coral-Heading--light">How this Data Element works</h4>
+      <p>
+        This Data Element returns the rating thresholds of the selected metric. These are the
+        thresholds of the metric's "good", "needs improvement" and "poor" ratings.
+        <a class="coral-Link" href="https://github.com/GoogleChrome/web-vitals#rating-thresholds" target="_blank" rel="noopener noreferrer">
+          Refer to the Web Vitals project to learn more about the
+          <code class="coral-Code--XS">rating thresholds</code> metric type.
+        </a>
+      </p>
+
+      <coral-alert variant="warning">
+        <coral-alert-header>
+          Requires Web Vitals 3.3.1 or greater.
+        </coral-alert-header>
+        <coral-alert-content>
+          <p>
+            If you are loading the Web Vitals library from your own URL, <em>and</em> you want to use
+            this Data Element, then you <span class="text-underline">must</span> ensure that your
+            Web Vitals library is at least version 3.3.1.
+          </p>
+          <p>
+            If you are loading the Web Vitals library from the one that is bundled with this extension
+            or from the <code class="coral-Code--XS">unpkg.com</code> CDN, then rating thresholds
+            are supported already, so you can use this Data Element.
+          </p>
+        </coral-alert-content>
+      </coral-alert>
+
+      <p>
+        How to use:
+      </p>
+      <ul class="coral-List">
+        <li class="coral-List-item"><code class="coral-Code--XS">%data element name%</code></li>
+        <li class="coral-List-item"><code class="coral-Code--XS">_satellite.getVar('data element name')</code></li>
+      </ul>
+    </section>
+
+    <hr class="coral-Divider--S">
+
+    <footer class="coral--lightest coral-Body--XS">
+      <div id="donations">
+        <p>
+          Donate: <a class="coral-Link" href="https://paypal.me/yuhuibc" target="_blank">PayPal</a>
+        </p>
+      </div>
+      <div id="support">
+        <p>
+          Support Information
+        </p>
+        <ul class="coral-List">
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://github.com/yuhui/launchext-web-vitals/issues" target="_blank">
+              Open a ticket
+            </a>
+          </li>
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://github.com/yuhui/launchext-web-vitals/blob/master/CHANGELOG.md" target="_blank">
+              Read change log
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <p>
+        Copyright &copy; 2023 Yuhui. All rights reserved.
+      </p>
+      <p>
+        <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
+        <a class="coral-Link" href="https://yuhui.sg/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a class="coral-Link" href="https://yuhui.sg/cookie-policy.html" target="_blank">Cookie Policy</a> |
+        <a class="coral-Link" href="https://yuhui.sg/acceptable-use-policy.html" target="_blank">Acceptable Use Policy</a>
+      </p>
+    </footer>
+
+    <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
+    <script src="../scripts/common.js"></script>
+    <script>
+      const FORM_ID = 'data-element-configuration';
+
+      window.extensionBridge.register({
+        init: (info) => {
+          if (info.settings) {
+            setFormValues(FORM_ID, info.settings);
+          }
+        },
+
+        getSettings: () => {
+          const formValues = getFormValues(FORM_ID);
+
+          return formValues;
+        },
+
+        validate: () => {
+          const formValues = getFormValues(FORM_ID);
+          const { metric } = formValues;
+
+          const acceptableMetrics = new Set([
+            'CLS',
+            'FCP',
+            'FID',
+            'INP',
+            'LCP',
+            'TTFB',
+          ]);
+
+          const metricIsValid = acceptableMetrics.has(metric);
+
+          return metricIsValid;
+        }
+      });
+    </script>
+  </body>
+</html>

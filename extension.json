@@ -284,6 +284,31 @@
       "viewPath": "dataElements/metricRating.html"
     },
     {
+      "displayName": "Rating Thresholds",
+      "name": "metric-rating-thresholds",
+      "categoryName": "Metric",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {
+          "metric": {
+            "enum": [
+              "CLS",
+              "FCP",
+              "FID",
+              "INP",
+              "LCP",
+              "TTFB"
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "required": ["metric"]
+      },
+      "libPath": "src/lib/dataElements/metricRatingThresholds.js",
+      "viewPath": "dataElements/metricRatingThresholds.html"
+    },
+    {
       "displayName": "Value",
       "name": "metric-value",
       "categoryName": "Metric",

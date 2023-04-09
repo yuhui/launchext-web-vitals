@@ -165,6 +165,9 @@ const loadWebVitals = ({
         }
 
         onMetric(triggerWebVitalsMetric, reportOptions);
+
+        ratingThresholds = window.webVitals[`${metric}Thresholds`];
+        METRIC_RATING_THRESHOLDS.set(metric, ratingThresholds);
       } else {
         failedToLoadListeners.push(`on${metric}`);
       }
@@ -185,7 +188,30 @@ loadWebVitals(EXTENSION_SETTINGS);
 
 module.exports = {
   /**
+   * Get the rating thresholds for the specified Web Vitals metric.
+   *
+   * @param {String} metric=null The Web Vitals metric.
+   *
+   * @return {Array} The Web Vitals metric's rating thresholds.
    */
+  getMetricRatingThresholds: (metric = null) => {
+    if (!metric) {
+      logger.error('Web Vitals metric not specified.');
+      return;
+    }
+    if (!WEB_VITALS_METRICS.has(metric)) {
+      logger.error(`Invalid Web Vitals metric specified: ${metric}.`);
+      return;
+    }
+
+    const ratingThresholds = METRIC_RATING_THRESHOLDS.get(metric);
+    if (!ratingThresholds) {
+      logger.warn(`Rating thresholds not available for Web Vitals metric: ${metric}.`);
+      return;
+    }
+
+    return ratingThresholds;
+  },
 
   /**
    * Register the Web Vitals metrics for triggering in Rules.
