@@ -48,7 +48,7 @@ const WEB_VITALS_LIBRARY_TYPES = [
   'cdn',
   'url',
 ];
-const WEB_VITALS_CDN_MAJOR_VERSION = '3.1';
+const WEB_VITALS_CDN_MAJOR_VERSION = '3';
 const WEB_VITALS_CDN_URL = `https://unpkg.com/web-vitals@${WEB_VITALS_CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`;
 const WEB_VITALS_VENDOR_SCRIPT_FILENAME = 'web-vitals.attribution.iife.js';
 
