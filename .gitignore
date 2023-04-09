@@ -1,6 +1,7 @@
 # Personal
-setup
-vendor
+setup/
+src/view/dist/
+vendor/
 *.zip
 
 # Visual Studio Code
