@@ -245,6 +245,14 @@
           'url',
           '#web-vitals-library-url-container',
         );
+
+        const formValues = getFormValues(FORM_ID);
+        const webVitalsLibraryTypeValue = formValues['webVitalsLibraryType'];
+        if (webVitalsLibraryTypeValue === 'url') {
+          const webVitalsLibraryUrlInputSelector = '#web-vitals-library-url';
+          const webVitalsLibraryUrlInput = document.querySelector(webVitalsLibraryUrlInputSelector);
+          webVitalsLibraryUrlInput.value = '';
+        }
       };
 
       window.extensionBridge.register({
@@ -319,6 +327,8 @@
             case 'cdn':
               formValues.webVitalsLibraryUrl = 'default';
               break;
+            case 'url':
+              break;
             default:
               formValues.webVitalsLibraryType = 'cdn';
               formValues.webVitalsLibraryUrl = 'default';
@@ -368,7 +378,7 @@
               Object.prototype.toString.call(webVitalsLibraryUrl) === '[object String]'
               && /^https?:\/\//.test(webVitalsLibraryUrl)
             )
-            : webVitalsLibraryUrl === 'default';
+            : ['', 'default'].includes(webVitalsLibraryUrl);
 
           return durationThresholdINPIsValid
             && reportAllChangesCLSIsValid
