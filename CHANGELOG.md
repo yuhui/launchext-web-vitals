@@ -1,3 +1,9 @@
+1.4.1 (released 21 April 2023)
+------------------------------
+
+- Fixed error in the configuration view that prevented the extension from being installed.
+- Fixed error in the configuration view that prevented an own Web Vitals library URL to be saved.
+
 1.4.0 (released 14 April 2023)
 ------------------------------
 
