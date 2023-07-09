@@ -2,7 +2,7 @@
   "displayName": "Web Vitals",
   "name": "web-vitals-js",
   "platform": "web",
-  "version": "1.4.1",
+  "version": "1.4.2",
   "description": "Measure page quality signals from Web Vitals (as defined by Google) to optimise the user experience of your website. Track Cumulative Layout Shift, Largest Contentful Paint and more Web Vitals. Use data elements to report on the ID, name, delta of metrics.",
   "author": {
     "name": "Yuhui",
