@@ -81,6 +81,15 @@ describe('metricDelta data element delegate', () => {
         expect(result).toBeInstanceOf(Number);
       }
     );
+
+    it(
+      'can be zero',
+      () => {
+        this.event.webvitals.delta = 0;
+        const result = this.dataElementDelegate(this.settings, this.event);
+        expect(result).toEqual(0);
+      }
+    );
   });
 
 });

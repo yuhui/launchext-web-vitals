@@ -40,7 +40,9 @@ module.exports = (settings, event = null) => {
     return;
   }
   const { delta = null } = webvitals;
-  if (!delta) {
+
+  // test for 0 delta explicitly
+  if (!delta && delta !== 0) {
     logger.warn('Metric delta not available.');
     return;
   }

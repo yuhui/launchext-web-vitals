@@ -81,6 +81,15 @@ describe('metricValue data element delegate', () => {
         expect(result).toBeInstanceOf(Number);
       }
     );
+
+    it(
+      'can be zero',
+      () => {
+        this.event.webvitals.value = 0;
+        const result = this.dataElementDelegate(this.settings, this.event);
+        expect(result).toEqual(0);
+      }
+    );
   });
 
 });

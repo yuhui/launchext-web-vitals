@@ -40,7 +40,9 @@ module.exports = (settings, event = null) => {
     return;
   }
   const { value = null } = webvitals;
-  if (!value) {
+
+  // test for 0 value explicitly
+  if (!value && value !== 0) {
     logger.warn('Metric value not available.');
     return;
   }
