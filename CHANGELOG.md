@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.4.3 - 2023-11-18
+
+### Fixed
+
+- Don't make the specific URL to be blank when re-opening the extension configuration after saving it.
+
+### Changed
+
+- Update bundled `web-vitals.attribution.js` library to version 3.5.0.
+
 ## 1.4.2 - 2023-07-12
 
 ### Fixed
