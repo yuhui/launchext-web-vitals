@@ -246,11 +246,9 @@
           '#web-vitals-library-url-container',
         );
 
-        const formValues = getFormValues(FORM_ID);
-        const webVitalsLibraryTypeValue = formValues['webVitalsLibraryType'];
-        if (webVitalsLibraryTypeValue === 'url') {
-          const webVitalsLibraryUrlInputSelector = '#web-vitals-library-url';
-          const webVitalsLibraryUrlInput = document.querySelector(webVitalsLibraryUrlInputSelector);
+        const webVitalsLibraryUrlInputSelector = '#web-vitals-library-url';
+        const webVitalsLibraryUrlInput = document.querySelector(webVitalsLibraryUrlInputSelector);
+        if (webVitalsLibraryUrlInput.value === 'default') {
           webVitalsLibraryUrlInput.value = '';
         }
       };
@@ -378,7 +376,7 @@
               Object.prototype.toString.call(webVitalsLibraryUrl) === '[object String]'
               && /^https?:\/\//.test(webVitalsLibraryUrl)
             )
-            : ['', 'default'].includes(webVitalsLibraryUrl);
+            : true;
 
           return durationThresholdINPIsValid
             && reportAllChangesCLSIsValid
