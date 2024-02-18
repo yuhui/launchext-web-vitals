@@ -1,0 +1,147 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Clear Batch Action</title>
+    <link rel="stylesheet" href="../dist/css/coral.min.css">
+    <link rel="stylesheet" href="../stylesheets/style.css">
+    <script src="../dist/js/coral.min.js"></script>
+    <script src="../scripts/analytics.js"></script>
+    <script src="//assets.adobedtm.com/6c27c1e662c8/609b9fc08c83/launch-54e6abf50de0.min.js" async></script>
+  </head>
+  <body class="coral--light coral-Body--S u-coral-margin">
+    <div id="batching-not-enabled" class="show">
+      <h3 class="coral-Heading--M">Batching has not been enabled</h3>
+      <p class="error-message">
+        You cannot save this Action because you have not enabled batch collection of Web Vitals
+        metric reports in the extension configuration.
+      </p>
+      <p>To enable batching:</p>
+      <ol class="coral-List">
+        <li class="coral-List-item">
+          In Extensions, open the "Web Vitals" extension configuration.
+        </li>
+        <li class="coral-List-item">Expand the "Advanced" section.</li>
+        <li class="coral-List-item">
+          Enable the "Collect batch of Web Vitals metric reports" toggle.
+        </li>
+        <li class="coral-List-item">Save the extension configuration.</li>
+      </ol>
+      <p>Then, return here to use this Action type.</p>
+    </div>
+
+    <div id="batching-enabled" class="hide">
+      <h3 class="coral-Heading--M">No configuration necessary</h3>
+
+      <section class="coral-Well">
+        <h4 class="coral-Heading--S coral-Heading--light">How this Action works</h4>
+        <p>
+          When this Action runs, it clears the batch of all Web Vitals metric reports that have been
+          collected so far.
+        </p>
+      </section>
+    </div>
+
+    <div id="messaging"></div>
+
+    <hr class="coral-Divider--S">
+
+    <footer class="coral--lightest coral-Body--XS">
+      <div id="donations">
+        <p>
+          Donate: <a class="coral-Link" href="https://paypal.me/yuhuibc" target="_blank">PayPal</a>
+        </p>
+      </div>
+      <div id="support">
+        <p>
+          Support Information
+        </p>
+        <ul class="coral-List">
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://github.com/yuhui/launchext-wogaa-sg/issues" target="_blank">
+              Open a ticket
+            </a>
+          </li>
+          <li class="coral-List-item">
+            <a class="coral-Link" href="https://github.com/yuhui/launchext-wogaa-sg/blob/master/CHANGELOG.md" target="_blank">
+              Read change log
+            </a>
+          </li>
+        </ul>
+      </div>
+
+      <p>
+        Copyright &copy; 2024 Yuhui. All rights reserved.
+      </p>
+      <p>
+        <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
+        <a class="coral-Link" href="https://yuhui.sg/privacy-policy.html" target="_blank">Privacy Policy</a> |
+        <a class="coral-Link" href="https://yuhui.sg/cookie-policy.html" target="_blank">Cookie Policy</a> |
+        <a class="coral-Link" href="https://yuhui.sg/acceptable-use-policy.html" target="_blank">Acceptable Use Policy</a>
+      </p>
+    </footer>
+
+    <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
+    <script src="../scripts/common.js"></script>
+    <script>
+      const FORM_ID = 'action-configuration';
+
+      var isBatchingEnabled = false;
+
+      function toggleBatchingConfiguration() {
+        const batchingNotEnabledElement = document.getElementById('batching-not-enabled');
+        const batchingEnabledElement = document.getElementById('batching-enabled');
+
+        if (isBatchingEnabled) {
+          batchingEnabledElement.classList.remove('hide');
+          batchingEnabledElement.classList.add('show');
+          batchingNotEnabledElement.classList.remove('show');
+          batchingNotEnabledElement.classList.add('hide');
+        } else {
+          batchingNotEnabledElement.classList.remove('hide');
+          batchingNotEnabledElement.classList.add('show');
+          batchingEnabledElement.classList.remove('show');
+          batchingEnabledElement.classList.add('hide');
+        }
+      }
+
+      window.extensionBridge.register({
+        init: (info) => {
+          const { extensionSettings: { enableBatching } } = info;
+          isBatchingEnabled = enableBatching && enableBatching === 'yes';
+
+          toggleBatchingConfiguration();
+
+          if (info.settings) {}
+
+          // analytics
+          const { company, propertySettings } = info;
+          initWithOrgIdAndDomains(
+            company.orgId,
+            propertySettings.settings
+              ? propertySettings.settings.domains
+              : propertySettings.domains,
+          );
+        },
+
+        getSettings: () => {
+          // analytics
+          const analyticsEventDetail = {
+            category: 'clearBatch action',
+            label: JSON.stringify({}),
+          };
+          dispatchAnalyticsEvent(
+            'action.getSettings',
+            analyticsEventDetail
+          );
+
+          return {};
+        },
+
+        validate: () => {
+          return isBatchingEnabled;
+        }
+      });
+    </script>
+  </body>
+</html>

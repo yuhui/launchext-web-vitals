@@ -25,6 +25,11 @@
           "maximum": 100,
           "default": 40
         },
+        "enableBatching": {
+          "type": "string",
+          "enum": [ "no", "yes" ],
+          "default": "no"
+        },
         "reportAllChangesCLS": {
           "type": "string",
           "enum": [ "no", "yes" ],
@@ -147,7 +152,35 @@
       "viewPath": "events/timeToFirstByte.html"
     }
   ],
+  "actions": [
+    {
+      "displayName": "Clear Batch",
+      "name": "clear-batch",
+      "categoryName": "Batch",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "libPath": "src/lib/actions/clearBatch.js",
+      "viewPath": "actions/clearBatch.html"
+    }
+  ],
   "dataElements": [
+    {
+      "displayName": "Batch",
+      "name": "batch",
+      "categoryName": "Batch",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "libPath": "src/lib/dataElements/batch.js",
+      "viewPath": "dataElements/batch.html"
+    },
     {
       "displayName": "Attribution",
       "name": "metric-attribution",

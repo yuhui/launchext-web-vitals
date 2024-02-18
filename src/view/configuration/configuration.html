@@ -110,6 +110,23 @@
           Learn more about Interaction to Next Paint (INP).
         </a>
       </p>
+
+      <coral-accordion>
+        <coral-accordion-item id="advanced-accordion">
+          <coral-accordion-item-label>Advanced</coral-accordion-item-label>
+          <div id="enable-batching-container" class="coral-FormGroup-item">
+            <coral-switch name="enableBatching" value="yes">
+              Collect batch of Web Vitals metric reports
+            </coral-switch>
+            <p>
+              When this setting is enabled, every reported Web Vitals metric gets added to a
+              batch, in the order that it had been reported. You can use this batch later for your
+              tracking purposes. (The batch of collected Web Vitals metric reports can be obtained
+              from this extension's "Batch" Data Element.)
+            </p>
+          </div>
+        </coral-accordion-item>
+      </coral-accordion>
     </form>
 
     <section class="coral-Well">
@@ -169,6 +186,25 @@
           <b>Use the appropriate Data Elements in your Rules to retrieve data about the Web
             Vitals metric, like its name, ID, value, delta, etc.</b><br />
             More information is available when setting up the Data Element.
+        </li>
+      </ol>
+      <p>If you want to use batching:</p>
+      <ol class="coral-List">
+        <li class="coral-List-item">
+          <b>Enable batching in this configuration view.</b> This will cause every Web Vitals
+            metric report to get added to the batch.<br />
+          <b>IMPORTANT!</b> If you use this extension's Events in your Rules, then the Web Vitals
+            metric reports that triggered those Rules will <em>also</em> be added to the batch.
+        </li>
+        <li class="coral-List-item">
+          <b>Use the "Batch" Data Element in your Rule(s) to retrieve the batch of Web Vitals
+            metric reports.</b><br />
+        </li>
+        <li class="coral-List-item">
+          <b><em>Recommended:</em> Add the "Clear batch" Action to your Rule(s) after you have
+            tracked a batch.</b><br />
+          This ensures that you do not track the reported Web Vitals metrics more than once
+            accidentally.
         </li>
       </ol>
 
@@ -258,6 +294,9 @@
           const { settings } = info;
           if (settings) {
             const hasOwnProperty = Object.prototype.hasOwnProperty;
+            const {
+              enableBatching,
+            } = settings;
 
             // these settings were added in v1.2.0
             if (
@@ -279,6 +318,14 @@
               info.settings.webVitalsLibraryUrl = 'default';
             }
 
+            // these settings were added in v2.0.0
+            if (!enableBatching) {
+              info.settings.enableBatching = 'no';
+            }
+            if (info.settings.enableBatching === 'yes') {
+              toggleAccordion('advanced-accordion');
+            }
+
             setFormValues(FORM_ID, info.settings);
 
             toggleWebVitalsLibraryUrlContainer();
@@ -289,6 +336,7 @@
           const formValues = getFormValues(FORM_ID);
           const {
             durationThresholdINP,
+            enableBatching,
             reportAllChangesCLS,
             reportAllChangesFCP,
             reportAllChangesFID,
@@ -301,6 +349,9 @@
 
           formValues.durationThresholdINP = stringToInteger(durationThresholdINP);
 
+          if (enableBatching === '') {
+            formValues.enableBatching = 'no';
+          }
           if (reportAllChangesCLS === '') {
             formValues.reportAllChangesCLS = 'no';
           }
@@ -341,6 +392,7 @@
           const formValues = getFormValues(FORM_ID);
           const {
             durationThresholdINP,
+            enableBatching,
             reportAllChangesCLS,
             reportAllChangesFCP,
             reportAllChangesFID,
@@ -363,6 +415,8 @@
             && durationThresholdINPNumIsInteger
             && durationThresholdINPNumIsPercentile;
 
+          const enableBatchingIsValid = ['', 'yes'].includes(enableBatching);
+
           const reportAllChangesCLSIsValid = ['', 'yes'].includes(reportAllChangesCLS);
           const reportAllChangesFCPIsValid = ['', 'yes'].includes(reportAllChangesFCP);
           const reportAllChangesFIDIsValid = ['', 'yes'].includes(reportAllChangesFID);
@@ -379,6 +433,7 @@
             : true;
 
           return durationThresholdINPIsValid
+            && enableBatchingIsValid
             && reportAllChangesCLSIsValid
             && reportAllChangesFCPIsValid
             && reportAllChangesFIDIsValid
