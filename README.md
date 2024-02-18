@@ -4,8 +4,8 @@ This is an extension for Adobe Experience Platform Data Collection Tags to measu
 
 It performs the following functions:
 
-- Detects all Web Vitals measurements.
-- Provides data elements for retrieving measured properties.
+- Detects all reports of Web Vitals metric measurements.
+- Provides data elements for retrieving reported properties.
 
 [Adobe Exchange Program app listing](https://exchange.adobe.com/apps/ec/106769)
 
