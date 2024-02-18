@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2024 Yuhui. All rights reserved.
+ * Copyright 2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,21 @@
 
 'use strict';
 
-const mockMetricData = require('./mockMetricData');
-
 /**
- * Return a base `event` object for use with data element unit testing.
+ * Return a `batch` spy object for use with event unit testing.
  */
-module.exports = function() {
-  const metricData = mockMetricData();
-  const baseEvent = {
-    webvitals: metricData,
+module.exports = function(throwError = false) {
+  const batch = {
+    append: jasmine.createSpy(),
+    clear: jasmine.createSpy(),
+    get: jasmine.createSpy().and.returnValue(jasmine.createSpy()),
   };
 
-  return baseEvent;
+  const batchWithErrors = {
+    append: jasmine.createSpy().and.throwError('die'),
+    clear: jasmine.createSpy().and.throwError('die'),
+    get: jasmine.createSpy().and.throwError('die'),
+  };
+
+  return throwError ? batchWithErrors : batch;
 };

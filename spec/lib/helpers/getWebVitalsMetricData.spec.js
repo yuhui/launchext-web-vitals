@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Yuhui. All rights reserved.
+ * Copyright 2023-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,61 +16,39 @@
 
 'use strict';
 
+const { WEB_VITALS_METRICS_NAMES } = require('../../../src/lib/constants');
 const mockMetricData = require('../../specHelpers/mockMetricData');
-const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('getWebVitalsMetricData helper delegate', () => {
-  beforeAll(() => {
-    global.turbine = mockTurbine;
+describe('getWebVitalsMetricData helper delegate', function() {
+  beforeEach(function() {
+    this.data = mockMetricData();
+    // delete "fullName" property because it gets set from WEB_VITALS_METRICS_NAMES
+    delete this.data.fullName;
+
     this.helperDelegate = require('../../../src/lib/helpers/getWebVitalsMetricData');
   });
 
-  beforeEach(() => {
-    this.data = mockMetricData();
-    this.metricFullName = this.data.fullName;
-    delete this.data.fullName;
+  describe('with invalid arguments', function() {
+    it('throws an error when "data" argument is missing', function() {
+      expect(() => {
+        this.helperDelegate();
+      }).toThrowError(Error, 'Web Vitals data not specified');
+    });
   });
 
-  afterAll(() => {
-    delete global.turbine;
+  describe('with valid arguments', function() {
+    it('returns a valid object', function() {
+      const result = this.helperDelegate(this.data);
+
+      expect(result).toBeInstanceOf(Object);
+
+      const dataKeys = Object.keys(this.data);
+      dataKeys.forEach((key) => {
+        expect(result[key]).toEqual(this.data[key]);
+      });
+
+      const metricFullName = WEB_VITALS_METRICS_NAMES.get(this.data.name)
+      expect(result.fullName).toEqual(metricFullName);
+    });
   });
-
-  describe('with invalid arguments', () => {
-    it(
-      'should be undefined when "data" argument is missing',
-      () => {
-        const result = this.helperDelegate(null, this.metricFullName);
-        expect(result).toBeUndefined();
-
-        const logError = turbine.logger.error;
-        expect(logError).toHaveBeenCalledWith('Web Vitals data not specified.');
-      }
-    );
-
-    it(
-      'should be undefined when "metricFullName" argument is missing',
-      () => {
-        const result = this.helperDelegate(this.data, null);
-        expect(result).toBeUndefined();
-
-        const logError = turbine.logger.error;
-        expect(logError).toHaveBeenCalledWith('Web Vitals metric full name not specified.');
-      }
-    );
-  });
-
-  describe('with valid arguments', () => {
-    it(
-      'should return a valid object',
-      () => {
-        const result = this.helperDelegate(this.data, this.metricFullName);
-        expect(result).toBeInstanceOf(Object);
-
-        const dataKeys = Object.keys(this.data);
-        dataKeys.forEach((key) => expect(result[key]).toEqual(this.data[key]));
-        expect(result.fullName).toEqual(this.metricFullName);
-      }
-    );
-  });
-
 });

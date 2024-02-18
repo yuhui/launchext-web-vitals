@@ -1,5 +1,5 @@
 /**
- * Copyright 2022-2023 Yuhui. All rights reserved.
+ * Copyright 2022-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,97 +16,96 @@
 
 'use strict';
 
+const proxyquire = require('proxyquire').noCallThru();
+
 const mockBaseEvent = require('../../specHelpers/mockBaseEvent');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('metricAttribution data element delegate', () => {
-  beforeAll(() => {
-    global.turbine = mockTurbine;
-    this.dataElementDelegate = require('../../../src/lib/dataElements/metricAttribution');
-  });
-
-  beforeEach(() => {
+describe('metricAttribution data element delegate', function() {
+  beforeEach(function() {
     this.event = mockBaseEvent();
     this.settings = {
       metricAttributionItem: 'loadState',
     };
-  });
+    this.turbine = mockTurbine();
 
-  afterAll(() => {
-    delete global.turbine;
-  });
-
-  describe('with invalid "settings" argument', () => {
-    it(
-      'should be undefined when "settings" argument is missing',
-      () => {
-        const result = this.dataElementDelegate(undefined, this.event);
-        expect(result).toBeUndefined();
-
-        const logError = global.turbine.logger.error;
-        expect(logError).toHaveBeenCalledWith('No metric attribution item provided.');
+    this.dataElementDelegate = proxyquire(
+      '../../../src/lib/dataElements/metricAttribution',
+      {
+        '../controllers/turbine': this.turbine,
       }
     );
+  });
+
+  describe('with invalid "settings" argument', function() {
+    it('logs an error and returns nothing when "settings" argument is missing', function() {
+      const result = this.dataElementDelegate(undefined, this.event);
+
+      expect(result).toBeUndefined();
+
+      const { error: logError } = this.turbine.logger;
+      expect(logError).toHaveBeenCalledWith('No metric attribution item provided.');
+    });
 
     it(
-      'should be undefined when "metricAttributionItem" property is missing',
-      () => {
+      'logs an error and returns nothing when "metricAttributionItem" property is missing',
+      function() {
         delete this.settings.metricAttributionItem;
+
         const result = this.dataElementDelegate(this.settings, this.event);
+
         expect(result).toBeUndefined();
 
-        const logError = global.turbine.logger.error;
+        const { error: logError } = this.turbine.logger;
         expect(logError).toHaveBeenCalledWith('No metric attribution item provided.');
       }
     );
   });
 
-  describe('with invalid "event" argument', () => {
-    it(
-      'should be undefined when "event" argument is missing',
-      () => {
-        const result = this.dataElementDelegate(this.settings);
-        expect(result).toBeUndefined();
+  describe('with invalid "event" argument', function() {
+    it('logs an error and returns nothing when "event" argument is missing', function() {
+      const result = this.dataElementDelegate(this.settings);
 
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith(
-          '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-        );
-      }
-    );
+      expect(result).toBeUndefined();
 
-    it(
-      'should be undefined when "webvitals" property is missing',
-      () => {
-        delete this.event.webvitals;
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeUndefined();
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith(
+        '"event" argument not specified. Use _satellite.getVar("data element name", event);'
+      );
+    });
 
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
-      }
-    );
+    it('logs an error and returns nothing when "webvitals" property is missing', function() {
+      delete this.event.webvitals;
+      const result = this.dataElementDelegate(this.settings, this.event);
+
+      expect(result).toBeUndefined();
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
+    });
 
     it(
-      'should be undefined when "attribution" property is missing in "webvitals"',
-      () => {
+      'logs an error and returns nothing when "attribution" property is missing in "webvitals"',
+      function() {
         delete this.event.webvitals.attribution;
         const result = this.dataElementDelegate(this.settings, this.event);
+
         expect(result).toBeUndefined();
 
-        const logWarn = global.turbine.logger.warn;
+        const { warn: logWarn } = this.turbine.logger;
         expect(logWarn).toHaveBeenCalledWith('Metric attribution not available.');
       }
     );
 
     it(
-      'should be undefined when "metricAttributionItem" property is missing in "attribution"',
-      () => {
+      'logs an error and returns nothing when "metricAttributionItem" property is missing in "attribution"',
+      function() {
         delete this.event.webvitals.attribution[this.settings.metricAttributionItem];
         const result = this.dataElementDelegate(this.settings, this.event);
+
         expect(result).toBeUndefined();
 
-        const logWarn = global.turbine.logger.warn;
+        const { warn: logWarn } = this.turbine.logger;
         expect(logWarn).toHaveBeenCalledWith(
           `Metric attribution item "${this.settings.metricAttributionItem}" not available.`
         );
@@ -114,14 +113,10 @@ describe('metricAttribution data element delegate', () => {
     );
   });
 
-  describe('with valid "settings" and "event" arguments', () => {
-    it(
-      'should be defined',
-      () => {
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeDefined();
-      }
-    );
+  describe('with valid "settings" and "event" arguments', function() {
+    it('is defined', function() {
+      const result = this.dataElementDelegate(this.settings, this.event);
+      expect(result).toBeDefined();
+    });
   });
-
 });

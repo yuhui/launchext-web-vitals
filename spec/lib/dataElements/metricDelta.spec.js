@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2023 Yuhui. All rights reserved.
+ * Copyright 2021-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,80 +16,73 @@
 
 'use strict';
 
+const proxyquire = require('proxyquire').noCallThru();
+
 const mockBaseEvent = require('../../specHelpers/mockBaseEvent');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('metricDelta data element delegate', () => {
-  beforeAll(() => {
-    global.turbine = mockTurbine;
-    this.dataElementDelegate = require('../../../src/lib/dataElements/metricDelta');
-  });
-
-  beforeEach(() => {
+describe('metricDelta data element delegate', function() {
+  beforeEach(function() {
     this.event = mockBaseEvent();
     this.settings = {}; // this data element does not have any custom settings
-  });
+    this.turbine = mockTurbine();
 
-  afterAll(() => {
-    delete global.turbine;
-  });
-
-  describe('with invalid "event" argument', () => {
-    it(
-      'should be undefined when "event" argument is missing',
-      () => {
-        const result = this.dataElementDelegate(this.settings);
-        expect(result).toBeUndefined();
-
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith(
-          '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-        );
-      }
-    );
-
-    it(
-      'should be undefined when "webvitals" property is missing',
-      () => {
-        delete this.event.webvitals;
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeUndefined();
-
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
-      }
-    );
-
-    it(
-      'should be undefined when "delta" property is missing',
-      () => {
-        delete this.event.webvitals.delta;
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeUndefined();
-
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith('Metric delta not available.');
+    this.dataElementDelegate = proxyquire(
+      '../../../src/lib/dataElements/metricDelta',
+      {
+        '../controllers/turbine': this.turbine,
       }
     );
   });
 
-  describe('with valid "event" argument', () => {
-    it(
-      'should be a float',
-      () => {
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeInstanceOf(Number);
-      }
-    );
+  describe('with invalid "event" argument', function() {
+    it('logs an error and returns nothing when "event" argument is missing', function() {
+      const result = this.dataElementDelegate(this.settings);
 
-    it(
-      'can be zero',
-      () => {
-        this.event.webvitals.delta = 0;
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toEqual(0);
-      }
-    );
+      expect(result).toBeUndefined();
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith(
+        '"event" argument not specified. Use _satellite.getVar("data element name", event);'
+      );
+    });
+
+    it('logs an error and returns nothing when "webvitals" property is missing', function() {
+      delete this.event.webvitals;
+
+      const result = this.dataElementDelegate(this.settings, this.event);
+
+      expect(result).toBeUndefined();
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
+    });
+
+    it('logs an error and returns nothing when "delta" property is missing', function() {
+      delete this.event.webvitals.delta;
+
+      const result = this.dataElementDelegate(this.settings, this.event);
+
+      expect(result).toBeUndefined();
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith('Metric delta not available.');
+    });
   });
 
+  describe('with valid "event" argument', function() {
+    it('is a float', function() {
+      const result = this.dataElementDelegate(this.settings, this.event);
+
+      expect(result).toBeInstanceOf(Number);
+    });
+
+    it('can be zero', function() {
+      this.event.webvitals.delta = 0;
+
+      const result = this.dataElementDelegate(this.settings, this.event);
+
+      expect(result).toEqual(0);
+    });
+  });
 });

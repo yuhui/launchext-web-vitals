@@ -1,5 +1,5 @@
 /**
- * Copyright 2022-2023 Yuhui. All rights reserved.
+ * Copyright 2022-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,78 +16,77 @@
 
 'use strict';
 
+const proxyquire = require('proxyquire').noCallThru();
+
 const mockBaseEvent = require('../../specHelpers/mockBaseEvent');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-const NAVIGATION_TYPES = [
+const NAVIGATION_TYPES = new Set([
   'navigate',
   'reload',
   'back-forward',
   'back-forward-cache',
   'prerender',
-];
+]);
 
-describe('metricNavigationType data element delegate', () => {
-  beforeAll(() => {
-    global.turbine = mockTurbine;
-    this.dataElementDelegate = require('../../../src/lib/dataElements/metricNavigationType');
-  });
-
-  beforeEach(() => {
+describe('metricNavigationType data element delegate', function() {
+  beforeEach(function() {
     this.event = mockBaseEvent();
     this.settings = {}; // this data element does not have any custom settings
+    this.turbine = mockTurbine();
+
+    this.dataElementDelegate = proxyquire(
+      '../../../src/lib/dataElements/metricNavigationType',
+      {
+        '../controllers/turbine': this.turbine,
+      }
+    );
   });
 
-  afterAll(() => {
-    delete global.turbine;
-  });
+  describe('with invalid "event" argument', function() {
+    it('logs an error and returns nothing when "event" argument is missing', function() {
+      const result = this.dataElementDelegate(this.settings);
 
-  describe('with invalid "event" argument', () => {
-    it(
-      'should be undefined when "event" argument is missing',
-      () => {
-        const result = this.dataElementDelegate(this.settings);
-        expect(result).toBeUndefined();
+      expect(result).toBeUndefined();
 
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith(
-          '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-        );
-      }
-    );
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith(
+        '"event" argument not specified. Use _satellite.getVar("data element name", event);'
+      );
+    });
 
-    it(
-      'should be undefined when "webvitals" property is missing',
-      () => {
-        delete this.event.webvitals;
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeUndefined();
+    it('logs an error and returns nothing when "webvitals" property is missing', function() {
+      delete this.event.webvitals;
 
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
-      }
-    );
+      const result = this.dataElementDelegate(this.settings, this.event);
 
-    it(
-      'should be undefined when "navigationType" property is missing',
-      () => {
-        delete this.event.webvitals.navigationType;
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeUndefined();
+      expect(result).toBeUndefined();
 
-        const logWarn = global.turbine.logger.warn;
-        expect(logWarn).toHaveBeenCalledWith('Metric navigation type not available.');
-      }
-    );
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
+    });
+
+    it('logs an error and returns nothing when "navigationType" property is missing', function() {
+      delete this.event.webvitals.navigationType;
+
+      const result = this.dataElementDelegate(this.settings, this.event);
+
+      expect(result).toBeUndefined();
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith('Metric navigation type not available.');
+    });
 
     it(
-      'should be undefined when "navigationType" property is an invalid value',
-      () => {
+      'logs an error and returns nothing when "navigationType" property is an invalid value',
+      function() {
         this.event.webvitals.navigationType = 'foo';
+
         const result = this.dataElementDelegate(this.settings, this.event);
+
         expect(result).toBeUndefined();
 
-        const logError = global.turbine.logger.error;
+        const { error: logError } = this.turbine.logger;
         expect(logError).toHaveBeenCalledWith(
           `Invalid metric navigation type: "${this.event.webvitals.navigationType}".`
         );
@@ -95,15 +94,13 @@ describe('metricNavigationType data element delegate', () => {
     );
   });
 
-  describe('with valid "event" argument', () => {
-    it(
-      'should be a string',
-      () => {
-        const result = this.dataElementDelegate(this.settings, this.event);
-        expect(result).toBeInstanceOf(String);
-        expect(NAVIGATION_TYPES).toContain(result);
-      }
-    );
-  });
+  describe('with valid "event" argument', function() {
+    it('is a string', function() {
+      const result = this.dataElementDelegate(this.settings, this.event);
 
+      expect(result).toBeInstanceOf(String);
+
+      expect(NAVIGATION_TYPES.has(result)).toBeTrue();
+    });
+  });
 });

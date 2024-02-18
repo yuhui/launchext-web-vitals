@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Yuhui. All rights reserved.
+ * Copyright 2023-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,52 +16,41 @@
 
 'use strict';
 
-const mockTurbine = require('../../specHelpers/mockTurbine');
-
-describe('createGetWebVitalsMetricEvent helper delegate', () => {
-  beforeAll(() => {
-    global.turbine = mockTurbine;
+describe('createGetWebVitalsMetricEvent helper delegate', function() {
+  beforeAll(function() {
     global.window = jasmine.createSpy();
+  });
+
+  beforeEach(function() {
+    this.metricData = jasmine.createSpy();
+
     this.helperDelegate = require('../../../src/lib/helpers/createGetWebVitalsMetricEvent');
   });
 
-  beforeEach(() => {
-    this.metricData = jasmine.createSpy();
-  });
-
-  afterAll(() => {
-    delete global.turbine;
+  afterAll(function() {
     delete global.window;
   });
 
-  describe('with invalid arguments', () => {
-    it(
-      'should be undefined when "metricData" argument is missing',
-      () => {
-        const result = this.helperDelegate();
-        expect(result).toBeUndefined();
-
-        const logError = turbine.logger.error;
-        expect(logError).toHaveBeenCalledWith('Web Vitals metric not specified.');
-      }
-    );
+  describe('with invalid arguments', function() {
+    it('throws an error when "metricData" argument is missing', function() {
+      expect(() => {
+        this.helperDelegate();
+      }).toThrowError(Error, 'Web Vitals metric not specified.');
+    });
   });
 
-  describe('with valid arguments', () => {
-    it(
-      'should return a valid object',
-      () => {
-        const result = this.helperDelegate(this.metricData);
-        expect(result).toBeInstanceOf(Object);
+  describe('with valid arguments', function() {
+    it('returns a valid object', function() {
+      const result = this.helperDelegate(this.metricData);
 
-        const keys = Object.keys(result);
-        expect(keys.length).toEqual(3);
+      expect(result).toBeInstanceOf(Object);
 
-        expect(result.window).toEqual(global.window);
-        expect(result.target).toEqual(global.window);
-        expect(result.webvitals).toEqual(this.metricData);
-      }
-    );
+      const keys = Object.keys(result);
+      expect(keys.length).toEqual(3);
+
+      expect(result.window).toEqual(global.window);
+      expect(result.target).toEqual(global.window);
+      expect(result.webvitals).toEqual(this.metricData);
+    });
   });
-
 });

@@ -16,27 +16,31 @@
 
 'use strict';
 
+const { WEB_VITALS_METRICS } = require('../../src/lib/constants');
+
 /**
- * Return a `webVitals` spy object for use with event unit testing.
+ * Return a `webVitals` spy object for use globally.
  */
-module.exports = function(throwError = false) {
-  const webVitals = {
-    metrics: {
-      listen: jasmine.createSpy(),
-    },
-    ratingThresholds: {
-      get: jasmine.createSpy().and.returnValue([1, 2]),
-    },
-  };
+module.exports = function(excludeMetric = '', metricWithBadRatingThresholds = '') {
+  const onMetrics = [];
+  const ratingThresholds = {};
+  for (const metric of WEB_VITALS_METRICS) {
+    if (metric === excludeMetric) {
+      continue;
+    }
 
-  const webVitalsWithErrors = {
-    metrics: {
-      listen: jasmine.createSpy().and.throwError('die'),
-    },
-    ratingThresholds: {
-      get: jasmine.createSpy().and.throwError('die'),
-    },
-  };
+    onMetrics.push(`on${metric}`);
 
-  return throwError ? webVitalsWithErrors : webVitals;
+    ratingThresholds[`${metric}Thresholds`] =
+      metric === metricWithBadRatingThresholds
+      ? 'foo'
+      : [1, 2];
+  }
+
+  const webVitals = jasmine.createSpyObj(
+    'webVitals',
+    onMetrics,
+    ratingThresholds
+  );
+  return webVitals;
 };

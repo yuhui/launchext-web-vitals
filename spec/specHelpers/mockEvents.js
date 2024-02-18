@@ -17,26 +17,29 @@
 'use strict';
 
 /**
- * Return a `webVitals` spy object for use with event unit testing.
+ * Return a `events` spy object for use with event unit testing.
  */
 module.exports = function(throwError = false) {
-  const webVitals = {
-    metrics: {
-      listen: jasmine.createSpy(),
-    },
-    ratingThresholds: {
-      get: jasmine.createSpy().and.returnValue([1, 2]),
-    },
+  const events = jasmine.createSpyObj(
+    'events',
+    {
+      get: [ jasmine.createSpy(), jasmine.createSpy() ],
+      register: jasmine.createSpy(),
+      registeredMetrics: [
+        'CLS',
+        'FID',
+        'INP',
+        'TTFB',
+        'FOO', // fake metric
+      ],
+    }
+  );
+
+  const eventsWithErrors = {
+    get: jasmine.createSpy().and.throwError('die'),
+    register: jasmine.createSpy().and.throwError('die'),
+    registeredMetrics: jasmine.createSpy().and.throwError('die'),
   };
 
-  const webVitalsWithErrors = {
-    metrics: {
-      listen: jasmine.createSpy().and.throwError('die'),
-    },
-    ratingThresholds: {
-      get: jasmine.createSpy().and.throwError('die'),
-    },
-  };
-
-  return throwError ? webVitalsWithErrors : webVitals;
+  return throwError ? eventsWithErrors : events;
 };

@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2023 Yuhui. All rights reserved.
+ * Copyright 2021-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,32 +18,60 @@
 
 const proxyquire = require('proxyquire').noCallThru();
 
-const mockWebVitals = require('../../specHelpers/mockWebVitals');
+const mockTurbine = require('../../specHelpers/mockTurbine');
 
 const METRIC = 'LCP';
-const webVitals = mockWebVitals();
 
-describe(`"${METRIC}" event delegate`, () => {
-  beforeEach(() => {
-    this.eventDelegate = proxyquire('../../../src/lib/events/largestContentfulPaint', {
-      '../helpers/webVitals': webVitals,
-    });
+describe(`"${METRIC}" event delegate`, function() {
+  beforeEach(function() {
     this.settings = {};
     this.trigger = jasmine.createSpy();
+    this.turbine = mockTurbine();
   });
 
-  it(
-    'sends the trigger to the webVitals helper module once only',
-    () => {
+  describe('with broken handleEvent()', function() {
+    beforeEach(function() {
+      this.error = new Error('die');
+      this.handleEvent = jasmine.createSpy().and.throwError(this.error);
+
+      this.eventDelegate = proxyquire(
+        '../../../src/lib/events/largestContentfulPaint',
+        {
+          '../controllers/turbine': this.turbine,
+          '../helpers/handleEvent': this.handleEvent,
+        }
+      );
+    });
+
+    it('logs an error', function() {
       this.eventDelegate(this.settings, this.trigger);
 
-      const { registerEventStateTrigger } = webVitals;
-      expect(registerEventStateTrigger).toHaveBeenCalledTimes(1);
-      expect(registerEventStateTrigger).toHaveBeenCalledWith(
+      const { error: logError } = this.turbine.logger;
+      expect(logError).toHaveBeenCalledOnceWith(this.error.message);
+    });
+  });
+
+  describe('with everything working properly', function() {
+    beforeEach(function() {
+      this.handleEvent = jasmine.createSpy();
+
+      this.eventDelegate = proxyquire(
+        '../../../src/lib/events/largestContentfulPaint',
+        {
+          '../controllers/turbine': this.turbine,
+          '../helpers/handleEvent': this.handleEvent,
+        }
+      );
+    });
+
+    it('sends the trigger to the events helper module once only', function() {
+      this.eventDelegate(this.settings, this.trigger);
+
+      expect(this.handleEvent).toHaveBeenCalledOnceWith(
         METRIC,
         this.settings,
         this.trigger
       );
-    }
-  );
+    });
+  });
 });
