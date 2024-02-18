@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2023 Yuhui. All rights reserved.
+ * Copyright 2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,37 @@
 
 'use strict';
 
-const {
-  logger: {
-    error: logError,
-  },
-} = require('../controllers/turbine');
-const handleEvent = require('../helpers/handleEvent');
+const enableWebVitals = require('./enableWebVitals');
+const validateMetric = require('./validateMetric');
+const { register: registerEvent } = require('../controllers/events');
 
 /**
- * Web Vitals First Input Delay metric event.
- * This event occurs when the browser responds to the user's first interaction on the current page.
+ * Handle a Rule event.
  *
+ * @async
+ *
+ * @param {String} metric=null The Web Vitals metric that the Rule event is for.
  * @param {Object} settings The event settings object.
  * @param {ruleTrigger} trigger The trigger callback.
+ *
+ * @throws {Error} error from validateMetric().
  */
-module.exports = (settings, trigger) => {
+module.exports = async (metric = null, settings, trigger) => {
   try {
-    handleEvent('FID', settings, trigger);
+    validateMetric(metric);
   } catch (e) {
-    logError(e.message);
+    throw e;
+  }
+
+  try {
+    registerEvent(metric, settings, trigger);
+  } catch (e) {
+    throw e;
+  }
+
+  try {
+    await enableWebVitals();
+  } catch (e) {
+    throw e;
   }
 };

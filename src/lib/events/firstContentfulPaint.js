@@ -16,7 +16,12 @@
 
 'use strict';
 
-const { registerEventStateTrigger } = require('../helpers/webVitals');
+const {
+  logger: {
+    error: logError,
+  },
+} = require('../controllers/turbine');
+const handleEvent = require('../helpers/handleEvent');
 
 /**
  * Web Vitals First Contentful Paint metric event.
@@ -27,9 +32,9 @@ const { registerEventStateTrigger } = require('../helpers/webVitals');
  * @param {ruleTrigger} trigger The trigger callback.
  */
 module.exports = (settings, trigger) => {
-  registerEventStateTrigger(
-    'FCP',
-    settings,
-    trigger
-  );
+  try {
+    handleEvent('FCP', settings, trigger);
+  } catch (e) {
+    logError(e.message);
+  }
 };

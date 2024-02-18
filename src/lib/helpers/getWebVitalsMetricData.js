@@ -16,28 +16,29 @@
 
 'use strict';
 
-const { logger } = turbine;
+const { WEB_VITALS_METRICS_NAMES } = require('../constants');
 
 /**
  * Get data for the current Web Vitals metric.
  *
- * @param {Object} data=null Data measured for the Web Vitals metric.
- * @param {String} metricFullName=null The Web Vitals metric full name.
+ * @param {Object} data=null Data reported for the Web Vitals metric.
  *
  * @return {Object} Data about the current Web Vitals metric.
+ *
+ * @throw {Error} data is not specified.
  */
-module.exports = (data = null, metricFullName = null) => {
+module.exports = (data = null) => {
   if (!data) {
-    logger.error('Web Vitals data not specified.');
-    return;
+    throw new Error('Web Vitals data not specified');
   }
 
-  if (!metricFullName) {
-    logger.error('Web Vitals metric full name not specified.');
-    return;
-  }
+  const metric = data.name;
+  const metricFullName = WEB_VITALS_METRICS_NAMES.get(metric) || metric;
 
-  const metricData = Object.assign({}, data, { fullName: metricFullName });
+  const metricData = {
+    ...data,
+    fullName: metricFullName,
+  };
 
   return metricData;
 };

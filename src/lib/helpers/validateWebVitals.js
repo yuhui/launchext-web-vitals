@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2023 Yuhui. All rights reserved.
+ * Copyright 2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,24 +16,24 @@
 
 'use strict';
 
-const {
-  logger: {
-    error: logError,
-  },
-} = require('../controllers/turbine');
-const handleEvent = require('../helpers/handleEvent');
+const { WEB_VITALS_METRICS } = require('../constants');
 
-/**
- * Web Vitals First Input Delay metric event.
- * This event occurs when the browser responds to the user's first interaction on the current page.
- *
- * @param {Object} settings The event settings object.
- * @param {ruleTrigger} trigger The trigger callback.
- */
-module.exports = (settings, trigger) => {
-  try {
-    handleEvent('FID', settings, trigger);
-  } catch (e) {
-    logError(e.message);
+module.exports = function() {
+  let isValidWebVitals = typeof webVitals !== 'undefined' && !!webVitals;
+
+  if (!isValidWebVitals) {
+    throw new Error('Web Vitals is not available.');
   }
+
+  let onMetric;
+  for (const metric of WEB_VITALS_METRICS) {
+    onMetric = webVitals[`on${metric}`];
+    isValidWebVitals &= typeof onMetric === 'function';
+  }
+
+  if (!isValidWebVitals) {
+    throw new Error('Web Vitals is not available.');
+  }
+
+  return true;
 };

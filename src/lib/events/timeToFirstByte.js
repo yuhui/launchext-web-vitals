@@ -16,7 +16,12 @@
 
 'use strict';
 
-const { registerEventStateTrigger } = require('../helpers/webVitals');
+const {
+  logger: {
+    error: logError,
+  },
+} = require('../controllers/turbine');
+const handleEvent = require('../helpers/handleEvent');
 
 /**
  * Web Vitals Time to First Byte metric event.
@@ -26,9 +31,9 @@ const { registerEventStateTrigger } = require('../helpers/webVitals');
  * @param {ruleTrigger} trigger The trigger callback.
  */
 module.exports = (settings, trigger) => {
-  registerEventStateTrigger(
-    'TTFB',
-    settings,
-    trigger
-  );
+  try {
+    handleEvent('TTFB', settings, trigger);
+  } catch (e) {
+    logError(e.message);
+  }
 };

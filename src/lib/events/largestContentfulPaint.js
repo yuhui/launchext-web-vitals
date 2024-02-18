@@ -16,7 +16,12 @@
 
 'use strict';
 
-const { registerEventStateTrigger } = require('../helpers/webVitals');
+const {
+  logger: {
+    error: logError,
+  },
+} = require('../controllers/turbine');
+const handleEvent = require('../helpers/handleEvent');
 
 /**
  * Web Vitals Largest Contentful Paint metric event.
@@ -27,9 +32,9 @@ const { registerEventStateTrigger } = require('../helpers/webVitals');
  * @param {ruleTrigger} trigger The trigger callback.
  */
 module.exports = (settings, trigger) => {
-  registerEventStateTrigger(
-    'LCP',
-    settings,
-    trigger
-  );
+  try {
+    handleEvent('LCP', settings, trigger);
+  } catch (e) {
+    logError(e.message);
+  }
 };

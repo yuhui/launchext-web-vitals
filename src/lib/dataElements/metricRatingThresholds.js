@@ -16,8 +16,11 @@
 
 'use strict';
 
-const { getMetricRatingThresholds } = require('../helpers/webVitals');
-
+const {
+  ratingThresholds: {
+    get: getMetricRatingThresholds,
+  },
+} = require('../controllers/webVitals');
 const {
   logger: {
     error: logError,
@@ -41,7 +44,13 @@ module.exports = ({ metric = null }) => {
     return;
   }
 
-  const metricRatingThresholds = getMetricRatingThresholds(metric);
+  let metricRatingThresholds;
+  try {
+    metricRatingThresholds = getMetricRatingThresholds(metric);
+  } catch (e) {
+    logError(e.message);
+    return;
+  }
 
   return metricRatingThresholds;
 };
