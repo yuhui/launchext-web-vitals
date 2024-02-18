@@ -182,6 +182,20 @@
       </table>
     </section>
 
+    <div id="batching-enabled" class="hide">
+      <coral-alert variant="warning">
+        <coral-alert-header>
+          Batch collection of Web Vitals metric reports is enabled.
+        </coral-alert-header>
+        <coral-alert-content>
+          The Web Vitals metric report that triggered this Event gets added to the batch
+          collection as well. As a result, be aware that you would track this same Web Vitals
+          metric report more than once, if you're tracking both from this Event and with the
+          "Batch" Data Element.
+        </coral-alert-content>
+      </coral-alert>
+    </div>
+
     <hr class="coral-Divider--S">
 
     <footer class="coral--lightest coral-Body--XS">
@@ -221,8 +235,27 @@
 
     <script src="https://assets.adobedtm.com/activation/reactor/extensionbridge/extensionbridge.min.js"></script>
     <script>
+      var isBatchingEnabled = false;
+
+      function toggleBatchingConfiguration() {
+        const batchingEnabledElement = document.getElementById('batching-enabled');
+
+        if (isBatchingEnabled) {
+          batchingEnabledElement.classList.remove('hide');
+          batchingEnabledElement.classList.add('show');
+        } else {
+          batchingEnabledElement.classList.remove('show');
+          batchingEnabledElement.classList.add('hide');
+        }
+      }
+
       window.extensionBridge.register({
         init: (info) => {
+          const { extensionSettings: { enableBatching } } = info;
+          isBatchingEnabled = enableBatching && enableBatching === 'yes';
+
+          toggleBatchingConfiguration();
+
           if (info.settings) {}
         },
 

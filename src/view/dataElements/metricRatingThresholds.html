@@ -40,20 +40,15 @@
         </a>
       </p>
 
-      <coral-alert variant="warning">
+      <coral-alert variant="warning" id="web-vitals-library-type-url" class="hide">
         <coral-alert-header>
           Requires Web Vitals 3.3.1 or greater.
         </coral-alert-header>
         <coral-alert-content>
           <p>
-            If you are loading the Web Vitals library from your own URL, <em>and</em> you want to use
-            this Data Element, then you <span class="text-underline">must</span> ensure that your
-            Web Vitals library is at least version 3.3.1.
-          </p>
-          <p>
-            If you are loading the Web Vitals library from the one that is bundled with this extension
-            or from the <code class="coral-Code--XS">unpkg.com</code> CDN, then rating thresholds
-            are supported already, so you can use this Data Element.
+            You are loading the Web Vitals library from your own URL. To use this Data Element, you
+            <span class="text-underline">must</span> ensure that your Web Vitals library is at
+            least version 3.3.1.
           </p>
         </coral-alert-content>
       </coral-alert>
@@ -109,8 +104,29 @@
     <script>
       const FORM_ID = 'data-element-configuration';
 
+      var isWebVitalsLibraryTypeUrl = false;
+
+      function toggleWebVitalsLibraryTypeUrlConfiguration() {
+        const webVitalsLibraryTypeUrlElement = document.getElementById(
+          'web-vitals-library-type-url'
+        );
+
+        if (isWebVitalsLibraryTypeUrl) {
+          webVitalsLibraryTypeUrlElement.classList.remove('hide');
+          webVitalsLibraryTypeUrlElement.classList.add('show');
+        } else {
+          webVitalsLibraryTypeUrlElement.classList.remove('show');
+          webVitalsLibraryTypeUrlElement.classList.add('hide');
+        }
+      }
+
       window.extensionBridge.register({
         init: (info) => {
+          const { extensionSettings: { webVitalsLibraryType } } = info;
+          isWebVitalsLibraryTypeUrl = webVitalsLibraryType && webVitalsLibraryType === 'url';
+
+          toggleWebVitalsLibraryTypeUrlConfiguration();
+
           if (info.settings) {
             setFormValues(FORM_ID, info.settings);
           }
