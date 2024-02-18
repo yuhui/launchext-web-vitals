@@ -16,7 +16,12 @@
 
 'use strict';
 
-const { logger } = turbine;
+const {
+  logger: {
+    error: logError,
+    warn: logWarn,
+  },
+} = require('../controllers/turbine');
 
 /**
  * Attribution data element.
@@ -29,32 +34,29 @@ const { logger } = turbine;
  * @param {Object} event.webvitals.attribution=null The event's data metric attribution.
  * @returns {*}
  */
-module.exports = (settings = { metricAttributionItem: null }, event = null) => {
-  if (!settings || !settings.metricAttributionItem) {
-    logger.error('No metric attribution item provided.');
+module.exports = ({ metricAttributionItem = null } = {}, event = null) => {
+  if (!metricAttributionItem) {
+    logError('No metric attribution item provided.');
     return;
   }
   if (!event) {
-    logger.warn(
-      '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-    );
+    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;
   }
   const { webvitals = null } = event;
   if (!webvitals) {
-    logger.warn('Web Vitals not available.');
+    logWarn('Web Vitals not available.');
     return;
   }
   const { attribution = null } = webvitals;
   if (!attribution) {
-    logger.warn('Metric attribution not available.');
+    logWarn('Metric attribution not available.');
     return;
   }
 
   const hasOwnProperty = Object.prototype.hasOwnProperty;
-  const { metricAttributionItem = null } = settings;
   if (!hasOwnProperty.call(attribution, `${metricAttributionItem}`)) {
-    logger.warn(`Metric attribution item "${metricAttributionItem}" not available.`);
+    logWarn(`Metric attribution item "${metricAttributionItem}" not available.`);
     return;
   }
   return attribution[metricAttributionItem];

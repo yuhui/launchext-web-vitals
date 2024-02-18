@@ -17,7 +17,12 @@
 
 'use strict';
 
-const { logger } = turbine;
+const {
+  logger: {
+    error: logError,
+    warn: logWarn,
+  },
+} = require('../controllers/turbine');
 
 const RATINGS = [
   'good',
@@ -40,23 +45,21 @@ const RATINGS = [
  */
 module.exports = (settings, event = null) => {
   if (!event) {
-    logger.warn(
-      '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-    );
+    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;
   }
   const { webvitals = null } = event;
   if (!webvitals) {
-    logger.warn('Web Vitals not available.');
+    logWarn('Web Vitals not available.');
     return;
   }
   const { rating = null } = webvitals;
   if (!rating) {
-    logger.warn('Metric rating not available.');
+    logWarn('Metric rating not available.');
     return;
   }
-  if (!RATINGS.includes(rating)) {
-    logger.error(`Invalid metric rating: "${rating}".`);
+  if (!RATINGS.has(rating)) {
+    logError(`Invalid metric rating: "${rating}".`);
     return;
   }
 

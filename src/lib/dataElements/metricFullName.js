@@ -16,7 +16,11 @@
 
 'use strict';
 
-const { logger } = turbine;
+const {
+  logger: {
+    warn: logWarn,
+  },
+} = require('../controllers/turbine');
 
 /**
  * Full Name data element.
@@ -36,19 +40,17 @@ const { logger } = turbine;
  */
 module.exports = (settings, event = null) => {
   if (!event) {
-    logger.warn(
-      '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-    );
+    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;
   }
   const { webvitals = null } = event;
   if (!webvitals) {
-    logger.warn('Web Vitals not available.');
+    logWarn('Web Vitals not available.');
     return;
   }
   const { fullName = null } = webvitals;
   if (!fullName) {
-    logger.warn('Metric full name not available.');
+    logWarn('Metric full name not available.');
     return;
   }
 

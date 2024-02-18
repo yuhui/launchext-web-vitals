@@ -18,7 +18,12 @@
 
 const { getMetricRatingThresholds } = require('../helpers/webVitals');
 
-const { logger } = turbine;
+const {
+  logger: {
+    error: logError,
+  },
+} = require('../controllers/turbine');
+const validateMetric = require('../helpers/validateMetric');
 
 /**
  * Rating Thresholds data element.
@@ -29,8 +34,10 @@ const { logger } = turbine;
  * @returns {Array}
  */
 module.exports = ({ metric = null }) => {
-  if (!metric) {
-    logger.error('Web Vitals metric not specified.');
+  try {
+    validateMetric(metric);
+  } catch (e) {
+    logError(e.message);
     return;
   }
 

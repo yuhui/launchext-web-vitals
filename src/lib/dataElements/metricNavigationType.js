@@ -16,7 +16,12 @@
 
 'use strict';
 
-const { logger } = turbine;
+const {
+  logger: {
+    error: logError,
+    warn: logWarn,
+  },
+} = require('../controllers/turbine');
 
 const NAVIGATION_TYPES = [
   'navigate',
@@ -43,23 +48,21 @@ const NAVIGATION_TYPES = [
  */
 module.exports = (settings, event = null) => {
   if (!event) {
-    logger.warn(
-      '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-    );
+    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;
   }
   const { webvitals = null } = event;
   if (!webvitals) {
-    logger.warn('Web Vitals not available.');
+    logWarn('Web Vitals not available.');
     return;
   }
   const { navigationType = null } = webvitals;
   if (!navigationType) {
-    logger.warn('Metric navigation type not available.');
+    logWarn('Metric navigation type not available.');
     return;
   }
-  if (!NAVIGATION_TYPES.includes(navigationType)) {
-    logger.error(`Invalid metric navigation type: "${navigationType}".`);
+  if (!NAVIGATION_TYPES.has(navigationType)) {
+    logError(`Invalid metric navigation type: "${navigationType}".`);
     return;
   }
 

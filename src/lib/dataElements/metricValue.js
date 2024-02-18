@@ -16,7 +16,11 @@
 
 'use strict';
 
-const { logger } = turbine;
+const {
+  logger: {
+    warn: logWarn,
+  },
+} = require('../controllers/turbine');
 
 /**
  * Value data element.
@@ -29,21 +33,19 @@ const { logger } = turbine;
  */
 module.exports = (settings, event = null) => {
   if (!event) {
-    logger.warn(
-      '"event" argument not specified. Use _satellite.getVar("data element name", event);'
-    );
+    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;
   }
   const { webvitals = null } = event;
   if (!webvitals) {
-    logger.warn('Web Vitals not available.');
+    logWarn('Web Vitals not available.');
     return;
   }
   const { value = null } = webvitals;
 
   // test for 0 value explicitly
   if (!value && value !== 0) {
-    logger.warn('Metric value not available.');
+    logWarn('Metric value not available.');
     return;
   }
 
