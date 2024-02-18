@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Yuhui. All rights reserved.
+ * Copyright 2023-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -23,7 +23,7 @@ const { WEB_VITALS_METRICS_NAMES } = require('../constants');
  *
  * @param {Object} data=null Data reported for the Web Vitals metric.
  *
- * @return {Object} Data about the current Web Vitals metric.
+ * @returns {Object} Data about the current Web Vitals metric.
  *
  * @throw {Error} data is not specified.
  */

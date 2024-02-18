@@ -1,5 +1,5 @@
 /**
- * Copyright 2023 Yuhui. All rights reserved.
+ * Copyright 2023-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,9 +34,10 @@ const validateMetric = require('../helpers/validateMetric');
  *
  * @param {Object} settings The data element settings object.
  * @param {String} settings.metric=null The Web Vitals metric to get rating thresholds.
- * @returns {Array}
+ *
+ * @returns {Array} The Web Vitals metric's rating thresholds.
  */
-module.exports = ({ metric = null }) => {
+module.exports = ({ metric = null } = {}) => {
   try {
     validateMetric(metric);
   } catch (e) {

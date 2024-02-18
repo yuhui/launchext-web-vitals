@@ -177,10 +177,11 @@
       <h4 class="coral-Heading--S coral-Heading--light">How this Extension works</h4>
       <ol class="coral-List">
         <li class="coral-List-item">
-          <b>Add the appropriate Events in your Rules to track the desired Web Vitals
-            metrics.</b> Each Event corresponds to the Web Vital metric that can be measured.<br />
-            <b>IMPORTANT!</b> Take note of the supported web browser(s) for each Event / Web
-            Vital metric.
+          <b>Add the appropriate Events in your Rules to track the desired Web Vitals metric
+            reports.</b> The Event gets triggered when the indicated Web Vital metric has been
+            reported.<br />
+          <b>IMPORTANT!</b> Take note of the supported web browser(s) for each Event / Web Vital
+            metric.
         </li>
         <li class="coral-List-item">
           <b>Use the appropriate Data Elements in your Rules to retrieve data about the Web
@@ -215,13 +216,13 @@
 
       <coral-alert variant="warning">
         <coral-alert-header>
-          Accuracy of measurements
+          Accuracy of reports
         </coral-alert-header>
         <coral-alert-content>
           Since <code class="coral-Code--XS">web-vitals.js</code> is loaded <em>after</em> the
-          Tags library itself has been loaded, some Web Vitals metrics may not be measured as
-          accurately as when they are implemented directly into the web pages. In some cases, the
-          Web Vitals metrics may just not be measured at all.
+          Tags library itself has been loaded, some Web Vitals metrics may not be reported as
+          accurately as when the are implemented directly into the web pages. In some cases, the
+          Web Vitals metrics may just not be reported at all.
         </coral-alert-content>
       </coral-alert>
     </section>
@@ -253,7 +254,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2021-2023 Yuhui. All rights reserved.
+        Copyright &copy; 2021-2024 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |
@@ -293,28 +294,26 @@
         init: (info) => {
           const { settings } = info;
           if (settings) {
-            const hasOwnProperty = Object.prototype.hasOwnProperty;
             const {
+              durationThresholdINP,
               enableBatching,
+              reportAllChangesINP,
+              webVitalsLibraryType,
+              webVitalsLibraryUrl,
             } = settings;
 
             // these settings were added in v1.2.0
-            if (
-              !hasOwnProperty.call(settings, 'reportAllChangesINP')
-              || !hasOwnProperty.call(settings, 'durationThresholdINP')
-            ) {
+            if (!reportAllChangesINP || !durationThresholdINP) {
               info.settings.reportAllChangesINP = 'yes';
               info.settings.durationThresholdINP = 40;
             }
 
             // these settings were added in v1.3.0
-            if (!hasOwnProperty.call(settings, 'webVitalsLibraryType')) {
+            if (!webVitalsLibraryType) {
               info.settings.webVitalsLibraryType = 'cdn';
             }
             if (
-              !hasOwnProperty.call(settings, 'webVitalsLibraryUrl')
-              || settings.webVitalsLibraryType !== 'url'
-            ) {
+              !webVitalsLibraryUrl || webVitalsLibraryType !== 'url') {
               info.settings.webVitalsLibraryUrl = 'default';
             }
 

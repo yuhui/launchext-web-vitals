@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2023 Yuhui. All rights reserved.
+ * Copyright 2021-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -163,6 +163,18 @@ function valueIsInteger(value) {
   return (`${value}`).length > 0
     && !Number.isNaN(parseInt(value, 10))
     && parseInt(value, 10) === Number(value);
+}
+
+/** Expand or collapse an accordion */
+// eslint-disable-next-line no-unused-vars
+function toggleAccordion(id) {
+  const accordion = document.getElementById(id);
+  const accordionSelected = accordion.selected;
+  if (accordionSelected) {
+    accordion.removeAttribute('selected');
+  } else {
+    accordion.setAttribute('selected', '');
+  }
 }
 
 /** Show or hide an element based on the value of a form field */

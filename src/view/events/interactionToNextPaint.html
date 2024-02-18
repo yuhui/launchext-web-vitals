@@ -44,13 +44,13 @@
 
       <coral-alert variant="warning">
         <coral-alert-header>
-          Accuracy of measurements
+          Accuracy of reports
         </coral-alert-header>
         <coral-alert-content>
           Since <code class="coral-Code--XS">web-vitals.js</code> is loaded <em>after</em> the
-          Tags library itself has been loaded, some Web Vitals metrics may not be measured as
-          accurately as when they are implemented directly into the web pages. In some cases, the
-          Web Vitals metrics may just not be measured at all.
+          Tags library itself has been loaded, some Web Vitals metrics may not be reported as
+          accurately as when the are implemented directly into the web pages. In some cases, the
+          Web Vitals metrics may just not be reported at all.
         </coral-alert-content>
       </coral-alert>
 
@@ -79,8 +79,8 @@
               String
             </td>
             <td is="coral-table-cell">
-              Unique ID representing this measured metric that's specific to the current web page
-              shown in the user's web browser
+              Unique ID representing this reported metric that's specific to the current web page
+              shown in the user's web browser.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -91,7 +91,7 @@
               String
             </td>
             <td is="coral-table-cell">
-              Name of the measured metric in acronym form: <code class="coral-Code--S">INP</code>.
+              Name of the reported metric in acronym form: <code class="coral-Code--S">INP</code>.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -102,7 +102,7 @@
               String
             </td>
             <td is="coral-table-cell">
-              Full name of the measured metric: <code class="coral-Code--S">Interaction
+              Full name of the reported metric: <code class="coral-Code--S">Interaction
               to Next Paint</code>.
             </td>
           </tr>
@@ -114,7 +114,7 @@
               Number
             </td>
             <td is="coral-table-cell">
-              Current value of the measured metric.
+              Current value of the reported metric.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -125,7 +125,7 @@
               String
             </td>
             <td is="coral-table-cell">
-              Rating of the measured metric.
+              Rating of the reported metric.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -136,7 +136,7 @@
               Number
             </td>
             <td is="coral-table-cell">
-              Delta between the current value and the last-reported value of the measured metric.
+              Delta between the current value and the last-reported value of the reported metric.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -147,7 +147,7 @@
               Array of <a class="coral-Link" href="https://developer.mozilla.org/en-US/docs/Web/API/PerformanceEventTiming" target="_blank" rel="noopener noreferrer">PerformanceEventTimings</a>
             </td>
             <td is="coral-table-cell">
-              Array of the performance entries used in the measured metric's value calculation.
+              Array of the performance entries used in the reported metric's value calculation.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -158,7 +158,7 @@
               String
             </td>
             <td is="coral-table-cell">
-              Navigation type of the measured metric.
+              Navigation type of the reported metric.
             </td>
           </tr>
           <tr is="coral-table-row">
@@ -219,7 +219,7 @@
       </div>
 
       <p>
-        Copyright &copy; 2022-2023 Yuhui. All rights reserved.
+        Copyright &copy; 2022-2024 Yuhui. All rights reserved.
       </p>
       <p>
         <a class="coral-Link" href="https://yuhui.sg/terms-of-service.html" target="_blank">Terms of Service</a> |

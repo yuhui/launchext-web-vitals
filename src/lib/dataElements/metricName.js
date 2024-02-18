@@ -1,5 +1,5 @@
 /**
- * Copyright 2021-2023 Yuhui. All rights reserved.
+ * Copyright 2021-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,9 +36,10 @@ const {
  * @param {Object} settings The data element settings object.
  * @param {Object} event The event that triggered the evaluation of the data element.
  * @param {Object} event.webvitals=null The event's data.
- * @returns {String}
+ *
+ * @returns {String} The Web Vitals metric's name.
  */
-module.exports = (settings, event = null) => {
+module.exports = ({}, event = null) => {
   if (!event) {
     logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;

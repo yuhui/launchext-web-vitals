@@ -1,5 +1,5 @@
 /**
- * Copyright 2022-2023 Yuhui. All rights reserved.
+ * Copyright 2022-2024 Yuhui. All rights reserved.
  *
  * Licensed under the GNU General Public License, Version 3.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,13 +32,15 @@ const {
  * @param {Object} event The event that triggered the evaluation of the data element.
  * @param {Object} event.webvitals=null The event's data.
  * @param {Object} event.webvitals.attribution=null The event's data metric attribution.
- * @returns {*}
+ *
+ * @returns {*} The Web Vitals metric's attribution for the selected attribution.
  */
 module.exports = ({ metricAttributionItem = null } = {}, event = null) => {
   if (!metricAttributionItem) {
     logError('No metric attribution item provided.');
     return;
   }
+
   if (!event) {
     logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
     return;
@@ -59,5 +61,6 @@ module.exports = ({ metricAttributionItem = null } = {}, event = null) => {
     logWarn(`Metric attribution item "${metricAttributionItem}" not available.`);
     return;
   }
+
   return attribution[metricAttributionItem];
 };
