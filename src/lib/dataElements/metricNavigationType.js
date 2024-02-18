@@ -23,13 +23,13 @@ const {
   },
 } = require('../controllers/turbine');
 
-const NAVIGATION_TYPES = [
+const NAVIGATION_TYPES = new Set([
   'navigate',
   'reload',
   'back-forward',
   'back-forward-cache',
   'prerender',
-];
+]);
 
 /**
  * Navigation Type data element.

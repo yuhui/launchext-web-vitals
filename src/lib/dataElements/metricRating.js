@@ -24,11 +24,11 @@ const {
   },
 } = require('../controllers/turbine');
 
-const RATINGS = [
+const RATINGS = new Set([
   'good',
   'needs-improvement',
   'poor',
-];
+]);
 
 /**
  * Rating data element.
