@@ -19,6 +19,10 @@
       const fidRatingThresholds = document.getElementById('fidRatingThresholds');
       fidRatingThresholds.textContent = JSON.stringify(fidRatingThresholdsValue);
     });
+
+    setInterval(() => {
+      console.log('Contents of batch', _satellite.getVar('Batch'));
+    }, 1000);
   </script>
 </body>
 

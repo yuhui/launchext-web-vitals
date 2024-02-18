@@ -11,7 +11,8 @@ module.exports = {
         "reportAllChangesINP": "yes",
         "reportAllChangesLCP": "no",
         "reportAllChangesTTFB": "no",
-        "durationThresholdINP": 40
+        "durationThresholdINP": 40,
+        "enableBatching": "yes"
       }
     }
   },
@@ -45,6 +46,13 @@ module.exports = {
       "forceLowerCase": false,
       "modulePath": "web-vitals-js/src/lib/dataElements/metricRatingThresholds.js",
       "storageDuration": ""
+    },
+    "Batch": {
+      "settings": {},
+      "cleanText": false,
+      "forceLowerCase": false,
+      "modulePath": "web-vitals-js/src/lib/dataElements/batch.js",
+      "storageDuration": ""
     }
   },
   "rules": [{
@@ -73,6 +81,17 @@ module.exports = {
       "modulePath": "sandbox/logEventInfo.js",
       "settings": {}
     }]
+  }, {
+    "id": "RL1705938489614",
+    "name": "Click",
+    "events": [{
+      "modulePath": "sandbox/click.js",
+      "settings": {}
+    }],
+    "actions": [{
+      "modulePath": "web-vitals-js/src/lib/actions/clearBatch.js",
+      "settings": {}
+    }]
   }],
   "property": {
     "settings": {
@@ -91,8 +110,8 @@ module.exports = {
   },
   "buildInfo": {
     "turbineVersion": "27.5.0",
-    "turbineBuildDate": "2023-04-08T15:26:48.022Z",
-    "buildDate": "2023-04-08T15:26:48.022Z",
+    "turbineBuildDate": "2024-02-03T15:11:25.779Z",
+    "buildDate": "2024-02-03T15:11:25.780Z",
     "environment": "development"
   }
 }
