@@ -19,7 +19,7 @@
 /**
  * Return a `webVitals` spy object for use with event unit testing.
  */
-module.exports = function(throwError = false) {
+module.exports = function (throwError = false) {
   const webVitals = {
     metrics: {
       listen: jasmine.createSpy(),

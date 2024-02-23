@@ -19,7 +19,7 @@
 /**
  * Return a base `event` object for use with data element unit testing.
  */
-module.exports = function() {
+module.exports = function () {
   const baseData = {
     id: 'v1-1621390039209-9647315286660',
     name: 'FCP',

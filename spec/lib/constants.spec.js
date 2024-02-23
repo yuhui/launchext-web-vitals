@@ -34,33 +34,32 @@ const EXPECTED_CONSTANTS = {
   VENDOR_SCRIPT_FILENAME: 'web-vitals.attribution.iife.js',
 };
 
-describe('constants delegate', function() {
-  beforeEach(function() {
+describe('constants delegate', function () {
+  beforeEach(function () {
     this.delegate = require('../../src/lib/constants');
   });
 
-  it('has the expected constants', function() {
-      const result = this.delegate;
+  it('has the expected constants', function () {
+    const result = this.delegate;
 
-      expect(result).toBeDefined();
+    expect(result).toBeDefined();
 
-      const numKeys = Object.keys(result).length;
-      expect(numKeys).toEqual(5);
+    const numKeys = Object.keys(result).length;
+    expect(numKeys).toEqual(5);
 
-      const {
-        WEB_VITALS_CDN_URL,
-        WEB_VITALS_LIBRARY_TYPES,
-        WEB_VITALS_METRICS,
-        WEB_VITALS_METRICS_NAMES,
-        WEB_VITALS_VENDOR_SCRIPT_FILENAME,
-      } = result;
-      expect(WEB_VITALS_CDN_URL).toEqual(
-        `https://unpkg.com/web-vitals@${EXPECTED_CONSTANTS.CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`
-      );
-      expect(WEB_VITALS_LIBRARY_TYPES).toEqual(EXPECTED_CONSTANTS.LIBRARY_TYPES);
-      expect(WEB_VITALS_METRICS).toEqual(new Set(EXPECTED_CONSTANTS.METRICS_NAMES.keys()));
-      expect(WEB_VITALS_METRICS_NAMES).toEqual(EXPECTED_CONSTANTS.METRICS_NAMES);
-      expect(WEB_VITALS_VENDOR_SCRIPT_FILENAME).toEqual(EXPECTED_CONSTANTS.VENDOR_SCRIPT_FILENAME);
-    }
-  );
+    const {
+      WEB_VITALS_CDN_URL,
+      WEB_VITALS_LIBRARY_TYPES,
+      WEB_VITALS_METRICS,
+      WEB_VITALS_METRICS_NAMES,
+      WEB_VITALS_VENDOR_SCRIPT_FILENAME,
+    } = result;
+    expect(WEB_VITALS_CDN_URL).toEqual(
+      `https://unpkg.com/web-vitals@${EXPECTED_CONSTANTS.CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`
+    );
+    expect(WEB_VITALS_LIBRARY_TYPES).toEqual(EXPECTED_CONSTANTS.LIBRARY_TYPES);
+    expect(WEB_VITALS_METRICS).toEqual(new Set(EXPECTED_CONSTANTS.METRICS_NAMES.keys()));
+    expect(WEB_VITALS_METRICS_NAMES).toEqual(EXPECTED_CONSTANTS.METRICS_NAMES);
+    expect(WEB_VITALS_VENDOR_SCRIPT_FILENAME).toEqual(EXPECTED_CONSTANTS.VENDOR_SCRIPT_FILENAME);
+  });
 });

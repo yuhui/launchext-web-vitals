@@ -22,12 +22,12 @@ const { WEB_VITALS_METRICS } = require('../../../src/lib/constants');
 
 const mockWebVitalsObj = require('../../specHelpers/mockWebVitalsObj');
 
-describe('webVitals controller delegate', function() {
-  beforeEach(function() {
+describe('webVitals controller delegate', function () {
+  beforeEach(function () {
     this.handleWebVitalsMetric = jasmine.createSpy();
   });
 
-  it('returns the expected object', function() {
+  it('returns the expected object', function () {
     global.webVitals = mockWebVitalsObj();
 
     this.controllerDelegate = proxyquire(
@@ -57,18 +57,18 @@ describe('webVitals controller delegate', function() {
     delete global.webVitals;
   });
 
-  describe('metrics object', function() {
-    beforeEach(function() {
+  describe('metrics object', function () {
+    beforeEach(function () {
       this.objectName = 'metrics';
     });
 
-    describe('listen() function', function() {
-      beforeEach(function() {
+    describe('listen() function', function () {
+      beforeEach(function () {
         this.functionName = 'listen';
       });
 
-      describe('with invalid arguments', function() {
-        beforeEach(function() {
+      describe('with invalid arguments', function () {
+        beforeEach(function () {
           global.webVitals = mockWebVitalsObj();
 
           this.controllerDelegate = proxyquire(
@@ -81,30 +81,30 @@ describe('webVitals controller delegate', function() {
           this.functionDelegate = this.objectDelegate[this.functionName];
         });
 
-        afterEach(function() {
+        afterEach(function () {
           delete global.webVitals;
         });
 
-        it('throws an error when "metric" argument is missing', function() {
+        it('throws an error when "metric" argument is missing', function () {
           expect(() => {
             this.functionDelegate();
           }).toThrow();
         });
 
-        it('throws an error when "metric" argument is not a Web Vitals metric', function() {
+        it('throws an error when "metric" argument is not a Web Vitals metric', function () {
           expect(() => {
             this.functionDelegate('foo');
           }).toThrow();
         });
       });
 
-      describe('with valid arguments', function() {
-        beforeEach(function() {
+      describe('with valid arguments', function () {
+        beforeEach(function () {
           this.metric = 'CLS';
         });
 
-        describe('with missing webVitals object', function() {
-          beforeEach(function() {
+        describe('with missing webVitals object', function () {
+          beforeEach(function () {
             delete global.webVitals;
 
             this.controllerDelegate = proxyquire(
@@ -117,15 +117,15 @@ describe('webVitals controller delegate', function() {
             this.functionDelegate = this.objectDelegate[this.functionName];
           });
 
-          it('throws an error', function() {
+          it('throws an error', function () {
             expect(() => {
               this.functionDelegate(this.metric);
             }).toThrow();
           });
         });
 
-        describe('with broken webVitals object', function() {
-          beforeEach(function() {
+        describe('with broken webVitals object', function () {
+          beforeEach(function () {
             global.webVitals = mockWebVitalsObj(this.metric);
 
             this.controllerDelegate = proxyquire(
@@ -138,19 +138,19 @@ describe('webVitals controller delegate', function() {
             this.functionDelegate = this.objectDelegate[this.functionName];
           });
 
-          afterEach(function() {
+          afterEach(function () {
             delete global.webVitals;
           });
 
-          it('throws an error', function() {
+          it('throws an error', function () {
             expect(() => {
               this.functionDelegate(this.metric);
             }).toThrow();
           });
         });
 
-        describe('with everything working properly', function() {
-          beforeEach(function() {
+        describe('with everything working properly', function () {
+          beforeEach(function () {
             global.webVitals = mockWebVitalsObj();
 
             this.controllerDelegate = proxyquire(
@@ -163,12 +163,12 @@ describe('webVitals controller delegate', function() {
             this.functionDelegate = this.objectDelegate[this.functionName];
           });
 
-          afterEach(function() {
+          afterEach(function () {
             delete global.webVitals;
           });
 
           for (const metric of WEB_VITALS_METRICS) {
-            it(`calls "on${metric}()"`, function() {
+            it(`calls "on${metric}()"`, function () {
               const onMetric = global.webVitals[`on${metric}`];
 
               this.functionDelegate(metric);
@@ -176,7 +176,7 @@ describe('webVitals controller delegate', function() {
               expect(onMetric).toHaveBeenCalledOnceWith(this.handleWebVitalsMetric, {});
             });
 
-            it(`calls "on${metric}()" with options`, function() {
+            it(`calls "on${metric}()" with options`, function () {
               const options = { foo: 'bar' };
               const onMetric = global.webVitals[`on${metric}`];
 
@@ -190,18 +190,18 @@ describe('webVitals controller delegate', function() {
     });
   });
 
-  describe('ratingThresholds object', function() {
-    beforeEach(function() {
+  describe('ratingThresholds object', function () {
+    beforeEach(function () {
       this.objectName = 'ratingThresholds';
     });
 
-    describe('get() function', function() {
-      beforeEach(function() {
+    describe('get() function', function () {
+      beforeEach(function () {
         this.functionName = 'get';
       });
 
-      describe('with invalid arguments', function() {
-        beforeEach(function() {
+      describe('with invalid arguments', function () {
+        beforeEach(function () {
           global.webVitals = mockWebVitalsObj();
 
           this.controllerDelegate = proxyquire(
@@ -214,30 +214,30 @@ describe('webVitals controller delegate', function() {
           this.functionDelegate = this.objectDelegate[this.functionName];
         });
 
-        afterEach(function() {
+        afterEach(function () {
           delete global.webVitals;
         });
 
-        it('throws an error when "metric" argument is missing', function() {
+        it('throws an error when "metric" argument is missing', function () {
           expect(() => {
             this.functionDelegate();
           }).toThrow();
         });
 
-        it('throws an error when "metric" argument is not a Web Vitals metric', function() {
+        it('throws an error when "metric" argument is not a Web Vitals metric', function () {
           expect(() => {
             this.functionDelegate('foo');
           }).toThrow();
         });
       });
 
-      describe('with valid arguments', function() {
-        beforeEach(function() {
+      describe('with valid arguments', function () {
+        beforeEach(function () {
           this.metric = 'CLS';
         });
 
-        describe('with missing webVitals object', function() {
-          beforeEach(function() {
+        describe('with missing webVitals object', function () {
+          beforeEach(function () {
             delete global.webVitals;
 
             this.controllerDelegate = proxyquire(
@@ -250,15 +250,15 @@ describe('webVitals controller delegate', function() {
             this.functionDelegate = this.objectDelegate[this.functionName];
           });
 
-          it('throws an error', function() {
+          it('throws an error', function () {
             expect(() => {
               this.functionDelegate(this.metric);
             }).toThrow();
           });
         });
 
-        describe('with broken webVitals object', function() {
-          beforeEach(function() {
+        describe('with broken webVitals object', function () {
+          beforeEach(function () {
             this.ratingThresholdsName = `${this.metric}Thresholds`;
 
             global.webVitals = mockWebVitalsObj('', this.metric);
@@ -273,19 +273,19 @@ describe('webVitals controller delegate', function() {
             this.functionDelegate = this.objectDelegate[this.functionName];
           });
 
-          afterEach(function() {
+          afterEach(function () {
             delete global.webVitals;
           });
 
-          it('throws an error when the metric rating thresholds are not available', function() {
+          it('throws an error when the metric rating thresholds are not available', function () {
             expect(() => {
               this.functionDelegate(this.metric);
             }).toThrowError(`Web Vitals "${this.ratingThresholdsName}" not found.`);
           });
         });
 
-        describe('with everything working properly', function() {
-          beforeEach(function() {
+        describe('with everything working properly', function () {
+          beforeEach(function () {
             global.webVitals = mockWebVitalsObj();
 
             this.controllerDelegate = proxyquire(
@@ -298,12 +298,12 @@ describe('webVitals controller delegate', function() {
             this.functionDelegate = this.objectDelegate[this.functionName];
           });
 
-          afterEach(function() {
+          afterEach(function () {
             delete global.webVitals;
           });
 
           for (const metric of WEB_VITALS_METRICS) {
-            it(`returns "${metric}Thresholds" array`, function() {
+            it(`returns "${metric}Thresholds" array`, function () {
               const ratingThresholds = global.webVitals[`${metric}Thresholds`];
 
               const result = this.functionDelegate(metric);

@@ -21,17 +21,18 @@ const proxyquire = require('proxyquire').noCallThru();
 const mockTurbine = require('../../specHelpers/mockTurbine');
 const mockWebVitals = require('../../specHelpers/mockWebVitals');
 
-describe('metricRatingThresholds data element delegate', function() {
-  beforeEach(function() {
+describe('metricRatingThresholds data element delegate', function () {
+  beforeEach(function () {
     this.settings = {
       metric: 'CLS',
     };
+
     this.turbine = mockTurbine();
     this.webVitals = mockWebVitals();
   });
 
-  describe('with invalid "settings" argument', function() {
-    beforeEach(function() {
+  describe('with invalid "settings" argument', function () {
+    beforeEach(function () {
       this.dataElementDelegate = proxyquire(
         '../../../src/lib/dataElements/metricRatingThresholds',
         {
@@ -41,7 +42,7 @@ describe('metricRatingThresholds data element delegate', function() {
       );
     });
 
-    it('logs an error and returns nothing when "metric" property is missing', function() {
+    it('logs an error and returns nothing when "metric" property is missing', function () {
       delete this.settings.metric;
 
       const result = this.dataElementDelegate(this.settings);
@@ -52,7 +53,7 @@ describe('metricRatingThresholds data element delegate', function() {
       expect(logError).toHaveBeenCalled();
     });
 
-    it('logs an error and returns nothing when "metric" is not a Web Vitals metric', function() {
+    it('logs an error and returns nothing when "metric" is not a Web Vitals metric', function () {
       this.settings.metric = 'foo';
 
       const result = this.dataElementDelegate(this.settings);
@@ -64,9 +65,9 @@ describe('metricRatingThresholds data element delegate', function() {
     });
   });
 
-  describe('with valid "settings" argument', function() {
-    describe('with broken webVitals', function() {
-      beforeEach(function() {
+  describe('with valid "settings" argument', function () {
+    describe('with broken webVitals', function () {
+      beforeEach(function () {
         this.webVitalsWithErrors = mockWebVitals(true);
 
         this.dataElementDelegate = proxyquire(
@@ -78,7 +79,7 @@ describe('metricRatingThresholds data element delegate', function() {
         );
       });
 
-      it('logs an error and returns nothing', function() {
+      it('logs an error and returns nothing', function () {
         const result = this.dataElementDelegate(this.settings);
 
         expect(result).toBeUndefined();
@@ -88,8 +89,8 @@ describe('metricRatingThresholds data element delegate', function() {
       });
     });
 
-    describe('with everything working properly', function() {
-      beforeEach(function() {
+    describe('with everything working properly', function () {
+      beforeEach(function () {
         this.dataElementDelegate = proxyquire(
           '../../../src/lib/dataElements/metricRatingThresholds',
           {
@@ -99,7 +100,7 @@ describe('metricRatingThresholds data element delegate', function() {
         );
       });
 
-      it('executes to completion', function() {
+      it('executes to completion', function () {
         this.dataElementDelegate(this.settings);
 
         const { get: getMetricRatingThresholds } = this.webVitals.ratingThresholds;

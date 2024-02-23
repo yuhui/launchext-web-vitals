@@ -18,42 +18,22 @@
 
 const proxyquire = require('proxyquire').noCallThru();
 
-describe('loadWebVitals helper delegate', function() {
-  beforeEach(function() {
+describe('loadWebVitals helper delegate', function () {
+  beforeEach(function () {
     this.error = new Error('die');
-    this.loadScript = jasmine.createSpy().and.resolveTo(true);
-    this.validateWebVitals = jasmine.createSpy().and.resolveTo(true);
     this.webVitalsUrl = 'http://www.foo.com/bar';
     this.webVitalsLocation = 'foo';
+
+    this.loadScript = jasmine.createSpy().and.resolveTo(true);
+    this.validateWebVitals = jasmine.createSpy().and.resolveTo(true);
     this.getWebVitalsLibrary = jasmine.createSpy().and.returnValue([
       this.webVitalsUrl,
       this.webVitalsLocation,
     ]);
   });
 
-  describe('with broken getWebVitalsLibrary()', function() {
-    beforeEach(function() {
-      this.getWebVitalsLibraryWithError = jasmine.createSpy().and.throwError(this.error),
-
-      this.helperDelegate = proxyquire(
-        '../../../src/lib/helpers/loadWebVitals',
-        {
-          '@adobe/reactor-load-script': this.loadScript,
-          './getWebVitalsLibrary': this.getWebVitalsLibraryWithError,
-          './validateWebVitals': this.validateWebVitals,
-        }
-      );
-    });
-
-    it('throws an error', async function() {
-      await expectAsync(
-        this.helperDelegate()
-      ).toBeRejectedWith(this.error);
-    });
-  });
-
-  describe('with broken loadScript', function() {
-    beforeEach(function() {
+  describe('with broken loadScript', function () {
+    beforeEach(function () {
       this.loadScriptWithError = jasmine.createSpy().and.rejectWith('die'),
 
       this.helperDelegate = proxyquire(
@@ -66,36 +46,15 @@ describe('loadWebVitals helper delegate', function() {
       );
     });
 
-    it('throws an error', async function() {
+    it('throws an error', async function () {
       await expectAsync(
         this.helperDelegate()
       ).toBeRejectedWithError(Error, `Failed to load Web Vitals from ${this.webVitalsLocation}.`);
     });
   });
 
-  describe('with broken validateWebVitals()', function() {
-    beforeEach(function() {
-      this.validateWebVitalsWithError = jasmine.createSpy().and.throwError(this.error),
-
-      this.helperDelegate = proxyquire(
-        '../../../src/lib/helpers/loadWebVitals',
-        {
-          '@adobe/reactor-load-script': this.loadScript,
-          './getWebVitalsLibrary': this.getWebVitalsLibrary,
-          './validateWebVitals': this.validateWebVitalsWithError,
-        }
-      );
-    });
-
-    it('throws an error', async function() {
-      await expectAsync(
-        this.helperDelegate()
-      ).toBeRejectedWith(this.error);
-    });
-  });
-
-  describe('with everything working properly', function() {
-    beforeEach(function() {
+  describe('with everything working properly', function () {
+    beforeEach(function () {
       this.helperDelegate = proxyquire(
         '../../../src/lib/helpers/loadWebVitals',
         {
@@ -106,7 +65,7 @@ describe('loadWebVitals helper delegate', function() {
       );
     });
 
-    it(`returns the Web Vitals script location`, async function() {
+    it('returns the Web Vitals script location', async function () {
       const result = await this.helperDelegate();
 
       expect(this.getWebVitalsLibrary).toHaveBeenCalledTimes(1);

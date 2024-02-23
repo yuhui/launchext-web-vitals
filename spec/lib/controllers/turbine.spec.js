@@ -18,8 +18,8 @@
 
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('turbine controller delegate', function() {
-  beforeEach(function() {
+describe('turbine controller delegate', function () {
+  beforeEach(function () {
     this.extensionSettings = {
       enableBatching: 'yes',
       webVitalsLibraryType: 'cdn',
@@ -30,11 +30,11 @@ describe('turbine controller delegate', function() {
     this.controllerDelegate = require('../../../src/lib/controllers/turbine');
   });
 
-  afterEach(function() {
+  afterEach(function () {
     delete global.turbine;
   });
 
-  it('returns the expected object', function() {
+  it('returns the expected object', function () {
     const result = this.controllerDelegate;
 
     expect(result).toBeDefined();

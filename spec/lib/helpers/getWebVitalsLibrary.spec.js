@@ -24,9 +24,9 @@ const {
 } = require('../../../src/lib/constants');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('getWebVitalsLibrary helper delegate', function() {
-  describe('with invalid extension settings', function() {
-    it('throws an error when "webVitalsLibraryType" setting is invalid', function() {
+describe('getWebVitalsLibrary helper delegate', function () {
+  describe('with invalid extension settings', function () {
+    it('throws an error when "webVitalsLibraryType" setting is invalid', function () {
       this.extensionSettings = {
         webVitalsLibraryType: 'foo',
         webVitalsLibraryUrl: 'default',
@@ -50,7 +50,7 @@ describe('getWebVitalsLibrary helper delegate', function() {
 
     it(
       'throws an error when "webVitalsLibraryUrl" setting is "default" for "url" type',
-      function() {
+      function () {
         this.extensionSettings = {
           webVitalsLibraryType: 'url',
           webVitalsLibraryUrl: 'default',
@@ -71,7 +71,7 @@ describe('getWebVitalsLibrary helper delegate', function() {
     );
   });
 
-  describe('with valid extension settings', function() {
+  describe('with valid extension settings', function () {
     const extensionSettingsAndExpectedScriptUrl = [
       [undefined, undefined, WEB_VITALS_CDN_URL],
       ['bundle', 'default', 'refer to turbine.getHostedLibFileUrl()'],
@@ -79,7 +79,7 @@ describe('getWebVitalsLibrary helper delegate', function() {
       ['url', 'baz', 'baz'],
     ];
     extensionSettingsAndExpectedScriptUrl.forEach(([ type, url, expectedUrl ]) => {
-      it(`returns a valid array for type "${type}"`, function() {
+      it(`returns a valid array for type "${type}"`, function () {
         this.extensionSettings = {
           webVitalsLibraryType: type,
           webVitalsLibraryUrl: url,

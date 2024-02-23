@@ -21,7 +21,7 @@ const { WEB_VITALS_METRICS } = require('../../src/lib/constants');
 /**
  * Return a `webVitals` spy object for use globally.
  */
-module.exports = function(excludeMetric = '', metricWithBadRatingThresholds = '') {
+module.exports = function (excludeMetric = '', metricWithBadRatingThresholds = '') {
   const onMetrics = [];
   const ratingThresholds = {};
   for (const metric of WEB_VITALS_METRICS) {

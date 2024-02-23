@@ -18,12 +18,12 @@
 
 const proxyquire = require('proxyquire').noCallThru();
 
-describe('processEvent helper delegate', function() {
-  beforeAll(function() {
+describe('processEvent helper delegate', function () {
+  beforeAll(function () {
     global.window = jasmine.createSpy();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     this.error = new Error('die');
     this.metricData = jasmine.createSpy();
     this.event = {
@@ -32,28 +32,28 @@ describe('processEvent helper delegate', function() {
     };
   });
 
-  afterAll(function() {
+  afterAll(function () {
     delete global.window;
   });
 
-  describe('with invalid arguments', function() {
-    beforeEach(function() {
+  describe('with invalid arguments', function () {
+    beforeEach(function () {
       this.helperDelegate = require('../../../src/lib/helpers/processEvent');
     });
 
-    it('throws an error when "metricData" argument is missing', function() {
+    it('throws an error when "metricData" argument is missing', function () {
       expect(() => {
         this.helperDelegate(null, this.event);
       }).toThrowError(Error, 'Web Vitals metric data not specified.');
     });
 
-    it('throws an error when "event" argument is missing', function() {
+    it('throws an error when "event" argument is missing', function () {
       expect(() => {
         this.helperDelegate(this.metricData, null);
       }).toThrowError(Error, 'Rule event not specified.');
     });
 
-    it('throws an error when "event.trigger" argument is missing', function() {
+    it('throws an error when "event.trigger" argument is missing', function () {
       const event = jasmine.createSpy();
 
       expect(() => {
@@ -62,9 +62,9 @@ describe('processEvent helper delegate', function() {
     });
   });
 
-  describe('with valid arguments', function() {
-    describe('with broken createGetWebVitalsMetricEvent()', function() {
-      beforeEach(function() {
+  describe('with valid arguments', function () {
+    describe('with broken createGetWebVitalsMetricEvent()', function () {
+      beforeEach(function () {
         this.createGetWebVitalsMetricEvent = jasmine.createSpy().and.throwError(this.error);
 
         this.helperDelegate = proxyquire(
@@ -75,15 +75,15 @@ describe('processEvent helper delegate', function() {
         );
       });
 
-      it('throws the error message', function() {
+      it('throws the error message', function () {
         expect(() => {
           this.helperDelegate(this.metricData, this.event);
         }).toThrow(this.error);
       });
     });
 
-    describe('with everything working properly', function() {
-      beforeEach(function() {
+    describe('with everything working properly', function () {
+      beforeEach(function () {
         this.createGetWebVitalsMetricEvent = jasmine.createSpy();
 
         this.helperDelegate = proxyquire(
@@ -94,7 +94,7 @@ describe('processEvent helper delegate', function() {
         );
       });
 
-      it('executes to completion', function() {
+      it('executes to completion', function () {
         this.helperDelegate(this.metricData, this.event);
 
         const { trigger } = this.event;

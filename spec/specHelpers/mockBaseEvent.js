@@ -21,7 +21,7 @@ const mockMetricData = require('./mockMetricData');
 /**
  * Return a base `event` object for use with data element unit testing.
  */
-module.exports = function() {
+module.exports = function () {
   const metricData = mockMetricData();
   const baseEvent = {
     webvitals: metricData,

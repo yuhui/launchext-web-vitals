@@ -16,31 +16,31 @@
 
 'use strict';
 
-describe('createGetWebVitalsMetricEvent helper delegate', function() {
-  beforeAll(function() {
+describe('createGetWebVitalsMetricEvent helper delegate', function () {
+  beforeAll(function () {
     global.window = jasmine.createSpy();
   });
 
-  beforeEach(function() {
+  beforeEach(function () {
     this.metricData = jasmine.createSpy();
 
     this.helperDelegate = require('../../../src/lib/helpers/createGetWebVitalsMetricEvent');
   });
 
-  afterAll(function() {
+  afterAll(function () {
     delete global.window;
   });
 
-  describe('with invalid arguments', function() {
-    it('throws an error when "metricData" argument is missing', function() {
+  describe('with invalid arguments', function () {
+    it('throws an error when "metricData" argument is missing', function () {
       expect(() => {
         this.helperDelegate();
       }).toThrowError(Error, 'Web Vitals metric not specified.');
     });
   });
 
-  describe('with valid arguments', function() {
-    it('returns a valid object', function() {
+  describe('with valid arguments', function () {
+    it('returns a valid object', function () {
       const result = this.helperDelegate(this.metricData);
 
       expect(result).toBeInstanceOf(Object);

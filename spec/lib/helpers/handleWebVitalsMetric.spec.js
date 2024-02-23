@@ -24,9 +24,10 @@ const mockMetricData = require('../../specHelpers/mockMetricData');
 
 describe('handleWebVitalsMetric helper delegate', function() {
   beforeEach(function() {
+    this.error = new Error('die');
+
     this.batch = mockBatch();
     this.data = mockMetricData();
-    this.error = new Error('die');
     this.events = mockEvents();
   });
 
@@ -51,13 +52,13 @@ describe('handleWebVitalsMetric helper delegate', function() {
   describe('with valid arguments', function() {
     describe('with broken events', function() {
       beforeEach(function() {
-        this.events = mockEvents(true);
+        this.eventsWithErrors = mockEvents(true);
 
         this.helperDelegate = proxyquire(
           '../../../src/lib/helpers/handleWebVitalsMetric',
           {
             '../controllers/batch': this.batch,
-            '../controllers/events': this.events,
+            '../controllers/events': this.eventsWithErrors,
           }
         );
       });
@@ -88,14 +89,14 @@ describe('handleWebVitalsMetric helper delegate', function() {
       });
     });
 
-    describe('with broken batch', function() {
+    describe('with broken controller', function() {
       beforeEach(function() {
-        this.batch = mockBatch(true);
+        this.batchWithErrors = mockBatch(true);
 
         this.helperDelegate = proxyquire(
           '../../../src/lib/helpers/handleWebVitalsMetric',
           {
-            '../controllers/batch': this.batch,
+            '../controllers/batch': this.batchWithErrors,
             '../controllers/events': this.events,
           }
         );
@@ -129,13 +130,13 @@ describe('handleWebVitalsMetric helper delegate', function() {
 
     describe('with everything working properly', function() {
       beforeEach(function() {
-        this.getWebVitalsMetricData = jasmine.createSpy();
+        this.getWebVitalsMetricData = jasmine.createSpy().and.returnValue(this.data);
         this.processEvent = jasmine.createSpy();
 
         this.helperDelegate = proxyquire(
           '../../../src/lib/helpers/handleWebVitalsMetric',
           {
-            './getWebVitalsMetricData': this.getWebVitalsMetricData.and.returnValue(this.data),
+            './getWebVitalsMetricData': this.getWebVitalsMetricData,
             './processEvent': this.processEvent,
             '../controllers/batch': this.batch,
             '../controllers/events': this.events,

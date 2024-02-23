@@ -19,7 +19,7 @@
 /**
  * Return a `turbine` spy object.
  */
-module.exports = function(extensionSettings = {}, isGlobal = false) {
+module.exports = function (extensionSettings = {}, isGlobal = false) {
   const turbineMethods = {
     getHostedLibFileUrl: 'https://www.foo.com/bar',
   };

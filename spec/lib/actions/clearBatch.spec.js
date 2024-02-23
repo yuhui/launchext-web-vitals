@@ -18,27 +18,27 @@
 
 const proxyquire = require('proxyquire').noCallThru();
 
-const mockBatch = require('../../specHelpers/mockBatch');
+const mockController = require('../../specHelpers/mockController');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('clearBatch action delegate', function() {
-  beforeEach(function() {
-    this.batch = mockBatch();
+describe('clearBatch action delegate', function () {
+  beforeEach(function () {
+    this.controller = mockController();
     this.turbine = mockTurbine();
 
     this.actionDelegate = proxyquire(
       '../../../src/lib/actions/clearBatch',
       {
-        '../controllers/batch': this.batch,
+        '../controller': this.controller,
         '../controllers/turbine': this.turbine,
       }
     );
   });
 
-  it('executes to completion', function() {
+  it('executes to completion', function () {
     this.actionDelegate();
 
-    const { clear: clearBatch } = this.batch;
+    const { clearBatch } = this.controller;
     expect(clearBatch).toHaveBeenCalledTimes(1);
 
     const { debug: logDebug } = this.turbine.logger;

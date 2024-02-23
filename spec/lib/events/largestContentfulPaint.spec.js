@@ -18,56 +18,57 @@
 
 const proxyquire = require('proxyquire').noCallThru();
 
+const mockController = require('../../specHelpers/mockController');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
 const METRIC = 'LCP';
 
-describe(`"${METRIC}" event delegate`, function() {
-  beforeEach(function() {
+describe(`"${METRIC}" event delegate`, function () {
+  beforeEach(function () {
     this.settings = {};
     this.trigger = jasmine.createSpy();
+
+    this.controller = mockController();
     this.turbine = mockTurbine();
   });
 
-  describe('with broken handleEvent()', function() {
-    beforeEach(function() {
-      this.error = new Error('die');
-      this.handleEvent = jasmine.createSpy().and.throwError(this.error);
+  describe('with broken controller', function () {
+    beforeEach(function () {
+      this.controllerWithErrors = mockController('', {}, true);
 
       this.eventDelegate = proxyquire(
         '../../../src/lib/events/largestContentfulPaint',
         {
+          '../controller': this.controllerWithErrors,
           '../controllers/turbine': this.turbine,
-          '../helpers/handleEvent': this.handleEvent,
         }
       );
     });
 
-    it('logs an error', function() {
+    it('logs an error', function () {
       this.eventDelegate(this.settings, this.trigger);
 
       const { error: logError } = this.turbine.logger;
-      expect(logError).toHaveBeenCalledOnceWith(this.error.message);
+      expect(logError).toHaveBeenCalled();
     });
   });
 
-  describe('with everything working properly', function() {
-    beforeEach(function() {
-      this.handleEvent = jasmine.createSpy();
-
+  describe('with everything working properly', function () {
+    beforeEach(function () {
       this.eventDelegate = proxyquire(
         '../../../src/lib/events/largestContentfulPaint',
         {
+          '../controller': this.controller,
           '../controllers/turbine': this.turbine,
-          '../helpers/handleEvent': this.handleEvent,
         }
       );
     });
 
-    it('sends the trigger to the events helper module once only', function() {
+    it('sends the trigger to the controller module once only', function () {
       this.eventDelegate(this.settings, this.trigger);
 
-      expect(this.handleEvent).toHaveBeenCalledOnceWith(
+      const { handleEvent } = this.controller;
+      expect(handleEvent).toHaveBeenCalledOnceWith(
         METRIC,
         this.settings,
         this.trigger

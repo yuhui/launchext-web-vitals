@@ -18,29 +18,29 @@
 
 const proxyquire = require('proxyquire').noCallThru();
 
-const mockBatch = require('../../specHelpers/mockBatch');
+const mockController = require('../../specHelpers/mockController');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('batch data element delegate', function() {
-  beforeEach(function() {
-    this.batch = mockBatch();
+describe('batch data element delegate', function () {
+  beforeEach(function () {
+    this.controller = mockController();
     this.turbine = mockTurbine();
   });
 
-  describe('with broken batch', function() {
-    beforeEach(function() {
-      this.batchWithErrors = mockBatch(true);
+  describe('with broken controller', function () {
+    beforeEach(function () {
+      this.controllerWithErrors = mockController('', {}, true);
 
       this.dataElementDelegate = proxyquire(
         '../../../src/lib/dataElements/batch',
         {
-          '../controllers/batch': this.batchWithErrors,
+          '../controller': this.controllerWithErrors,
           '../controllers/turbine': this.turbine,
         }
       );
     });
 
-    it('logs an error and returns nothing', function() {
+    it('logs an error and returns nothing', function () {
       const result = this.dataElementDelegate();
 
       expect(result).toBeUndefined();
@@ -50,23 +50,23 @@ describe('batch data element delegate', function() {
     });
   });
 
-  describe('with everything working properly', function() {
-    beforeEach(function() {
+  describe('with everything working properly', function () {
+    beforeEach(function () {
       this.dataElementDelegate = proxyquire(
         '../../../src/lib/dataElements/batch',
         {
-          '../controllers/batch': this.batch,
+          '../controller': this.controller,
           '../controllers/turbine': this.turbine,
         }
       );
     });
 
-    it('is defined', function() {
+    it('is defined', function () {
       const result = this.dataElementDelegate();
 
       expect(result).toBeDefined();
 
-      const { get: getBatch } = this.batch;
+      const { getBatch } = this.controller;
       expect(getBatch).toHaveBeenCalledTimes(1);
 
       const { debug: logDebug } = this.turbine.logger;

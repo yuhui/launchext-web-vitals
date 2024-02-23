@@ -19,7 +19,7 @@
 /**
  * Return a `batch` spy object for use with event unit testing.
  */
-module.exports = function(throwError = false) {
+module.exports = function (throwError = false) {
   const batch = {
     append: jasmine.createSpy(),
     clear: jasmine.createSpy(),

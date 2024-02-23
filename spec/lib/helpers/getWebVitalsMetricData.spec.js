@@ -19,8 +19,8 @@
 const { WEB_VITALS_METRICS_NAMES } = require('../../../src/lib/constants');
 const mockMetricData = require('../../specHelpers/mockMetricData');
 
-describe('getWebVitalsMetricData helper delegate', function() {
-  beforeEach(function() {
+describe('getWebVitalsMetricData helper delegate', function () {
+  beforeEach(function () {
     this.data = mockMetricData();
     // delete "fullName" property because it gets set from WEB_VITALS_METRICS_NAMES
     delete this.data.fullName;
@@ -28,16 +28,16 @@ describe('getWebVitalsMetricData helper delegate', function() {
     this.helperDelegate = require('../../../src/lib/helpers/getWebVitalsMetricData');
   });
 
-  describe('with invalid arguments', function() {
-    it('throws an error when "data" argument is missing', function() {
+  describe('with invalid arguments', function () {
+    it('throws an error when "data" argument is missing', function () {
       expect(() => {
         this.helperDelegate();
       }).toThrowError(Error, 'Web Vitals data not specified');
     });
   });
 
-  describe('with valid arguments', function() {
-    it('returns a valid object', function() {
+  describe('with valid arguments', function () {
+    it('returns a valid object', function () {
       const result = this.helperDelegate(this.data);
 
       expect(result).toBeInstanceOf(Object);

@@ -19,59 +19,58 @@
 const proxyquire = require('proxyquire').noCallThru();
 
 const mockBaseEvent = require('../../specHelpers/mockBaseEvent');
+const mockController = require('../../specHelpers/mockController');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
-describe('metricFullName data element delegate', function() {
-  beforeEach(function() {
-    this.event = mockBaseEvent();
+describe('metricFullName data element delegate', function () {
+  beforeEach(function () {
+    this.metricData = 'fullName';
     this.settings = {}; // this data element does not have any custom settings
-    this.turbine = mockTurbine();
 
-    this.dataElementDelegate = proxyquire(
-      '../../../src/lib/dataElements/metricFullName',
-      {
-        '../controllers/turbine': this.turbine,
-      }
-    );
+    this.event = mockBaseEvent();
+    this.turbine = mockTurbine();
+    this.controller = mockController(this.metricData, this.event.webvitals);
   });
 
-  describe('with invalid "event" argument', function() {
-    it('logs an error and returns nothing when "event" argument is missing', function() {
-      const result = this.dataElementDelegate(this.settings);
+  describe('with invalid "event" argument', function () {
+    describe('when "fullName" property is missing', function () {
+      beforeEach(function () {
+        delete this.event.webvitals[this.metricData];
 
-      expect(result).toBeUndefined();
+        this.controllerWithErrors = mockController(this.metricData, this.event.webvitals, true);
 
-      const { warn: logWarn } = this.turbine.logger;
-      expect(logWarn).toHaveBeenCalledWith(
-        '"event" argument not specified. Use _satellite.getVar("data element name", event);'
+        this.dataElementDelegate = proxyquire(
+          '../../../src/lib/dataElements/metricFullName',
+          {
+            '../controller': this.controllerWithErrors,
+            '../controllers/turbine': this.turbine,
+          }
+        );
+      });
+
+      it('logs a warning and returns nothing', function () {
+        const result = this.dataElementDelegate(this.settings, this.event);
+
+        expect(result).toBeUndefined();
+
+        const { warn: logWarn } = this.turbine.logger;
+        expect(logWarn).toHaveBeenCalled();
+      });
+    });
+  });
+
+  describe('with valid "event" argument', function () {
+    beforeEach(function () {
+      this.dataElementDelegate = proxyquire(
+        '../../../src/lib/dataElements/metricFullName',
+        {
+          '../controller': this.controller,
+          '../controllers/turbine': this.turbine,
+        }
       );
     });
 
-    it('logs an error and returns nothing when "webvitals" property is missing', function() {
-      delete this.event.webvitals;
-
-      const result = this.dataElementDelegate(this.settings, this.event);
-
-      expect(result).toBeUndefined();
-
-      const { warn: logWarn } = this.turbine.logger;
-      expect(logWarn).toHaveBeenCalledWith('Web Vitals not available.');
-    });
-
-    it('logs an error and returns nothing when "fullName" property is missing', function() {
-      delete this.event.webvitals.fullName;
-
-      const result = this.dataElementDelegate(this.settings, this.event);
-
-      expect(result).toBeUndefined();
-
-      const { warn: logWarn } = this.turbine.logger;
-      expect(logWarn).toHaveBeenCalledWith('Metric full name not available.');
-    });
-  });
-
-  describe('with valid "event" argument', function() {
-    it('is a string', function() {
+    it('is a string', function () {
       const result = this.dataElementDelegate(this.settings, this.event);
 
       expect(result).toBeInstanceOf(String);

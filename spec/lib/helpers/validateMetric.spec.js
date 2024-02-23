@@ -18,18 +18,18 @@
 
 const { WEB_VITALS_METRICS } = require('../../../src/lib/constants');
 
-describe('validateMetric helper delegate', function() {
-  beforeEach(function() {
+describe('validateMetric helper delegate', function () {
+  beforeEach(function () {
     this.helperDelegate = require('../../../src/lib/helpers/validateMetric');
   });
 
-  it('throws an error when "metric" is missing', function() {
+  it('throws an error when "metric" is missing', function () {
     expect(() => {
       this.helperDelegate();
     }).toThrowError(Error, 'Web Vitals metric not specified');
   });
 
-  it('throws an error when "metric" is not a Web Vitals metric', function() {
+  it('throws an error when "metric" is not a Web Vitals metric', function () {
     const metric = 'foo';
 
     expect(() => {
@@ -38,7 +38,7 @@ describe('validateMetric helper delegate', function() {
   });
 
   for (const metric of WEB_VITALS_METRICS) {
-    it(`returns true when "metric" is Web Vitals metric "${metric}"`, function() {
+    it(`returns true when "metric" is Web Vitals metric "${metric}"`, function () {
       const result = this.helperDelegate(metric);
 
       expect(result).toBeTrue();

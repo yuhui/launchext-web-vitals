@@ -19,7 +19,7 @@
 /**
  * Return a `events` spy object for use with event unit testing.
  */
-module.exports = function(throwError = false) {
+module.exports = function (throwError = false) {
   const events = jasmine.createSpyObj(
     'events',
     {

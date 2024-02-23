@@ -22,17 +22,19 @@ const { WEB_VITALS_METRICS } = require('../../../src/lib/constants');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 const mockWebVitals = require('../../specHelpers/mockWebVitals');
 
-describe('enableWebVitals helper delegate', function() {
-  beforeEach(function() {
+describe('enableWebVitals helper delegate', function () {
+  beforeEach(function () {
     this.error = new Error('die');
     this.webVitalsLocation = 'bundle';
-    this.loadWebVitals = jasmine.createSpy().and.resolveTo(this.webVitalsLocation);
+
     this.turbine = mockTurbine();
     this.webVitals = mockWebVitals();
+
+    this.loadWebVitals = jasmine.createSpy().and.resolveTo(this.webVitalsLocation);
   });
 
-  describe('with broken loadWebVitals()', function() {
-    beforeEach(function() {
+  describe('with broken loadWebVitals()', function () {
+    beforeEach(function () {
       this.loadWebVitalsWithErrors = jasmine.createSpy().and.rejectWith(this.error);
 
       this.helperDelegate = proxyquire(
@@ -45,7 +47,7 @@ describe('enableWebVitals helper delegate', function() {
       );
     });
 
-    it('logs an error', async function() {
+    it('logs an error', async function () {
       await this.helperDelegate();
 
       const { error: logError } = this.turbine.logger;
@@ -53,8 +55,8 @@ describe('enableWebVitals helper delegate', function() {
     });
   });
 
-  describe('with broken webVitals', function() {
-    beforeEach(function() {
+  describe('with broken webVitals', function () {
+    beforeEach(function () {
       this.webVitalsWithErrors = mockWebVitals(true);
 
       this.helperDelegate = proxyquire(
@@ -67,7 +69,7 @@ describe('enableWebVitals helper delegate', function() {
       );
     });
 
-    it('logs an error', async function() {
+    it('logs an error', async function () {
       await this.helperDelegate();
 
       let metricsWithErrors = [];
@@ -82,8 +84,8 @@ describe('enableWebVitals helper delegate', function() {
     });
   });
 
-  describe('with everything working properly', function() {
-    beforeEach(function() {
+  describe('with everything working properly', function () {
+    beforeEach(function () {
       this.helperDelegate = proxyquire(
         '../../../src/lib/helpers/enableWebVitals',
         {
@@ -94,7 +96,7 @@ describe('enableWebVitals helper delegate', function() {
       );
     });
 
-    it('executes to completion', async function() {
+    it('executes to completion', async function () {
       await this.helperDelegate();
 
       expect(this.loadWebVitals).toHaveBeenCalledTimes(1);
