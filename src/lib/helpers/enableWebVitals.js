@@ -41,8 +41,6 @@ var runEnableStatus = 'not started';
  * Enable the Web Vitals library.
  *
  * @async
- *
- * @throws {Error} error from loadWebVitals().
  */
 module.exports = async () => {
   if (runEnableStatus !== 'not started') {

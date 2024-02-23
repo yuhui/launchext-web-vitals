@@ -27,8 +27,6 @@ const { get: getEvents } = require('../controllers/events');
  * @param {Object} data Data reported for the Web Vitals metric.
  *
  * @throws {Error} data is not specified.
- * @throws {Error} error from getWebVitalsMetricData().
- * @throws {Error} error from processEvent().
  */
 module.exports = (data = null) => {
   if (!data) {
@@ -37,25 +35,11 @@ module.exports = (data = null) => {
 
   const { name: metric } = data;
 
-  let events;
-  try {
-    events = getEvents(metric);
-  } catch (e) {
-    throw e;
-  }
+  const events = getEvents(metric);
 
-  let metricData;
-  try {
-    metricData = getWebVitalsMetricData(data);
-  } catch (e) {
-    throw e;
-  }
+  const metricData = getWebVitalsMetricData(data);
 
-  try {
-    appendToBatch(metricData);
-  } catch (e) {
-    throw e;
-  }
+  appendToBatch(metricData);
 
   if (events.length === 0) {
     // there are no Event triggers for this Web Vitals metric report, so ignore it
@@ -63,10 +47,6 @@ module.exports = (data = null) => {
   }
 
   events.forEach((event) => {
-    try {
-      processEvent(metricData, event);
-    } catch (e) {
-      throw e;
-    }
+    processEvent(metricData, event);
   });
 };

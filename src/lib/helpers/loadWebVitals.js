@@ -29,16 +29,9 @@ const validateWebVitals = require('./validateWebVitals');
  * @returns the location that the Web Vitals script was loaded from.
  *
  * @throws {Error} something went wrong when loading Web Vitals.
- * @throws {Error} error from getWebVitalsLibrary().
- * @throws {Error} error from validateWebVitals().
  */
 module.exports = async () => {
-  let webVitalsLibrary;
-  try {
-    webVitalsLibrary = getWebVitalsLibrary();
-  } catch (e) {
-    throw e;
-  }
+  const webVitalsLibrary = getWebVitalsLibrary();
   const [ webVitalsUrl, webVitalsLocation ] = webVitalsLibrary;
 
   try {
@@ -47,11 +40,7 @@ module.exports = async () => {
     throw new Error(`Failed to load Web Vitals from ${webVitalsLocation}.`);
   }
 
-  try {
-    validateWebVitals();
-  } catch (e) {
-    throw e;
-  }
+  validateWebVitals();
 
   return webVitalsLocation;
 };
