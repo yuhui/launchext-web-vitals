@@ -16,6 +16,7 @@
 
 'use strict';
 
+const { getMetricData } = require('../controller');
 const {
   logger: {
     error: logError,
@@ -48,20 +49,14 @@ const NAVIGATION_TYPES = new Set([
  * @returns {String} The Web Vitals metric's navigation type.
  */
 module.exports = ({}, event = null) => {
-  if (!event) {
-    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
+  let navigationType;
+  try {
+    navigationType = getMetricData('navigationType', event);
+  } catch (e) {
+    logWarn(e.message);
     return;
   }
-  const { webvitals = null } = event;
-  if (!webvitals) {
-    logWarn('Web Vitals not available.');
-    return;
-  }
-  const { navigationType = null } = webvitals;
-  if (!navigationType) {
-    logWarn('Metric navigation type not available.');
-    return;
-  }
+
   if (!NAVIGATION_TYPES.has(navigationType)) {
     logError(`Invalid metric navigation type: "${navigationType}".`);
     return;

@@ -16,6 +16,7 @@
 
 'use strict';
 
+const { getMetricData } = require('../controller');
 const {
   logger: {
     warn: logWarn,
@@ -34,20 +35,13 @@ const {
  * @returns {String}  The Web Vitals metric's ID.
  */
 module.exports = ({}, event = null) => {
-  if (!event) {
-    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
-    return;
-  }
-  const { webvitals = null } = event;
-  if (!webvitals) {
-    logWarn('Web Vitals not available.');
-    return;
-  }
-  const { id = null } = webvitals;
-  if (!id) {
-    logWarn('Metric ID not available.');
+  let metricId;
+  try {
+    metricId = getMetricData('id', event);
+  } catch (e) {
+    logWarn(e.message);
     return;
   }
 
-  return id;
+  return metricId;
 };

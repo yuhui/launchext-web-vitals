@@ -16,7 +16,7 @@
 
 'use strict';
 
-const { clear: clearBatch } = require('../controllers/batch');
+const { clearBatch } = require('../controller');
 const {
   logger: {
     debug: logDebug,

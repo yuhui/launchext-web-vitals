@@ -16,6 +16,7 @@
 
 'use strict';
 
+const { getMetricData } = require('../controller');
 const {
   logger: {
     error: logError,
@@ -44,20 +45,14 @@ const RATINGS = new Set([
  * @returns {String} The Web Vitals metric's rating.
  */
 module.exports = ({}, event = null) => {
-  if (!event) {
-    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
+  let rating;
+  try {
+    rating = getMetricData('rating', event);
+  } catch (e) {
+    logWarn(e.message);
     return;
   }
-  const { webvitals = null } = event;
-  if (!webvitals) {
-    logWarn('Web Vitals not available.');
-    return;
-  }
-  const { rating = null } = webvitals;
-  if (!rating) {
-    logWarn('Metric rating not available.');
-    return;
-  }
+
   if (!RATINGS.has(rating)) {
     logError(`Invalid metric rating: "${rating}".`);
     return;

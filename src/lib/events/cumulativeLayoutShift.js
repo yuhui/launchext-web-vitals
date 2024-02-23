@@ -16,12 +16,12 @@
 
 'use strict';
 
+const { handleEvent } = require('../controller');
 const {
   logger: {
     error: logError,
   },
 } = require('../controllers/turbine');
-const handleEvent = require('../helpers/handleEvent');
 
 /**
  * Web Vitals Cumulative Layout Shift metric event.

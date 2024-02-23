@@ -16,12 +16,12 @@
 
 'use strict';
 
+const { handleEvent } = require('../controller');
 const {
   logger: {
     error: logError,
   },
 } = require('../controllers/turbine');
-const handleEvent = require('../helpers/handleEvent');
 
 /**
  * Web Vitals Interaction to Next Paint metric event.

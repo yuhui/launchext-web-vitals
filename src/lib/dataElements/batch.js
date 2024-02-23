@@ -16,7 +16,7 @@
 
 'use strict';
 
-const { get: getBatch } = require('../controllers/batch');
+const { getBatch } = require('../controller');
 const {
   logger: {
     debug: logDebug,

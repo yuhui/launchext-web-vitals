@@ -16,6 +16,7 @@
 
 'use strict';
 
+const { getMetricData } = require('../controller');
 const {
   logger: {
     error: logError,
@@ -41,18 +42,11 @@ module.exports = ({ metricAttributionItem = null } = {}, event = null) => {
     return;
   }
 
-  if (!event) {
-    logWarn('"event" argument not specified. Use _satellite.getVar("data element name", event);');
-    return;
-  }
-  const { webvitals = null } = event;
-  if (!webvitals) {
-    logWarn('Web Vitals not available.');
-    return;
-  }
-  const { attribution = null } = webvitals;
-  if (!attribution) {
-    logWarn('Metric attribution not available.');
+  let attribution;
+  try {
+    attribution = getMetricData('attribution', event);
+  } catch (e) {
+    logWarn(e.message);
     return;
   }
 

@@ -16,8 +16,6 @@
 
 'use strict';
 
-const { enableBatching } = require('./turbine');
-
 /**
  * Create the batch of all Web Vitals metric reports.
 */
@@ -34,10 +32,6 @@ module.exports = {
    * @throws {Error} metricData is not specified.
    */
   append: (metricData = null) => {
-    if (!enableBatching) {
-      return;
-    }
-
     if (!metricData) {
       throw new Error('Web Vitals metric data not specified.');
     }
@@ -60,10 +54,6 @@ module.exports = {
    * Does not do anything if "enableBatching" extension setting is not "yes".
    */
   get: () => {
-    if (!enableBatching) {
-      throw new Error('Batching has not been enabled. Check your extension settings.');
-    }
-
     const batch = REPORTS_BATCH;
     return batch;
   },
