@@ -18,7 +18,7 @@
 
 const { WEB_VITALS_METRICS } = require('../constants');
 
-module.exports = function() {
+module.exports = () => {
   let isValidWebVitals = typeof webVitals !== 'undefined' && !!webVitals;
 
   if (!isValidWebVitals) {

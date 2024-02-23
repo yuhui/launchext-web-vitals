@@ -17,15 +17,15 @@
 'use strict';
 
 const {
-  ratingThresholds: {
-    get: getMetricRatingThresholds,
-  },
-} = require('../controllers/webVitals');
-const {
   logger: {
     error: logError,
   },
 } = require('../controllers/turbine');
+const {
+  ratingThresholds: {
+    get: getMetricRatingThresholds,
+  },
+} = require('../controllers/webVitals');
 const validateMetric = require('../helpers/validateMetric');
 
 /**

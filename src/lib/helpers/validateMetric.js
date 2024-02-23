@@ -18,7 +18,7 @@
 
 const { WEB_VITALS_METRICS } = require('../constants');
 
-module.exports = function(metric = null) {
+module.exports = (metric = null) => {
   if (!metric) {
     throw new Error('Web Vitals metric not specified');
   }

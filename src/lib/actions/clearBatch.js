@@ -27,7 +27,7 @@ const {
  * Clear Batch action.
  * This action clears the batch of Web Vitals metric reports.
  */
-module.exports = function() {
+module.exports = function () {
   clearBatch();
 
   logDebug('Cleared the batch of Web Vitals metric reports.');
