@@ -11,7 +11,7 @@
     "@adobe/reactor-releaser": "^3.1.2",
     "@adobe/reactor-sandbox": "^12.5.0",
     "@adobe/reactor-uploader": "^5.1.2",
-    "eslint": "^8.56.0",
+    "eslint": "^8.57.0",
     "jasmine": "^5.1.0",
     "proxyquire": "^2.1.3"
   },

@@ -36,7 +36,11 @@
     "quotes": [1, "single", "avoid-escape"],
     "semi": [2, "always"],
     "space-before-blocks": [2, "always"],
-    "space-before-function-paren": [2, "never"],
+    "space-before-function-paren": ["error", {
+      "anonymous": "always",
+      "named": "never",
+      "asyncArrow": "always"}
+    ],
     "space-infix-ops": [2, { "int32Hint": false }],
     "spaced-comment": 0,
     "strict": [2, "global"]
