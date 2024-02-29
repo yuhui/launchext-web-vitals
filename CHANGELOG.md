@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.0.1 - 2024-02-28
+
+### Changed
+
+- Use a central "controller" with common functions that gets bundled into all Tagslibrary builds to ensure that the Web Vitals library is always loaded.
+
 ## 2.0.0 - 2024-02-21
 
 ### Changed
