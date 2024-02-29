@@ -18,6 +18,16 @@
 
 const { WEB_VITALS_METRICS } = require('../constants');
 
+/**
+ * Validate that the global Web Vitals library is proper.
+ *
+ * @global webVitals
+ *
+ * @returns {Boolean} `true` if the Web Vitals library is proper.
+ *
+ * @throws {Error} webVitals is not set.
+ * @throws {Error} webVitals does not have any of the expected `on*` functions.
+ */
 module.exports = () => {
   let isValidWebVitals = typeof webVitals !== 'undefined' && !!webVitals;
 

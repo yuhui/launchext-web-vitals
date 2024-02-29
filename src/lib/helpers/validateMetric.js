@@ -18,6 +18,16 @@
 
 const { WEB_VITALS_METRICS } = require('../constants');
 
+/**
+ * Validate that the specified metric is a Web Vitals metric.
+ *
+ * @param {String} metric=null Metric to validate.
+ *
+ * @returns {Boolean} `true` if the specified metric is a Web Vitals metric.
+ *
+ * @throws {Error} metric is not set.
+ * @throws {Error} metric is not a Web Vitals metric.
+ */
 module.exports = (metric = null) => {
   if (!metric) {
     throw new Error('Web Vitals metric not specified');
