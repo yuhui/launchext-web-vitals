@@ -24,6 +24,65 @@ const {
   },
 } = require('../controllers/turbine');
 
+const WEB_VITALS_METRIC_ATTRIBUTION_DEPRECATIONS = {
+  FID: {
+    eventEntry: {
+      deprecation: 'deleted',
+    },
+    eventTarget: {
+      deprecation: 'deleted',
+    },
+    eventTime: {
+      deprecation: 'deleted',
+    },
+    eventType: {
+      deprecation: 'deleted',
+    },
+  },
+  INP: {
+    eventEntry: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'processedEventEntries',
+    },
+    eventTarget: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'interactionTarget',
+    },
+    eventTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'interactionTime',
+    },
+    eventType: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'interactionType',
+    },
+  },
+  LCP: {
+    resourceLoadTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'resourceLoadDuration',
+    },
+  },
+  TTFB: {
+    connectionTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'connectionDuration',
+    },
+    dnsTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'dnsDuration',
+    },
+    requestTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'requestDuration',
+    },
+    waitingTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'waitingDuration',
+    },
+  },
+};
+
 /**
  * Attribution data element.
  * This data element returns the attribution of the metric.
@@ -41,6 +100,7 @@ module.exports = ({ metricAttributionItem = null } = {}, event = null) => {
     logError('No metric attribution item provided.');
     return;
   }
+  let metricAttributionName = metricAttributionItem;
 
   let attribution;
   try {
@@ -50,11 +110,43 @@ module.exports = ({ metricAttributionItem = null } = {}, event = null) => {
     return;
   }
 
+  /**
+   * This setting might be referencing a deprecated attribution name.
+   * So, alert the user about this.
+   */
+  const metric = getMetricData('name', event);
+  const metricDeprecations = WEB_VITALS_METRIC_ATTRIBUTION_DEPRECATIONS[metric];
+  if (metricDeprecations) {
+    const deprecatedItem = metricDeprecations[metricAttributionItem];
+    if (deprecatedItem) {
+      const { deprecation } = deprecatedItem;
+      switch (deprecation) {
+        case 'deleted':
+          logWarn(
+            `Metric attribution item "${metricAttributionItem}" has been removed from Web Vitals.`
+          );
+          break;
+        case 'renamed':
+          const { renamedMetricAttributionItem } = deprecatedItem;
+          metricAttributionName = renamedMetricAttributionItem;
+          logWarn(
+            `Metric attribution item "${metricAttributionItem}" has been renamed to "${renamedMetricAttributionItem}".`
+          );
+          break;
+      }
+    }
+  }
+
+  let attributionItem;
   const hasOwnProperty = Object.prototype.hasOwnProperty;
-  if (!hasOwnProperty.call(attribution, `${metricAttributionItem}`)) {
-    logWarn(`Metric attribution item "${metricAttributionItem}" not available.`);
+  if (hasOwnProperty.call(attribution, `${metricAttributionName}`)) {
+    attributionItem = attribution[metricAttributionName];
+  }
+
+  if (!attributionItem) {
+    logWarn(`Metric attribution item "${metricAttributionName}" not available.`);
     return;
   }
 
-  return attribution[metricAttributionItem];
+  return attributionItem;
 };

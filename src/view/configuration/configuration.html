@@ -44,6 +44,17 @@
         <div class="coral-InputGroup" style="width: 100%;" role="presentation">
           <input id="web-vitals-library-url" name="webVitalsLibraryUrl" value="" class="coral-InputGroup-input" is="coral-textfield" placeholder="https://www.website.com/web-vitals.attribution.iife.js">
         </div>
+
+        <coral-alert variant="error">
+          <coral-alert-header>
+            This extension supports Web Vitals 4.0 and higher only.
+          </coral-alert-header>
+          <coral-alert-content>
+            Some items from older versions of Web Vitals will not work any more. Please ensure that
+            the library that is loaded from your URL supports Web Vitals 4.0 or higher to use this
+            extension.
+          </coral-alert-content>
+        </coral-alert>
       </div>
 
       <br class="coral-Divider--S">
@@ -60,7 +71,7 @@
             First Contentful Paint (FCP)
           </coral-switch>
           <coral-switch name="reportAllChangesFID" value="yes">
-            First Input Delay (FID)
+            First Input Delay (FID) (deprecated)
           </coral-switch>
           <coral-switch name="reportAllChangesINP" value="yes" checked="">
             Interaction to Next Paint (INP)
@@ -153,7 +164,7 @@
           </li>
           <li class="coral-List-item">
             <a class="coral-Link" href="https://web.dev/fid/" target="_blank" rel="noopener noreferrer">
-              First Input Delay (FID)
+              First Input Delay (FID) (deprecated)
             </a>
           </li>
           <li class="coral-List-item">

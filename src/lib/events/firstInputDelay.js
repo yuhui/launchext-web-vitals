@@ -20,6 +20,7 @@ const { handleEvent } = require('../controller');
 const {
   logger: {
     error: logError,
+    warn: logWarn,
   },
 } = require('../controllers/turbine');
 
@@ -31,6 +32,10 @@ const {
  * @param {ruleTrigger} trigger The trigger callback.
  */
 module.exports = (settings, trigger) => {
+  logWarn(
+    'FID has been deprecated in Web Vitals 4.0. See https://github.com/GoogleChrome/web-vitals/pull/435.'
+  );
+
   try {
     handleEvent('FID', settings, trigger);
   } catch (e) {

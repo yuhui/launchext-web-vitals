@@ -20,12 +20,24 @@
           <coral-select id="metric" name="metric" class="coral-Form-field" labelledby="metric-label"  placeholder="Choose a Web Vitals metric" style="width: 100%;">
             <coral-select-item value="CLS">Cumulative Layout Shift (CLS)</coral-select-item>
             <coral-select-item value="FCP">First Contentful Paint (FCP)</coral-select-item>
-            <coral-select-item value="FID">First Input Delay (FID) </coral-select-item>
+            <coral-select-item value="FID">First Input Delay (FID) (deprecated)</coral-select-item>
             <coral-select-item value="INP">Interaction to Next Paint (INP)</coral-select-item>
             <coral-select-item value="LCP">Largest Contentful Paint (LCP)</coral-select-item>
             <coral-select-item value="TTFB">Time to First Byte (TTFB)</coral-select-item>
           </coral-select>
         </div>
+
+        <coral-alert variant="error" id="metric-deprecated-alert" class="hide">
+          <coral-alert-header>
+            <span id="metric-deprecated-full-name"></span> (<span id="metric-deprecated-name"></span>)
+            was deprecated in Web Vitals <span id="metric-deprecated-version"></span>.
+          </coral-alert-header>
+          <coral-alert-content>
+            As a result, rating thresholds will <span class="text-underline">not</span> be returned
+            in the next major release of the library..
+          </coral-alert-content>
+        </coral-alert>
+
       </div>
     </form>
 
@@ -104,31 +116,71 @@
     <script>
       const FORM_ID = 'data-element-configuration';
 
-      var isWebVitalsLibraryTypeUrl = false;
+      const ACCEPTABLE_METRICS = [
+        'CLS',
+        'FCP',
+        'FID',
+        'INP',
+        'LCP',
+        'TTFB',
+      ];
 
-      function toggleWebVitalsLibraryTypeUrlConfiguration() {
-        const webVitalsLibraryTypeUrlElement = document.getElementById(
-          'web-vitals-library-type-url'
-        );
+      const DEPRECATED_METRICS = {
+        FID: {
+          fullName: 'First Input Delay',
+          version: '4.0',
+        },
+      };
 
-        if (isWebVitalsLibraryTypeUrl) {
-          webVitalsLibraryTypeUrlElement.classList.remove('hide');
-          webVitalsLibraryTypeUrlElement.classList.add('show');
-        } else {
-          webVitalsLibraryTypeUrlElement.classList.remove('show');
-          webVitalsLibraryTypeUrlElement.classList.add('hide');
+      function toggleDeprecatedMetricAlert(metric) {
+        let action = 'hide';
+        let metricFullName = '';
+        let metricName = '';
+        let metricVersion = '';
+
+        if (DEPRECATED_METRICS.hasOwnProperty(metric)) {
+          action = 'show';
+
+          const { fullName, version } = DEPRECATED_METRICS[metric];
+          metricFullName = fullName;
+          metricName = metric;
+          metricVersion = version;
         }
+
+        setInnerText('#metric-deprecated-full-name', metricFullName);
+        setInnerText('#metric-deprecated-name', metricName);
+        setInnerText('#metric-deprecated-version', metricVersion);
+
+        hideOrShowElement('#metric-deprecated-alert', action);
       }
+
+      document.getElementById('metric').addEventListener('change', ({ target }) => {
+        const metricInput = target.querySelector('input[name="metric"]');
+        const metric = metricInput.value;
+        toggleDeprecatedMetricAlert(metric);
+      });
 
       window.extensionBridge.register({
         init: (info) => {
-          const { extensionSettings: { webVitalsLibraryType } } = info;
-          isWebVitalsLibraryTypeUrl = webVitalsLibraryType && webVitalsLibraryType === 'url';
+          const {
+            extensionSettings: { webVitalsLibraryType },
+            settings,
+          } = info;
 
-          toggleWebVitalsLibraryTypeUrlConfiguration();
+          const isWebVitalsLibraryTypeUrl = !!webVitalsLibraryType
+            && webVitalsLibraryType === 'url';
+          hideOrShowElement(
+            '#web-vitals-library-type-url-alert',
+            'show',
+            isWebVitalsLibraryTypeUrl
+          );
 
-          if (info.settings) {
-            setFormValues(FORM_ID, info.settings);
+          if (settings) {
+            setFormValues(FORM_ID, settings);
+
+            // these checks were added in v2.1.0
+            const { metric } = settings;
+            toggleDeprecatedMetricAlert(metric);
           }
         },
 
@@ -142,16 +194,7 @@
           const formValues = getFormValues(FORM_ID);
           const { metric } = formValues;
 
-          const acceptableMetrics = new Set([
-            'CLS',
-            'FCP',
-            'FID',
-            'INP',
-            'LCP',
-            'TTFB',
-          ]);
-
-          const metricIsValid = acceptableMetrics.has(metric);
+          const metricIsValid = ACCEPTABLE_METRICS.includes(metric);
 
           return metricIsValid;
         }

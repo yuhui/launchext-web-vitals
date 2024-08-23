@@ -87,19 +87,6 @@
       "viewPath": "events/cumulativeLayoutShift.html"
     },
     {
-      "displayName": "First Input Delay (FID)",
-      "name": "first-input-delay",
-      "categoryName": "Core Web Vitals",
-      "schema": {
-        "$schema": "http://json-schema.org/draft-04/schema#",
-        "type": "object",
-        "properties": {},
-        "additionalProperties": false
-      },
-      "libPath": "src/lib/events/firstInputDelay.js",
-      "viewPath": "events/firstInputDelay.html"
-    },
-    {
       "displayName": "Largest Contentful Paint (LCP)",
       "name": "largest-contentful-paint",
       "categoryName": "Core Web Vitals",
@@ -150,6 +137,19 @@
       },
       "libPath": "src/lib/events/timeToFirstByte.js",
       "viewPath": "events/timeToFirstByte.html"
+    },
+    {
+      "displayName": "First Input Delay (FID)",
+      "name": "first-input-delay",
+      "categoryName": "X-Deprecated Web Vitals",
+      "schema": {
+        "$schema": "http://json-schema.org/draft-04/schema#",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "libPath": "src/lib/events/firstInputDelay.js",
+      "viewPath": "events/firstInputDelay.html"
     }
   ],
   "actions": [
@@ -191,7 +191,11 @@
         "properties": {
           "metricAttributionItem": {
             "enum": [
+              "cacheDuration",
+              "cacheTime",
+              "connectionDuration",
               "connectionTime",
+              "dnsDuration",
               "dnsTime",
               "element",
               "elementRenderDelay",
@@ -201,6 +205,11 @@
               "eventType",
               "fcpEntry",
               "firstByteToFCP",
+              "inputDelay",
+              "interactionTarget",
+              "interactionTargetElement",
+              "interactionTime",
+              "interactionType",
               "largestShiftEntry",
               "largestShiftSource",
               "largestShiftTarget",
@@ -209,12 +218,20 @@
               "lcpEntry",
               "lcpResourceEntry",
               "loadState",
+              "longAnimationFrameEntries",
               "navigationEntry",
+              "nextPaintTime",
+              "presentationDelay",
+              "processedEventEntries",
+              "processingDuration",
+              "requestDuration",
               "requestTime",
               "resourceLoadDelay",
+              "resourceLoadDuration",
               "resourceLoadTime",
               "timeToFirstByte",
               "url",
+              "waitingDuration",
               "waitingTime"
             ]
           }

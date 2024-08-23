@@ -18,33 +18,70 @@
         </label>
         <div class="coral-InputGroup" style="width: 100%;" role="presentation">
           <coral-select id="metric-attribution-item" name="metricAttributionItem" class="coral-Form-field" labelledby="metric-attribution-item-label"  placeholder="Choose an attribution" style="width: 100%;">
-            <coral-select-item value="connectionTime">Connection Time (TTFB)</coral-select-item>
-            <coral-select-item value="dnsTime">DNS Time (TTFB)</coral-select-item>
-            <coral-select-item value="element">Element (LCP)</coral-select-item>
-            <coral-select-item value="elementRenderDelay">Element Render Delay (LCP)</coral-select-item>
-            <coral-select-item value="eventEntry">Event Entry (FID, INP)</coral-select-item>
-            <coral-select-item value="eventTarget">Event Target (FID, INP)</coral-select-item>
-            <coral-select-item value="eventTime">Event Time (FID, INP)</coral-select-item>
-            <coral-select-item value="eventType">Event Type (FID, INP)</coral-select-item>
-            <coral-select-item value="fcpEntry">FCP Entry (FCP)</coral-select-item>
-            <coral-select-item value="firstByteToFCP">First Byte To FCP (FCP)</coral-select-item>
-            <coral-select-item value="largestShiftEntry">Largest Shift Entry (CLS)</coral-select-item>
-            <coral-select-item value="largestShiftSource">Largest Shift Source (CLS)</coral-select-item>
-            <coral-select-item value="largestShiftTarget">Largest Shift Target (CLS)</coral-select-item>
-            <coral-select-item value="largestShiftTime">Largest Shift Time (CLS)</coral-select-item>
-            <coral-select-item value="largestShiftValue">Largest Shift Value (CLS)</coral-select-item>
-            <coral-select-item value="lcpEntry">LCP Entry (LCP)</coral-select-item>
-            <coral-select-item value="lcpResourceEntry">LCP Resource Entry (LCP)</coral-select-item>
-            <coral-select-item value="loadState">Load State (CLS, FCP, FID, INP)</coral-select-item>
-            <coral-select-item value="navigationEntry">Navigation Entry (FCP, LCP, TTFB)</coral-select-item>
-            <coral-select-item value="requestTime">Request Time (TTFB)</coral-select-item>
-            <coral-select-item value="resourceLoadDelay">Resource Load Delay (LCP)</coral-select-item>
-            <coral-select-item value="resourceLoadTime">Resource Load Time (LCP)</coral-select-item>
-            <coral-select-item value="timeToFirstByte">Time to First Byte (FCP, LCP)</coral-select-item>
-            <coral-select-item value="url">URL (LCP)</coral-select-item>
-            <coral-select-item value="waitingTime">Waiting Time (TTFB)</coral-select-item>
+           <coral-select-item value="cacheDuration">Cache Duration (TTFB)</coral-select-item>
+           <coral-select-item value="connectionDuration">Connection Duration (TTFB)</coral-select-item>
+           <coral-select-item value="dnsDuration">DNS Duration (TTFB)</coral-select-item>
+           <coral-select-item value="element">Element (LCP)</coral-select-item>
+           <coral-select-item value="elementRenderDelay">Element Render Delay (LCP)</coral-select-item>
+           <coral-select-item value="fcpEntry">FCP Entry (FCP)</coral-select-item>
+           <coral-select-item value="firstByteToFCP">First Byte To FCP (FCP)</coral-select-item>
+           <coral-select-item value="inputDelay">Input Delay (INP)</coral-select-item>
+           <coral-select-item value="interactionTarget">Interaction Target (INP)</coral-select-item>
+           <coral-select-item value="interactionTargetElement">Interaction Target Element (INP)</coral-select-item>
+           <coral-select-item value="interactionTime">Interaction Time (INP)</coral-select-item>
+           <coral-select-item value="interactionType">Interaction Type (INP)</coral-select-item>
+           <coral-select-item value="largestShiftEntry">Largest Shift Entry (CLS)</coral-select-item>
+           <coral-select-item value="largestShiftSource">Largest Shift Source (CLS)</coral-select-item>
+           <coral-select-item value="largestShiftTarget">Largest Shift Target (CLS)</coral-select-item>
+           <coral-select-item value="largestShiftTime">Largest Shift Time (CLS)</coral-select-item>
+           <coral-select-item value="largestShiftValue">Largest Shift Value (CLS)</coral-select-item>
+           <coral-select-item value="lcpEntry">LCP Entry (LCP)</coral-select-item>
+           <coral-select-item value="lcpResourceEntry">LCP Resource Entry (LCP)</coral-select-item>
+           <coral-select-item value="loadState">Load State (CLS, FCP, INP)</coral-select-item>
+           <coral-select-item value="longAnimationFrameEntries">Long Animation Frame Entries (INP)</coral-select-item>
+           <coral-select-item value="navigationEntry">Navigation Entry (FCP, LCP, TTFB)</coral-select-item>
+           <coral-select-item value="nextPaintTime">Next Paint Time (INP)</coral-select-item>
+           <coral-select-item value="presentationDelay">Presentation Delay (INP)</coral-select-item>
+           <coral-select-item value="processedEventEntries">Processed Event Entries (INP)</coral-select-item>
+           <coral-select-item value="processingDuration">Processing Duration (INP)</coral-select-item>
+           <coral-select-item value="requestDuration">Request Duration (TTFB)</coral-select-item>
+           <coral-select-item value="resourceLoadDelay">Resource Load Delay (LCP)</coral-select-item>
+           <coral-select-item value="resourceLoadDuration">Resource Load Duration (LCP)</coral-select-item>
+           <coral-select-item value="timeToFirstByte">Time to First Byte (FCP, LCP)</coral-select-item>
+           <coral-select-item value="url">URL (LCP)</coral-select-item>
+           <coral-select-item value="waitingDuration">Waiting Duration (TTFB)</coral-select-item>
           </coral-select>
         </div>
+
+        <coral-alert variant="error" id="metric-attribution-item-renamed-alert" class="hide">
+          <coral-alert-header>
+            <span id="metric-attribution-item-renamed-old-name"></span> was renamed in Web Vitals
+            <span id="metric-attribution-item-renamed-version"></span>.
+          </coral-alert-header>
+          <coral-alert-content>
+            <p>
+              The renamed attribution, <b id="metric-attribution-item-renamed-new-name"></b>,
+              has been selected for you. Please save this data element to retain the update.
+            </p>
+          </coral-alert-content>
+        </coral-alert>
+
+        <coral-alert variant="error" id="metric-attribution-item-deleted-alert" class="hide">
+          <coral-alert-header>
+            <span id="metric-attribution-item-deleted-name"></span> was deleted in Web Vitals
+            <span id="metric-attribution-item-deleted-version"></span>.
+          </coral-alert-header>
+          <coral-alert-content>
+            <p>
+              As a result, this data element will not return any value.
+              <em>You can delete this data element.</em>
+            </p>
+            <p id="metric-attribution-item-deleted-INP-replaced" class="hide">
+              If you are using this attribution to report with <b>Interaction to Next Paint (INP)</b>,
+              use the updated attribution instead: <b id="metric-attribution-item-deleted-INP-replaced-name"></b>.
+            </p>
+          </coral-alert-content>
+        </coral-alert>
       </div>
     </form>
 
@@ -132,31 +169,180 @@
     <script>
       const FORM_ID = 'data-element-configuration';
 
-      var isWebVitalsLibraryTypeUrl = false;
+      const ACCEPTABLE_METRIC_ATTRIBUTION_ITEMS = [
+        'cacheDuration',
+        'connectionDuration',
+        'dnsDuration',
+        'element',
+        'elementRenderDelay',
+        'fcpEntry',
+        'firstByteToFCP',
+        'inputDelay',
+        'interactionTarget',
+        'interactionTargetElement',
+        'interactionTime',
+        'interactionType',
+        'largestShiftEntry',
+        'largestShiftSource',
+        'largestShiftTarget',
+        'largestShiftTime',
+        'largestShiftValue',
+        'lcpEntry',
+        'lcpResourceEntry',
+        'loadState',
+        'longAnimationFrameEntries',
+        'navigationEntry',
+        'nextPaintTime',
+        'presentationDelay',
+        'processedEventEntries',
+        'processingDuration',
+        'requestDuration',
+        'resourceLoadDelay',
+        'resourceLoadDuration',
+        'timeToFirstByte',
+        'url',
+        'waitingDuration',
+      ];
 
-      function toggleWebVitalsLibraryTypeUrlConfiguration() {
-        const webVitalsLibraryTypeUrlElement = document.getElementById(
-          'web-vitals-library-type-url'
-        );
+      const DEPRECATED_METRIC_ATTRIBUTION_ITEMS = {
+        connectionTime: {
+          deprecation: 'renamed',
+          fullName: 'Connection Time',
+          renamedMetricAttributionItem: 'connectionDuration',
+          renamedFullName: 'Connection Duration',
+          version: '4.0',
+        },
+        dnsTime: {
+          deprecation: 'renamed',
+          fullName: 'DNS Time',
+          renamedMetricAttributionItem: 'dnsDuration',
+          renamedFullName: 'DNS Duration',
+          version: '4.0',
+        },
+        eventEntry: {
+          deprecation: 'deleted',
+          fullName: 'Event Entry',
+          metricWithReplacement: 'INP',
+          renamedMetricAttributionItem: 'processedEventEntries',
+          renamedFullName: 'Processed Event Entries',
+          version: '4.0',
+        },
+        eventTarget: {
+          deprecation: 'deleted',
+          fullName: 'Event Target',
+          metricWithReplacement: 'INP',
+          renamedMetricAttributionItem: 'interactionTarget',
+          renamedFullName: 'Interaction Target',
+          version: '4.0',
+        },
+        eventTime: {
+          deprecation: 'deleted',
+          fullName: 'Event Time',
+          metricWithReplacement: 'INP',
+          renamedMetricAttributionItem: 'interactionTime',
+          renamedFullName: 'Interaction Time',
+          version: '4.0',
+        },
+        eventType: {
+          deprecation: 'deleted',
+          fullName: 'Event Type',
+          metricWithReplacement: 'INP',
+          renamedMetricAttributionItem: 'interactionType',
+          renamedFullName: 'Interaction Type',
+          version: '4.0',
+        },
+        requestTime: {
+          deprecation: 'renamed',
+          fullName: 'Request Time',
+          renamedMetricAttributionItem: 'requestDuration',
+          renamedFullName: 'Request Duration',
+          version: '4.0',
+        },
+        resourceLoadTime: {
+          deprecation: 'renamed',
+          fullName: 'Resource Load Time',
+          renamedMetricAttributionItem: 'resourceLoadDuration',
+          renamedFullName: 'Resource Load Duration',
+          version: '4.0',
+        },
+        waitingTime: {
+          deprecation: 'renamed',
+          fullName: 'Waiting Time',
+          renamedMetricAttributionItem: 'waitingDuration',
+          renamedFullName: 'Waiting Duration',
+          version: '4.0',
+        },
+      };
 
-        if (isWebVitalsLibraryTypeUrl) {
-          webVitalsLibraryTypeUrlElement.classList.remove('hide');
-          webVitalsLibraryTypeUrlElement.classList.add('show');
-        } else {
-          webVitalsLibraryTypeUrlElement.classList.remove('show');
-          webVitalsLibraryTypeUrlElement.classList.add('hide');
-        }
-      }
+      document.getElementById('metric-attribution-item').addEventListener('change', () => {
+        hideOrShowElement('#metric-attribution-item-renamed-alert', 'hide');
+        hideOrShowElement('#metric-attribution-item-deleted-alert', 'hide');
+        hideOrShowElement('#metric-attribution-item-deleted-INP-replaced', 'hide');
+      });
 
       window.extensionBridge.register({
         init: (info) => {
-          const { extensionSettings: { webVitalsLibraryType } } = info;
-          isWebVitalsLibraryTypeUrl = webVitalsLibraryType && webVitalsLibraryType === 'url';
+          const {
+            extensionSettings: { webVitalsLibraryType },
+            settings,
+          } = info;
 
-          toggleWebVitalsLibraryTypeUrlConfiguration();
+          const isWebVitalsLibraryTypeUrl = !!webVitalsLibraryType
+            && webVitalsLibraryType === 'url';
+          hideOrShowElement(
+            '#web-vitals-library-type-url-alert',
+            'show',
+            isWebVitalsLibraryTypeUrl
+          );
 
-          if (info.settings) {
-            setFormValues(FORM_ID, info.settings);
+          if (settings) {
+            // these checks were added in v2.1.0
+            const { metricAttributionItem } = settings;
+            const deprecatedMetricAttribution =
+              DEPRECATED_METRIC_ATTRIBUTION_ITEMS[metricAttributionItem];
+            if (deprecatedMetricAttribution) {
+              const {
+                deprecation,
+                fullName,
+                metricWithReplacement,
+                renamedMetricAttributionItem,
+                renamedFullName,
+                version,
+              } = deprecatedMetricAttribution;
+
+              switch (deprecation) {
+                case 'deleted':
+                  setInnerText('#metric-attribution-item-deleted-name', fullName);
+                  setInnerText('#metric-attribution-item-deleted-version', version);
+                  hideOrShowElement('#metric-attribution-item-deleted-alert');
+
+                  // delete the setting to force the user to take action on the data element
+                  delete settings.metricAttributionItem;
+
+                  if (metricWithReplacement !== 'INP') {
+                    break;
+                  }
+
+                  setInnerText(
+                    '#metric-attribution-item-deleted-INP-replaced-name',
+                    renamedFullName
+                  );
+                  hideOrShowElement('#metric-attribution-item-deleted-INP-replaced');
+
+                  break;
+                case 'renamed':
+                  setInnerText('#metric-attribution-item-renamed-old-name', fullName);
+                  setInnerText('#metric-attribution-item-renamed-new-name', renamedFullName);
+                  setInnerText('#metric-attribution-item-renamed-version', version);
+                  hideOrShowElement('#metric-attribution-item-renamed-alert');
+
+                  // update the setting to force the user to save the data element
+                  settings.metricAttributionItem = renamedMetricAttributionItem;
+                  break;
+              }
+            }
+
+            setFormValues(FORM_ID, settings);
           }
         },
 
@@ -170,35 +356,7 @@
           const formValues = getFormValues(FORM_ID);
           const { metricAttributionItem } = formValues;
 
-          const acceptableMetricAttributionItems = [
-            'connectionTime',
-            'dnsTime',
-            'element',
-            'elementRenderDelay',
-            'eventEntry',
-            'eventTarget',
-            'eventTime',
-            'eventType',
-            'fcpEntry',
-            'firstByteToFCP',
-            'largestShiftEntry',
-            'largestShiftSource',
-            'largestShiftTarget',
-            'largestShiftTime',
-            'largestShiftValue',
-            'lcpEntry',
-            'lcpResourceEntry',
-            'loadState',
-            'navigationEntry',
-            'requestTime',
-            'resourceLoadDelay',
-            'resourceLoadTime',
-            'timeToFirstByte',
-            'url',
-            'waitingTime',
-          ];
-
-          const metricAttributionItemIsValid = acceptableMetricAttributionItems.includes(
+          const metricAttributionItemIsValid = ACCEPTABLE_METRIC_ATTRIBUTION_ITEMS.includes(
             metricAttributionItem
           );
 

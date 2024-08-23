@@ -19,6 +19,7 @@
 const {
   logger: {
     error: logError,
+    warn: logWarn,
   },
 } = require('../controllers/turbine');
 const {
@@ -51,6 +52,12 @@ module.exports = ({ metric = null } = {}) => {
   } catch (e) {
     logError(e.message);
     return;
+  }
+
+  if (metric === 'FID') {
+    logWarn(
+      'Rating Thresholds for FID may be unavailable, because FID has been deprecated in Web Vitals 4.0. See https://github.com/GoogleChrome/web-vitals/pull/435.'
+    );
   }
 
   return metricRatingThresholds;

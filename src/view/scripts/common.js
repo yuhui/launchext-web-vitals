@@ -165,6 +165,41 @@ function valueIsInteger(value) {
     && parseInt(value, 10) === Number(value);
 }
 
+/** Set the text in an element (usually a SPAN) */
+// eslint-disable-next-line no-unused-vars
+function setInnerText(selector, innerText) {
+  const element = document.querySelector(selector);
+  element.innerText = innerText;
+}
+
+/** Hide or show an element based on a condtion */
+// eslint-disable-next-line no-unused-vars
+function hideOrShowElement(selectorToToggle, action = 'show', condition = true) {
+  if (!condition) {
+    return;
+  }
+
+  let classToRemove, classToAdd;
+  switch (action) {
+    case 'hide':
+      classToRemove = 'show';
+      classToAdd = 'hide';
+      break;
+    case 'show':
+      classToRemove = 'hide';
+      classToAdd = 'show';
+      break;
+  }
+
+  if (!classToRemove || !classToAdd) {
+    return;
+  }
+
+  const element = document.querySelector(selectorToToggle);
+  element.classList.remove(classToRemove);
+  element.classList.add(classToAdd);
+}
+
 /** Expand or collapse an accordion */
 // eslint-disable-next-line no-unused-vars
 function toggleAccordion(id) {
@@ -177,19 +212,16 @@ function toggleAccordion(id) {
   }
 }
 
-/** Show or hide an element based on the value of a form field */
+/** Hide or show an element based on the value of a form field */
 // eslint-disable-next-line no-unused-vars
 function toggleElement(formId, toggleField, toggleValue, selectorToToggle) {
   const formValues = getFormValues(formId);
   const toggleFieldValue = formValues[toggleField];
 
-  const elementToShowHide = document.querySelector(selectorToToggle);
   if (toggleFieldValue === toggleValue) {
-    elementToShowHide.classList.remove('hide');
-    elementToShowHide.classList.add('show');
+    hideOrShowElement(selectorToToggle, 'show');
   } else {
-    elementToShowHide.classList.remove('show');
-    elementToShowHide.classList.add('hide');
+    hideOrShowElement(selectorToToggle, 'hide');
   }
 }
 
@@ -202,11 +234,9 @@ function toggleInputErrorMessage(inputName, inputIsValid) {
   const errorMessage = inputElementGreatGreatGrandparentNode.querySelector('span.error-message');
   if (inputIsValid) {
     inputElement.classList.remove('spectrum-Alert--error');
-    errorMessage.classList.remove('show');
-    errorMessage.classList.add('hide');
+    hideOrShowElement('span.error-message', 'hide');
   } else {
     inputElement.classList.add('spectrum-Alert--error');
-    errorMessage.classList.remove('hide');
-    errorMessage.classList.add('show');
+    hideOrShowElement('span.error-message', 'show');
   }
 }
