@@ -16,7 +16,7 @@
 
 'use strict';
 
-const WEB_VITALS_CDN_MAJOR_VERSION = '3';
+const WEB_VITALS_CDN_MAJOR_VERSION = '4';
 
 const WEB_VITALS_LIBRARY_TYPES = [
   'bundle',

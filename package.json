@@ -22,7 +22,7 @@
     "copy-spectrum-dist-resources": "mkdir ./src/view/dist/resources && cp ./node_modules/@adobe/coral-spectrum/dist/resources/* ./src/view/dist/resources",
     "copy-spectrum-dist": "npm run copy-spectrum-dist-css && npm run copy-spectrum-dist-js && npm run copy-spectrum-dist-resources",
     "cp-spectrum": "npm run remove-spectrum-dist && npm run copy-spectrum-dist",
-    "add-web-vitals": "curl -L -o ./vendor/web-vitals.attribution.iife.js https://unpkg.com/web-vitals@3/dist/web-vitals.attribution.iife.js",
+    "add-web-vitals": "curl -L -o ./vendor/web-vitals.attribution.iife.js https://unpkg.com/web-vitals@4/dist/web-vitals.attribution.iife.js",
     "test": "jasmine"
   },
   "repository": {
