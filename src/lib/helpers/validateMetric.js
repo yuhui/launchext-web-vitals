@@ -32,7 +32,7 @@ module.exports = (metric = null) => {
   if (!metric) {
     throw new Error('Web Vitals metric not specified');
   }
-  if (!WEB_VITALS_METRICS.has(metric)) {
+  if (!WEB_VITALS_METRICS.includes(metric)) {
     throw new Error(`invalid Web Vitals metric specified: ${metric}`);
   }
   return true;

@@ -38,7 +38,7 @@ const {
  * @throws {Error} Web Vitals library URL is invalid.
  */
 module.exports = () => {
-  if (!WEB_VITALS_LIBRARY_TYPES.has(webVitalsLibraryType)) {
+  if (!WEB_VITALS_LIBRARY_TYPES.includes(webVitalsLibraryType)) {
     throw new Error(`Unknown Web Vitals library type provided: "${webVitalsLibraryType}"`);
   }
 

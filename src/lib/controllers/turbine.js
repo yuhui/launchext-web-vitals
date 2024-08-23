@@ -45,7 +45,7 @@ module.exports = {
     });
     const reportAllChanges = reportAllChangesKeys.reduce((obj, key) => {
       const metric = key.replace('reportAllChanges', '');
-      if (!WEB_VITALS_METRICS.has(metric)) {
+      if (!WEB_VITALS_METRICS.includes(metric)) {
         return obj;
       }
 

@@ -33,7 +33,7 @@ module.exports = (data = null) => {
   }
 
   const metric = data.name;
-  const metricFullName = WEB_VITALS_METRICS_NAMES.get(metric) || metric;
+  const metricFullName = WEB_VITALS_METRICS_NAMES[metric] || metric;
 
   const metricData = {
     ...data,

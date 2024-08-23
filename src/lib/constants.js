@@ -18,21 +18,21 @@
 
 const WEB_VITALS_CDN_MAJOR_VERSION = '3';
 
-const WEB_VITALS_LIBRARY_TYPES = new Set([
+const WEB_VITALS_LIBRARY_TYPES = [
   'bundle',
   'cdn',
   'url',
-]);
+];
 
 // map of Web Vitals metrics and their full names
-const WEB_VITALS_METRICS_NAMES = new Map([
-  ['CLS', 'Cumulative Layout Shift'],
-  ['FCP', 'First Contentful Paint'],
-  ['FID', 'First Input Delay'],
-  ['INP', 'Interaction to Next Paint'],
-  ['LCP', 'Largest Contentful Paint'],
-  ['TTFB', 'Time to First Byte'],
-]);
+const WEB_VITALS_METRICS_NAMES = {
+  CLS: 'Cumulative Layout Shift',
+  FCP: 'First Contentful Paint',
+  FID: 'First Input Delay',
+  INP: 'Interaction to Next Paint',
+  LCP: 'Largest Contentful Paint',
+  TTFB: 'Time to First Byte',
+};
 
 const WEB_VITALS_VENDOR_SCRIPT_FILENAME = 'web-vitals.attribution.iife.js';
 
@@ -42,7 +42,7 @@ module.exports = {
   WEB_VITALS_VENDOR_SCRIPT_FILENAME,
 
   // set of Web Vitals metrics
-  WEB_VITALS_METRICS: new Set(WEB_VITALS_METRICS_NAMES.keys()),
+  WEB_VITALS_METRICS: Object.keys(WEB_VITALS_METRICS_NAMES),
 
   // constants related to setting up Web Vitals
   WEB_VITALS_CDN_URL: `https://unpkg.com/web-vitals@${WEB_VITALS_CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`,
