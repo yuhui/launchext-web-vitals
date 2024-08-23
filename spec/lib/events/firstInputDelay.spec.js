@@ -64,6 +64,15 @@ describe(`"${METRIC}" event delegate`, function () {
       );
     });
 
+    it('logs a warning', function () {
+      this.eventDelegate(this.settings, this.trigger);
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith(
+        'FID has been deprecated in Web Vitals 4.0. See https://github.com/GoogleChrome/web-vitals/pull/435.'
+      );
+    });
+
     it('sends the trigger to the controller module once only', function () {
       this.eventDelegate(this.settings, this.trigger);
 

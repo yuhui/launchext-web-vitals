@@ -47,6 +47,15 @@ module.exports = {
       "modulePath": "web-vitals-js/src/lib/dataElements/metricRatingThresholds.js",
       "storageDuration": ""
     },
+    "Metric INP Rating Thresholds": {
+      "settings": {
+        "metric": "INP"
+      },
+      "cleanText": false,
+      "forceLowerCase": false,
+      "modulePath": "web-vitals-js/src/lib/dataElements/metricRatingThresholds.js",
+      "storageDuration": ""
+    },
     "Batch": {
       "settings": {},
       "cleanText": false,
@@ -110,8 +119,8 @@ module.exports = {
   },
   "buildInfo": {
     "turbineVersion": "27.5.0",
-    "turbineBuildDate": "2024-02-03T15:11:25.779Z",
-    "buildDate": "2024-02-03T15:11:25.780Z",
+    "turbineBuildDate": "2024-08-09T15:23:15.458Z",
+    "buildDate": "2024-08-09T15:23:15.458Z",
     "environment": "development"
   }
 }

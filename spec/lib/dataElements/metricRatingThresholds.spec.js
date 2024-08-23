@@ -106,6 +106,17 @@ describe('metricRatingThresholds data element delegate', function () {
         const { get: getMetricRatingThresholds } = this.webVitals.ratingThresholds;
         expect(getMetricRatingThresholds).toHaveBeenCalledOnceWith(this.settings.metric);
       });
+
+      it('logs a warning when netric is "FID"', function () {
+        this.settings.metric = 'FID';
+        this.dataElementDelegate(this.settings, this.trigger);
+
+        const { warn: logWarn } = this.turbine.logger;
+        expect(logWarn).toHaveBeenCalledWith(
+          'Rating Thresholds for FID may be unavailable, because FID has been deprecated in Web Vitals 4.0. See https://github.com/GoogleChrome/web-vitals/pull/435.'
+        );
+      });
+
     });
   });
 });

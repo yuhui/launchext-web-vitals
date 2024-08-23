@@ -47,7 +47,7 @@ describe('getWebVitalsMetricData helper delegate', function () {
         expect(result[key]).toEqual(this.data[key]);
       });
 
-      const metricFullName = WEB_VITALS_METRICS_NAMES.get(this.data.name)
+      const metricFullName = WEB_VITALS_METRICS_NAMES[this.data.name]
       expect(result.fullName).toEqual(metricFullName);
     });
   });

@@ -11,13 +11,18 @@
 <body>
   <h1>Reactor Extension Library Sandbox</h1>
   <p>FID Rating Thresholds: <span id="fidRatingThresholds"></span></p>
+  <p>INP Rating Thresholds: <span id="inpRatingThresholds"></span></p>
   <p><img src="https://www.atatus.com/blog/content/images/2020/12/webvitals_nohit.png" /></p>
 
   <script>
     window.addEventListener('load', () => {
       const fidRatingThresholdsValue = _satellite.getVar('Metric FID Rating Thresholds');
       const fidRatingThresholds = document.getElementById('fidRatingThresholds');
-      fidRatingThresholds.textContent = JSON.stringify(fidRatingThresholdsValue);
+      fidRatingThresholds.innerText = JSON.stringify(fidRatingThresholdsValue);
+
+      const inpRatingThresholdsValue = _satellite.getVar('Metric INP Rating Thresholds');
+      const inpRatingThresholds = document.getElementById('inpRatingThresholds');
+      inpRatingThresholds.innerText = JSON.stringify(inpRatingThresholdsValue);
     });
 
     setInterval(() => {

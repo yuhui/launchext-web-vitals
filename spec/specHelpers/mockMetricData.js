@@ -22,8 +22,8 @@
 module.exports = function () {
   const baseData = {
     id: 'v1-1621390039209-9647315286660',
-    name: 'FCP',
-    fullName: 'First Contentful Paint',
+    name: 'TTFB',
+    fullName: 'Time To First Byte',
     navigationType: 'navigate',
     rating: 'good',
     delta: 866.8799999868497,
@@ -33,6 +33,7 @@ module.exports = function () {
     ],
     attribution: {
       loadState: 'completed',
+      waitingDuration: 42,
     },
   };
 

@@ -22,6 +22,65 @@ const mockBaseEvent = require('../../specHelpers/mockBaseEvent');
 const mockController = require('../../specHelpers/mockController');
 const mockTurbine = require('../../specHelpers/mockTurbine');
 
+const WEB_VITALS_METRIC_ATTRIBUTION_DEPRECATIONS = {
+  FID: {
+    eventEntry: {
+      deprecation: 'deleted',
+    },
+    eventTarget: {
+      deprecation: 'deleted',
+    },
+    eventTime: {
+      deprecation: 'deleted',
+    },
+    eventType: {
+      deprecation: 'deleted',
+    },
+  },
+  INP: {
+    eventEntry: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'processedEventEntries',
+    },
+    eventTarget: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'interactionTarget',
+    },
+    eventTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'interactionTime',
+    },
+    eventType: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'interactionType',
+    },
+  },
+  LCP: {
+    resourceLoadTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'resourceLoadDuration',
+    },
+  },
+  TTFB: {
+    connectionTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'connectionDuration',
+    },
+    dnsTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'dnsDuration',
+    },
+    requestTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'requestDuration',
+    },
+    waitingTime: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'waitingDuration',
+    },
+  },
+};
+
 describe('metricAttribution data element delegate', function () {
   beforeEach(function () {
     this.metricData = 'attribution';
@@ -137,6 +196,31 @@ describe('metricAttribution data element delegate', function () {
     it('is defined', function () {
       const result = this.dataElementDelegate(this.settings, this.event);
       expect(result).toBeDefined();
+    });
+
+    it('logs a warning for a renamed item', function () {
+      this.settings.metricAttributionItem = 'waitingTime';
+      const result = this.dataElementDelegate(this.settings, this.event);
+      expect(result).toBeDefined();
+
+      const metricDeprecations = WEB_VITALS_METRIC_ATTRIBUTION_DEPRECATIONS[this.event.webvitals.name];
+      const { renamedMetricAttributionItem } = metricDeprecations[this.settings.metricAttributionItem];
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith(
+        `Metric attribution item "${this.settings.metricAttributionItem}" has been renamed to "${renamedMetricAttributionItem}".`
+      );
+    });
+
+    it('logs a warning for a deleted item', function () {
+      this.settings.metricAttributionItem = 'eventEntry';
+      this.event.webvitals.name = 'FID';
+      const result = this.dataElementDelegate(this.settings, this.event);
+      expect(result).toBeUndefined();
+
+      const { warn: logWarn } = this.turbine.logger;
+      expect(logWarn).toHaveBeenCalledWith(
+        `Metric attribution item "${this.settings.metricAttributionItem}" has been removed from Web Vitals.`
+      );
     });
   });
 });

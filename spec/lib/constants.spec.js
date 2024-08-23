@@ -17,20 +17,23 @@
 'use strict';
 
 const EXPECTED_CONSTANTS = {
-  CDN_MAJOR_VERSION: '3',
-  LIBRARY_TYPES: new Set([
+  CDN_MAJOR_VERSION: '4',
+  DEPRECATED_METRICS: [
+    'FID',
+  ],
+  LIBRARY_TYPES: [
     'bundle',
     'cdn',
     'url',
-  ]),
-  METRICS_NAMES: new Map([
-    ['CLS', 'Cumulative Layout Shift'],
-    ['FCP', 'First Contentful Paint'],
-    ['FID', 'First Input Delay'],
-    ['INP', 'Interaction to Next Paint'],
-    ['LCP', 'Largest Contentful Paint'],
-    ['TTFB', 'Time to First Byte'],
-  ]),
+  ],
+  METRICS_NAMES: {
+    CLS: 'Cumulative Layout Shift',
+    FCP: 'First Contentful Paint',
+    FID: 'First Input Delay',
+    INP: 'Interaction to Next Paint',
+    LCP: 'Largest Contentful Paint',
+    TTFB: 'Time to First Byte',
+  },
   VENDOR_SCRIPT_FILENAME: 'web-vitals.attribution.iife.js',
 };
 
@@ -45,9 +48,10 @@ describe('constants delegate', function () {
     expect(result).toBeDefined();
 
     const numKeys = Object.keys(result).length;
-    expect(numKeys).toEqual(5);
+    expect(numKeys).toEqual(6);
 
     const {
+      DEPRECATED_WEB_VITALS_METRICS,
       WEB_VITALS_CDN_URL,
       WEB_VITALS_LIBRARY_TYPES,
       WEB_VITALS_METRICS,
@@ -57,8 +61,9 @@ describe('constants delegate', function () {
     expect(WEB_VITALS_CDN_URL).toEqual(
       `https://unpkg.com/web-vitals@${EXPECTED_CONSTANTS.CDN_MAJOR_VERSION}/dist/web-vitals.attribution.iife.js`
     );
+    expect(DEPRECATED_WEB_VITALS_METRICS).toEqual(EXPECTED_CONSTANTS.DEPRECATED_METRICS);
     expect(WEB_VITALS_LIBRARY_TYPES).toEqual(EXPECTED_CONSTANTS.LIBRARY_TYPES);
-    expect(WEB_VITALS_METRICS).toEqual(new Set(EXPECTED_CONSTANTS.METRICS_NAMES.keys()));
+    expect(WEB_VITALS_METRICS).toEqual(Object.keys(EXPECTED_CONSTANTS.METRICS_NAMES));
     expect(WEB_VITALS_METRICS_NAMES).toEqual(EXPECTED_CONSTANTS.METRICS_NAMES);
     expect(WEB_VITALS_VENDOR_SCRIPT_FILENAME).toEqual(EXPECTED_CONSTANTS.VENDOR_SCRIPT_FILENAME);
   });

@@ -23,7 +23,9 @@ module.exports = function (returnMetricData = '', mockEventWebvitals = {}, throw
   const controller = {
     clearBatch: jasmine.createSpy(),
     getBatch: jasmine.createSpy().and.returnValue(jasmine.createSpy()),
-    getMetricData: jasmine.createSpy().and.returnValue(mockEventWebvitals[returnMetricData]),
+    getMetricData: jasmine.createSpy().and.callFake(function(key) {
+      return key === 'name' ? mockEventWebvitals.name : mockEventWebvitals[returnMetricData];
+    }),
     handleEvent: jasmine.createSpy(),
   };
 
