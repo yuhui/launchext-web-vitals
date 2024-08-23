@@ -1,5 +1,17 @@
 # Changelog
 
+## 2.1.0 - 2024-08-22
+
+### Changed
+
+- Updated bundled `web-vitals.attribution.js` library to version 4.2.3.
+- Brought feature parity with Web Vitals 4.0: deprecation of First Input Delay (FID), some Metric Attributions.
+- Replaced Sets and Maps with objects and arrays.
+
+### Added
+
+- Added warnings related to Web Vitals 4.0's deprecations.
+
 ## 2.0.1 - 2024-02-28
 
 ### Changed
