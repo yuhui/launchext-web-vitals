@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.1 - 2026-03-03
+
+### Changed
+
+- Brought feature parity with Web Vitals 5.0: renamed and removed some Metric Attributions.
+
 ## 2.1.0 - 2024-08-22
 
 ### Changed
