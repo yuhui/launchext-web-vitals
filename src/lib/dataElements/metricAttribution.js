@@ -56,8 +56,15 @@ const WEB_VITALS_METRIC_ATTRIBUTION_DEPRECATIONS = {
       deprecation: 'renamed',
       renamedMetricAttributionItem: 'interactionType',
     },
+    interactionTargetElement: {
+      deprecation: 'deleted',
+    },
   },
   LCP: {
+    element: {
+      deprecation: 'renamed',
+      renamedMetricAttributionItem: 'target',
+    },
     resourceLoadTime: {
       deprecation: 'renamed',
       renamedMetricAttributionItem: 'resourceLoadDuration',

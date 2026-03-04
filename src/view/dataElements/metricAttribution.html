@@ -21,13 +21,11 @@
            <coral-select-item value="cacheDuration">Cache Duration (TTFB)</coral-select-item>
            <coral-select-item value="connectionDuration">Connection Duration (TTFB)</coral-select-item>
            <coral-select-item value="dnsDuration">DNS Duration (TTFB)</coral-select-item>
-           <coral-select-item value="element">Element (LCP)</coral-select-item>
            <coral-select-item value="elementRenderDelay">Element Render Delay (LCP)</coral-select-item>
            <coral-select-item value="fcpEntry">FCP Entry (FCP)</coral-select-item>
            <coral-select-item value="firstByteToFCP">First Byte To FCP (FCP)</coral-select-item>
            <coral-select-item value="inputDelay">Input Delay (INP)</coral-select-item>
            <coral-select-item value="interactionTarget">Interaction Target (INP)</coral-select-item>
-           <coral-select-item value="interactionTargetElement">Interaction Target Element (INP)</coral-select-item>
            <coral-select-item value="interactionTime">Interaction Time (INP)</coral-select-item>
            <coral-select-item value="interactionType">Interaction Type (INP)</coral-select-item>
            <coral-select-item value="largestShiftEntry">Largest Shift Entry (CLS)</coral-select-item>
@@ -47,6 +45,7 @@
            <coral-select-item value="requestDuration">Request Duration (TTFB)</coral-select-item>
            <coral-select-item value="resourceLoadDelay">Resource Load Delay (LCP)</coral-select-item>
            <coral-select-item value="resourceLoadDuration">Resource Load Duration (LCP)</coral-select-item>
+           <coral-select-item value="target">Target (LCP)</coral-select-item>
            <coral-select-item value="timeToFirstByte">Time to First Byte (FCP, LCP)</coral-select-item>
            <coral-select-item value="url">URL (LCP)</coral-select-item>
            <coral-select-item value="waitingDuration">Waiting Duration (TTFB)</coral-select-item>
@@ -173,7 +172,6 @@
         'cacheDuration',
         'connectionDuration',
         'dnsDuration',
-        'element',
         'elementRenderDelay',
         'fcpEntry',
         'firstByteToFCP',
@@ -199,6 +197,7 @@
         'requestDuration',
         'resourceLoadDelay',
         'resourceLoadDuration',
+        'target',
         'timeToFirstByte',
         'url',
         'waitingDuration',
@@ -218,6 +217,13 @@
           renamedMetricAttributionItem: 'dnsDuration',
           renamedFullName: 'DNS Duration',
           version: '4.0',
+        },
+        element: {
+          deprecation: 'renamed',
+          fullName: 'Element',
+          renamedMetricAttributionItem: 'target',
+          renamedFullName: 'Target',
+          version: '5.0',
         },
         eventEntry: {
           deprecation: 'deleted',
@@ -250,6 +256,11 @@
           renamedMetricAttributionItem: 'interactionType',
           renamedFullName: 'Interaction Type',
           version: '4.0',
+        },
+        interactionTargetElement: {
+          deprecation: 'deleted',
+          fullName: 'Interaction Target Element',
+          version: '5.0',
         },
         requestTime: {
           deprecation: 'renamed',
@@ -319,7 +330,7 @@
                   // delete the setting to force the user to take action on the data element
                   delete settings.metricAttributionItem;
 
-                  if (metricWithReplacement !== 'INP') {
+                  if (metricWithReplacement && metricWithReplacement !== 'INP') {
                     break;
                   }
 
